@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-namespace RS
+namespace RSEngine
 {
     [RequireComponent(typeof(Rigidbody))]
     public class GeneralAICore : MonoBehaviour
@@ -18,7 +18,7 @@ namespace RS
         [SerializeField] LayerMask _targetObjectLayer;
         [SerializeField] LayerMask _groundLayer;
         [SerializeField] int _targetsLayerNumber;
-        [SerializeField] int _currentTargetIndex;
+        int _currentTargetIndex = 0;
         int _currentPatrollPathIndex = 0;
         bool _isGrounded = false;
         void AddGravityToThis() => _rb.AddForce((!_isGrounded) ? -transform.up * _fallSpeed * 100 : Vector3.zero);

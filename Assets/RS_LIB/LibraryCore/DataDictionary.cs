@@ -1,5 +1,5 @@
 using System;
-namespace RS
+namespace RSEngine
 {
     /// <summary> 特定の登録名に対応した値を格納するための機能を提供するクラスで、辞書っぽい機能を提供する </summary>
     /// <typeparam name="TDataKey"></typeparam>
