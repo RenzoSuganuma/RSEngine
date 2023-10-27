@@ -100,6 +100,7 @@ namespace RSEngine
             }
             else
             {
+                Debug.Log("Target Is Not Found");
                 PatrollNow(_currentPatrollPathIndex, _patrollPath);
             }
         }
