@@ -1,9 +1,8 @@
-using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 namespace RSEngine
 {
     namespace AI
@@ -12,12 +11,21 @@ namespace RSEngine
         [RequireComponent(typeof(AILimbComponent))]
         public class AIBrainComponent : MonoBehaviour
         {
-            [SerializeField] Transform _target;
-            [SerializeField] Transform _referencePoint;
+            [SerializeField, Header("Targets")] List<Transform> _targets = new();
+            int _targetIndex = 0;
+            [SerializeField, Header("Target Layer Number")] int _targetLayerNum;
+            [SerializeField, Header("MoveSpeed"), Range(1, 10)] float _moveSpeed;
+            [SerializeField, Header("Path")] List<Vector3> _path;
+            int _pathIndex = 0;
             AILimbComponent _aiLimb;
-            Vector3[] _path = new Vector3[0];
-            Vector3[] SetPath(Vector3 start, Vector3 end, int pointCount)
+            /// <summary> たどる道筋を始点と終点を指定して割り出す </summary>
+            /// <param name="start"></param>
+            /// <param name="end"></param>
+            /// <param name="pointCount"></param>
+            /// <returns></returns>
+            Vector3[] DetectPath(Vector3 start, Vector3 end, int pointCount)
             {
+                start.y = 0; end.y = 0; // temporary format
                 var dir = end - start;
                 var ddir = dir / (pointCount - 1);
                 Vector3[] path = new Vector3[pointCount];
@@ -32,12 +40,37 @@ namespace RSEngine
                 }
                 return path;
             }
+            /// <summary> レベルにターゲットが居るかの検索をかけたうえでターゲットをリターンする </summary>
+            /// <returns></returns>
+            (bool condition, List<Transform> targets) IsTargetInLevel()
+            {
+                var list = GameObject.FindObjectsOfType<Transform>().Where(x => x.gameObject.layer == _targetLayerNum).ToList();
+                return (list.Count > 0, list);
+            }
+            void SetPathToTarget((bool condition, List<Transform> targets) result, int targetIndex, int subDivide)
+            {
+                _targets = (result.condition) ? result.targets : new();
+                if (_targets.Count > 0)
+                    _path = DetectPath(transform.position, _targets[targetIndex].position, subDivide).ToList();
+            }
             private void Start()
             {
-                SetPath(transform.position, _target.position, 5).ToList().ForEach(x => new GameObject().transform.position = x);
+                _aiLimb = GetComponent<AILimbComponent>();
+                SetPathToTarget(IsTargetInLevel(), _targetIndex, 5);
             }
             private void FixedUpdate()
             {
+                _aiLimb.MoveToPoint(_path[_pathIndex], _moveSpeed);
+            }
+            private void OnDrawGizmos()
+            {
+                // visible path
+                Gizmos.color = Color.black;
+                Gizmos.DrawLineStrip(_path.ToArray(), true);
+                foreach (var path in _path)
+                {
+                    Gizmos.DrawWireSphere(path, .5f);
+                }
             }
         }
     }
