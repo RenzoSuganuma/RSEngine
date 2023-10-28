@@ -84,6 +84,7 @@ namespace RSEngine
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
             _targetsList = DetectChasableTargets();
+            _targetsLayerNumber = (_targetsLayerNumber == 0) ? 1 : _targetsLayerNumber; // ƒoƒO‚Ì—\–h
         }
         void Update()
         {
@@ -92,7 +93,9 @@ namespace RSEngine
         void FixedUpdate()
         {
             _isGrounded = CheckGrounded();
+            _targetsList = DetectChasableTargets();
             AddGravityToThis();
+
             if (IsTargetInLevel())
             {
                 var b = CheckInsideBorder(transform.position, _targetsList[_currentTargetIndex].transform.position, _targetDetectRangeRadius, _targetDetectBufferRangeRadius);
