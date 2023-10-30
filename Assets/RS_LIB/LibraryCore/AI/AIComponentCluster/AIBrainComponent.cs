@@ -1,5 +1,5 @@
+#define DEBUGGING
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,16 +16,20 @@ namespace RSEngine
             [SerializeField, Header("Target Layer Number")] int _targetLayerNum;
             [SerializeField, Header("MoveSpeed"), Range(1, 10)] float _moveSpeed;
             [SerializeField, Header("Path")] List<Vector3> _path;
+            [SerializeField, Header("Obstacle For AI Layer")] LayerMask _obstacleLayer;
+            [SerializeField, Header("Path Point Obstacle Avoidance")] float _pathAvoidanceRad;
             int _pathIndex = 0;
             AILimbComponent _aiLimb;
             /// <summary> たどる道筋を始点と終点を指定して割り出す </summary>
             /// <param name="start"></param>
             /// <param name="end"></param>
-            /// <param name="pointCount"></param>
+            /// <param name="pointCount"> 始点終点含めた中間座標点 </param>
             /// <returns></returns>
-            Vector3[] DetectPath(Vector3 start, Vector3 end, int pointCount)
+            Vector3[] DetectPath(Vector3 start, Vector3 end, int pointCount) // 0 ~ pointcount - 1
             {
-                start.y = 0; end.y = 0; // temporary format
+                start.y = 0; end.y = 0; // <- temporary format,
+                                        // guratitudelly set using
+                                        // user definded walkable mesh information.
                 var dir = end - start;
                 var ddir = dir / (pointCount - 1);
                 Vector3[] path = new Vector3[pointCount];
@@ -37,7 +41,14 @@ namespace RSEngine
                     {
                         path[i] = path[i - 1] + ddir;
                     }
-                }
+                } // make point
+                for (int i = 0; i < pointCount - 1; i++)
+                {
+                    if (Physics.CheckSphere(path[i], _pathAvoidanceRad, _obstacleLayer))
+                    {
+
+                    } // if is there obstacles 
+                } // check each point's near in obstacles
                 return path;
             }
             /// <summary> 指定した始点と終点から距離を割り出して目的の距離の値に達したら true を返す。 </summary>
@@ -62,11 +73,23 @@ namespace RSEngine
                 var list = GameObject.FindObjectsOfType<Transform>().Where(x => x.gameObject.layer == _targetLayerNum).ToList();
                 return (list.Count > 0, list);
             }
+            /// <summary> ターゲットまでの道筋を検出する </summary>
+            /// <param name="result"></param>
+            /// <param name="targetIndex"></param>
+            /// <param name="subDivide"></param>
             void SetPathToTarget((bool condition, List<Transform> targets) result, int targetIndex, int subDivide)
             {
                 _targets = (result.condition) ? result.targets : new();
                 if (_targets.Count > 0)
                     _path = DetectPath(transform.position, _targets[targetIndex].position, subDivide).ToList();
+            }
+            /// <summary> すでに検出した道筋をたどる </summary>
+            void TraceCurrentPath()
+            {
+                if (_path == null) return; // if path is null, return and do nothing
+                _aiLimb.MoveToPoint(_path[_pathIndex], _moveSpeed);
+                var result = CheckInsideOfBorder(transform.position, _path[_pathIndex], 1, 1);
+                if (result) _pathIndex = (_pathIndex + 1 < _path.Count) ? _pathIndex + 1 : _pathIndex;
             }
             private void Start()
             {
@@ -75,9 +98,7 @@ namespace RSEngine
             }
             private void FixedUpdate()
             {
-                _aiLimb.MoveToPoint(_path[_pathIndex], _moveSpeed);
-                var result = CheckInsideOfBorder(transform.position, _path[_pathIndex], 1, 1);
-                if (result) _pathIndex = (_pathIndex + 1 < _path.Count) ? _pathIndex + 1 : _pathIndex;
+                TraceCurrentPath();
             }
             private void OnDrawGizmos()
             {
@@ -86,7 +107,7 @@ namespace RSEngine
                 Gizmos.DrawLineStrip(_path.ToArray(), true);
                 foreach (var path in _path)
                 {
-                    Gizmos.DrawWireSphere(path, .5f);
+                    Gizmos.DrawWireSphere(path, _pathAvoidanceRad);
                 }
             }
         }
