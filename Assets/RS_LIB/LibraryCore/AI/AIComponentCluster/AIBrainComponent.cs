@@ -97,7 +97,7 @@ namespace RSEngine
             private void Start()
             {
                 _aiLimb = GetComponent<AILimbComponent>();
-                SetPathToTarget(IsTargetInLevel(), _targetIndex, 5);
+                SetPathToTarget(IsTargetInLevel(), _targetIndex, 10);
             }
             private void FixedUpdate()
             {
