@@ -1,4 +1,3 @@
-#define DEBUGGING
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +6,27 @@ namespace RSEngine
 {
     namespace AI
     {
-        /// <summary> 人体でいう脳に当たる機能を提供する </summary>
+        /// <summary> 人体でいう脳に当たる機能を提供する。各処理に必要な思考を司る </summary>
         [RequireComponent(typeof(AILimbComponent))]
         public class AIBrainComponent : MonoBehaviour
         {
+            /// <summary> 追跡対象のターゲットリスト </summary>
             [SerializeField, Header("Targets")] List<Transform> _targets = new();
+            /// <summary> ターゲットリストのインデックス </summary>
             int _targetIndex = 0;
+            /// <summary> ターゲットのレイヤ番号 </summary>
             [SerializeField, Header("Target Layer Number")] int _targetLayerNum;
+            /// <summary> 移動速度 </summary>
             [SerializeField, Header("MoveSpeed"), Range(1, 10)] float _moveSpeed;
+            /// <summary> 現在選択しているターゲットまでの道筋。分岐点のリスト </summary>
             [SerializeField, Header("Path")] List<Vector3> _path;
+            /// <summary> 障害物のレイヤマスク </summary>
             [SerializeField, Header("Obstacle For AI Layer")] LayerMask _obstacleLayer;
+            /// <summary> 分岐点の障害物検知半径 </summary>
             [SerializeField, Header("Path Point Obstacle Avoidance")] float _pathAvoidanceRad;
+            /// <summary> 道筋の分岐点のインデックス </summary>
             int _pathIndex = 0;
+            /// <summary> AI四肢コンポーネント </summary>
             AILimbComponent _aiLimb;
             /// <summary> たどる道筋を始点と終点を指定して割り出す </summary>
             /// <param name="start"></param>
