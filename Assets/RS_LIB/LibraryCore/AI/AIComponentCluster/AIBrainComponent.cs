@@ -46,7 +46,10 @@ namespace RSEngine
                 {
                     if (Physics.CheckSphere(path[i], _pathAvoidanceRad, _obstacleLayer))
                     {
-
+                        var cols = Physics.OverlapSphere(path[i], _pathAvoidanceRad, _obstacleLayer);
+                        var vec = -(cols[0].transform.position - path[i]);
+                        vec.y = 0; // temporary formatting 
+                        path[i] += vec * 1.5f;
                     } // if is there obstacles 
                 } // check each point's near in obstacles
                 return path;
