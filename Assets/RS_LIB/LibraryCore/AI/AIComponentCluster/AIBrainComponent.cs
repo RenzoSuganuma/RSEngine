@@ -24,10 +24,13 @@ namespace RSEngine
             [SerializeField, Header("Obstacle For AI Layer")] LayerMask _obstacleLayer;
             /// <summary> 分岐点の障害物検知半径 </summary>
             [SerializeField, Header("Path Point Obstacle Avoidance")] float _pathAvoidanceRad;
+            /// <summary> 歩行可能な面のレイヤマスク </summary>
+            [SerializeField, Header("Walkable Layer")] LayerMask _walkableLayerMask;
             /// <summary> 道筋の分岐点のインデックス </summary>
             int _pathIndex = 0;
             /// <summary> AI四肢コンポーネント </summary>
             AILimbComponent _aiLimb;
+
             /// <summary> たどる道筋を始点と終点を指定して割り出す </summary>
             /// <param name="start"></param>
             /// <param name="end"></param>
@@ -35,6 +38,7 @@ namespace RSEngine
             /// <returns></returns>
             Vector3[] DetectPath(Vector3 start, Vector3 end, int pointCount) // 0 ~ pointcount - 1
             {
+                #region Make Points:パスの頂点を作成
                 start.y = 0; end.y = 0; // <- temporary format,
                                         // guratitudelly set using
                                         // user definded walkable mesh information.
@@ -43,6 +47,7 @@ namespace RSEngine
                 Vector3[] path = new Vector3[pointCount];
                 path[0] = start;
                 path[pointCount - 1] = end;
+
                 if (pointCount > 2)
                 {
                     for (int i = 1; i < pointCount - 1; i++)
@@ -50,18 +55,33 @@ namespace RSEngine
                         path[i] = path[i - 1] + ddir;
                     }
                 } // make point
-                for (int i = 0; i < pointCount - 1; i++)
+                #endregion
+
+                #region Detect Obstacles:障害物の有無を検知、退避
+                for (int i = 0; i < pointCount; i++)
                 {
                     if (Physics.CheckSphere(path[i], _pathAvoidanceRad, _obstacleLayer))
                     {
                         var cols = Physics.OverlapSphere(path[i], _pathAvoidanceRad, _obstacleLayer);
                         var vec = -(cols[0].transform.position - path[i]);
                         vec.y = 0; // temporary formatting 
-                        path[i] += vec * 1.5f;
+                        path[i] += vec;
+                        path[(i + 1 < pointCount - 1) ? i + 1 : i] += vec;
                     } // if is there obstacles 
+
+                    if (Physics.CheckSphere(path[i], _pathAvoidanceRad, _walkableLayerMask))
+                    {
+                        while (Physics.CheckSphere(path[i], _pathAvoidanceRad, _walkableLayerMask))
+                        {
+                            path[i].y += _pathAvoidanceRad * Time.deltaTime;
+                        }
+                    }
                 } // check each point's near in obstacles
+                #endregion
+
                 return path;
             }
+
             /// <summary> 指定した始点と終点から距離を割り出して目的の距離の値に達したら true を返す。 </summary>
             /// <param name="strt"></param>
             /// <param name="end"></param>
@@ -77,6 +97,7 @@ namespace RSEngine
                 float lim = limdis * limdis;
                 return dd < lim + limoffset;
             }
+
             /// <summary> レベルにターゲットが居るかの検索をかけたうえでターゲットをリターンする </summary>
             /// <returns></returns>
             (bool condition, List<Transform> targets) IsTargetInLevel()
@@ -84,6 +105,7 @@ namespace RSEngine
                 var list = GameObject.FindObjectsOfType<Transform>().Where(x => x.gameObject.layer == _targetLayerNum).ToList();
                 return (list.Count > 0, list);
             }
+
             /// <summary> ターゲットまでの道筋を検出する </summary>
             /// <param name="result"></param>
             /// <param name="targetIndex"></param>
@@ -94,6 +116,7 @@ namespace RSEngine
                 if (_targets.Count > 0)
                     _path = DetectPath(transform.position, _targets[targetIndex].position, subDivide).ToList();
             }
+
             /// <summary> すでに検出した道筋をたどる </summary>
             void TraceCurrentPath()
             {
@@ -102,6 +125,7 @@ namespace RSEngine
                 var result = CheckInsideOfBorder(transform.position, _path[_pathIndex], 1, 1);
                 if (result) _pathIndex = (_pathIndex + 1 < _path.Count) ? _pathIndex + 1 : _pathIndex;
             }
+
             private void Start()
             {
                 _aiLimb = GetComponent<AILimbComponent>();
