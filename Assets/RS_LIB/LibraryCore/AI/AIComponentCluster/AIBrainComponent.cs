@@ -60,6 +60,7 @@ namespace RSEngine
                 #region Detect Obstacles:障害物の有無を検知、退避
                 for (int i = 0; i < pointCount; i++)
                 {
+                    // 障害物検知
                     if (Physics.CheckSphere(path[i], _characterHeight / 2.0f, _obstacleLayer))
                     {
                         var cols = Physics.OverlapSphere(path[i], _characterHeight / 2.0f, _obstacleLayer);
@@ -69,26 +70,34 @@ namespace RSEngine
                         path[(i + 1 < pointCount - 1) ? i + 1 : i] += vec;
                     } // if is there obstacles 
 
+                    // 歩行可能メッシュの高低差を検知して、高いなら上る
                     if (Physics.CheckSphere(path[i], _characterHeight / 2.0f, _walkableLayerMask))
                     {
+                        // get overlap colliders
                         var cols1 = Physics.OverlapSphere(path[i], _characterHeight / 2.0f, _walkableLayerMask);
                         // each vertices of gameobjects
-                        HashSet<Vector3[]> overlapVerts = new();
+                        HashSet<Vector3[]> overlapObjVerts = new();
+                        // all overlapped vertices heights
                         HashSet<float> verHeights = new();
                         foreach (var item in cols1)
                         {
+                            // get meshfilter component for get position mesh vertices
                             var component = item.gameObject.GetComponent<MeshFilter>();
+                            // temporary list for add overlapped vertices
                             List<Vector3> list = new();
-                            foreach (var ver in component.mesh.vertices)
+                            foreach (var ver in component.mesh.vertices) // the vertices overlapped object
                             {
+                                // get all vertices, after converted local position to world position
                                 list.Add(item.gameObject.transform.localToWorldMatrix.MultiplyPoint3x4(ver));
                             }
-                            overlapVerts.Add(list.ToArray());
-                        }
-                        foreach (var v in overlapVerts)
+                            // add overlapped object vertices
+                            overlapObjVerts.Add(list.ToArray());
+                        } // each overlapped objects 
+                        foreach (var v in overlapObjVerts)
                         {
                             foreach (var item in v)
                             {
+                                // add each vertices height(y axis value)
                                 verHeights.Add(item.y);
                             } // Vector3[]
                         } // HashSet
