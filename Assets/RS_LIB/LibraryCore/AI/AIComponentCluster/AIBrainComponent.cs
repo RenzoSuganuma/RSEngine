@@ -77,7 +77,13 @@ namespace RSEngine
                         HashSet<float> verHeights = new();
                         foreach (var item in cols1)
                         {
-                            overlapVerts.Add(item.gameObject.GetComponent<MeshFilter>().mesh.vertices);
+                            var component = item.gameObject.GetComponent<MeshFilter>();
+                            List<Vector3> list = new();
+                            foreach (var ver in component.mesh.vertices)
+                            {
+                                list.Add(item.gameObject.transform.localToWorldMatrix.MultiplyPoint3x4(ver));
+                            }
+                            overlapVerts.Add(list.ToArray());
                         }
                         foreach (var v in overlapVerts)
                         {
@@ -86,7 +92,7 @@ namespace RSEngine
                                 verHeights.Add(item.y);
                             } // Vector3[]
                         } // HashSet
-                        path[i].y = verHeights.Max() + _characterHeight;
+                        path[i].y = verHeights.Max() + _characterHeight / 2.0f;
                     }
                 } // check each point's near in obstacles
                 #endregion
