@@ -75,7 +75,6 @@ namespace RSEngine
                         // each vertices of gameobjects
                         HashSet<Vector3[]> overlapVerts = new();
                         HashSet<float> verHeights = new();
-                        float maxHeight = 0f;
                         foreach (var item in cols1)
                         {
                             overlapVerts.Add(item.gameObject.GetComponent<MeshFilter>().mesh.vertices);
