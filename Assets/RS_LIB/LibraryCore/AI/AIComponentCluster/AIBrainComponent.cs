@@ -22,8 +22,8 @@ namespace RSEngine
             [SerializeField, Header("Path")] List<Vector3> _path;
             /// <summary> 障害物のレイヤマスク </summary>
             [SerializeField, Header("Obstacle For AI Layer")] LayerMask _obstacleLayer;
-            /// <summary> 分岐点の障害物検知半径 </summary>
-            [SerializeField, Header("Path Point Obstacle Avoidance")] float _pathAvoidanceRad;
+            /// <summary> 分岐点の障害物検知半径、キャラの身長 </summary>
+            [SerializeField, Header("Character Height")] float _characterHeight; // ← set the character height
             /// <summary> 歩行可能な面のレイヤマスク </summary>
             [SerializeField, Header("Walkable Layer")] LayerMask _walkableLayerMask;
             /// <summary> 道筋の分岐点のインデックス </summary>
@@ -60,21 +60,34 @@ namespace RSEngine
                 #region Detect Obstacles:障害物の有無を検知、退避
                 for (int i = 0; i < pointCount; i++)
                 {
-                    if (Physics.CheckSphere(path[i], _pathAvoidanceRad, _obstacleLayer))
+                    if (Physics.CheckSphere(path[i], _characterHeight, _obstacleLayer))
                     {
-                        var cols = Physics.OverlapSphere(path[i], _pathAvoidanceRad, _obstacleLayer);
+                        var cols = Physics.OverlapSphere(path[i], _characterHeight, _obstacleLayer);
                         var vec = -(cols[0].transform.position - path[i]);
                         vec.y = 0; // temporary formatting 
                         path[i] += vec;
                         path[(i + 1 < pointCount - 1) ? i + 1 : i] += vec;
                     } // if is there obstacles 
 
-                    if (Physics.CheckSphere(path[i], _pathAvoidanceRad, _walkableLayerMask))
+                    if (Physics.CheckSphere(path[i], _characterHeight, _walkableLayerMask))
                     {
-                        while (Physics.CheckSphere(path[i], _pathAvoidanceRad, _walkableLayerMask))
+                        var cols1 = Physics.OverlapSphere(path[i], _characterHeight, _walkableLayerMask);
+                        // each vertices of gameobjects
+                        HashSet<Vector3[]> overlapVerts = new();
+                        HashSet<float> verHeights = new();
+                        float maxHeight = 0f;
+                        foreach (var item in cols1)
                         {
-                            path[i].y += _pathAvoidanceRad * Time.deltaTime;
+                            overlapVerts.Add(item.gameObject.GetComponent<MeshFilter>().mesh.vertices);
                         }
+                        foreach (var v in overlapVerts)
+                        {
+                            foreach (var item in v)
+                            {
+                                verHeights.Add(item.y);
+                            } // Vector3[]
+                        } // HashSet
+                        path[i].y = verHeights.Max() + _characterHeight;
                     }
                 } // check each point's near in obstacles
                 #endregion
@@ -142,7 +155,7 @@ namespace RSEngine
                 Gizmos.DrawLineStrip(_path.ToArray(), true);
                 foreach (var path in _path)
                 {
-                    Gizmos.DrawWireSphere(path, _pathAvoidanceRad);
+                    Gizmos.DrawWireSphere(path, _characterHeight);
                 }
             }
         }
