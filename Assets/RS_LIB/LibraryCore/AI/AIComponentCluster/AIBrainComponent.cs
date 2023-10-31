@@ -60,18 +60,18 @@ namespace RSEngine
                 #region Detect Obstacles:è·äQï®ÇÃóLñ≥ÇåüímÅAëﬁî
                 for (int i = 0; i < pointCount; i++)
                 {
-                    if (Physics.CheckSphere(path[i], _characterHeight, _obstacleLayer))
+                    if (Physics.CheckSphere(path[i], _characterHeight / 2.0f, _obstacleLayer))
                     {
-                        var cols = Physics.OverlapSphere(path[i], _characterHeight, _obstacleLayer);
+                        var cols = Physics.OverlapSphere(path[i], _characterHeight / 2.0f, _obstacleLayer);
                         var vec = -(cols[0].transform.position - path[i]);
                         vec.y = 0; // temporary formatting 
                         path[i] += vec;
                         path[(i + 1 < pointCount - 1) ? i + 1 : i] += vec;
                     } // if is there obstacles 
 
-                    if (Physics.CheckSphere(path[i], _characterHeight, _walkableLayerMask))
+                    if (Physics.CheckSphere(path[i], _characterHeight / 2.0f, _walkableLayerMask))
                     {
-                        var cols1 = Physics.OverlapSphere(path[i], _characterHeight, _walkableLayerMask);
+                        var cols1 = Physics.OverlapSphere(path[i], _characterHeight / 2.0f, _walkableLayerMask);
                         // each vertices of gameobjects
                         HashSet<Vector3[]> overlapVerts = new();
                         HashSet<float> verHeights = new();
@@ -141,7 +141,7 @@ namespace RSEngine
             private void Start()
             {
                 _aiLimb = GetComponent<AILimbComponent>();
-                SetPathToTarget(IsTargetInLevel(), _targetIndex, 10);
+                SetPathToTarget(IsTargetInLevel(), _targetIndex, 30);
             }
             private void FixedUpdate()
             {
@@ -154,7 +154,7 @@ namespace RSEngine
                 Gizmos.DrawLineStrip(_path.ToArray(), true);
                 foreach (var path in _path)
                 {
-                    Gizmos.DrawWireSphere(path, _characterHeight);
+                    Gizmos.DrawWireSphere(path, _characterHeight / 2.0f);
                 }
             }
         }
