@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 // ステートマシン 
 // もし登録した遷移を満たす条件が合えば遷移する
-// 
 public class StateMachine
 {
     List<StateTransition<IAIState, IAIState>> _transition = new();
@@ -33,6 +32,10 @@ public class StateMachine
     {
         _transition.Add(new StateTransition<IAIState, IAIState>(current, next));
     }
+    public void ClearTransition()
+    {
+        _transition.Clear();
+    }
     public void GotoNextState()
     {
         if (_isCurrentStateNow)
@@ -42,7 +45,11 @@ public class StateMachine
         else
         {
             var work = FindNextEntryPoint(_transition[_currentTransitionIndex]._next);
-            _currentTransitionIndex = (work != -1) ? work : _currentTransitionIndex; // もし、どこにもいかないのならそのステートにとどまる
+            if (work != -1)
+            {
+                _currentTransitionIndex = work;// もし、どこにもいかないのならそのステートにとどまる
+                _isCurrentStateNow = true;
+            }
         }
     }
     // 渡された StateTransition.next のステートがStateTransition.current として登録されている遷移リストのインデックスを返す
