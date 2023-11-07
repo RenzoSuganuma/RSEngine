@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
-public class GeneralAICoreHyeralchyExtension : MonoBehaviour
+using RSEngine.AI;
+public class AI_Patroller_Path_Extensions : MonoBehaviour
 {
-    [MenuItem("GameObject/GeneralAI/PatrollingPath", false, 10)]
+    [MenuItem("GameObject/RSE_AI/PatrollingPath", false, 10)]
     static void CreateGameObject(MenuCommand menuCommand)
     {
         // Create a custom game object
         GameObject root = new();
+        root.AddComponent<PartollingPathHolder>();
         root.name = "AI_PatrollPath_Root";
         // Ensure it gets reparented if this was a context click (otherwise does nothing)
         GameObjectUtility.SetParentAndAlign(root, menuCommand.context as GameObject);

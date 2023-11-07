@@ -11,7 +11,7 @@ namespace RSEngine
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="action"></param>
-        public static void DOnce(bool condition, Action action)// Function Name Means Do Once
+        public static void Tap(bool condition, Action action)
         {
             if (condition) { action(); }
         }
