@@ -8,24 +8,33 @@ using UnityEngine;
 public class StateMachine
 {
     List<StateTransition<IAIState, IAIState>> _transition = new();
-    delegate void OnStateExit(StateTransitionInfo info);
-    OnStateExit onStateExit;
-    int _currentIndex = 0;
+    public delegate void OnStateExit(StateTransitionInfo info);
+    public event OnStateExit onStateExit;
+    int _currentTransitionIndex = 0; // 現在の遷移のリストからのインデックス
     public void Update()
     {
         // 現在エントリーしているステートの実行
-        _transition[_currentIndex]._current.Entry();
-        _transition[_currentIndex]._current.Tick();
-        _transition[_currentIndex]._current.Exit();
-        var trans = _transition[_currentIndex];
+        _transition[_currentTransitionIndex]._current.In();
+        _transition[_currentTransitionIndex]._current.Tick();
+        _transition[_currentTransitionIndex]._current.Out();
+        //
+        _transition[_currentTransitionIndex]._next.In();
+        _transition[_currentTransitionIndex]._next.Tick();
+        _transition[_currentTransitionIndex]._next.Out();
+        // 
+        var trans = _transition[_currentTransitionIndex];
         onStateExit(new StateTransitionInfo(trans._current, trans._next));
         // もし条件を満たしたのなら次の遷移先のステートへとぶ
-        var work = FindNextEntryPoint(_transition[_currentIndex]._next);
-        _currentIndex = (work != -1) ? work : 0; // もし、どこにもいかないのならデフォルトのステートへいく
+        var work = FindNextEntryPoint(_transition[_currentTransitionIndex]._next);
+        _currentTransitionIndex = (work != -1) ? work : _currentTransitionIndex; // もし、どこにもいかないのならそのステートにとどまる
     }
     public void AddTransition(IAIState current, IAIState next)
     {
         _transition.Add(new StateTransition<IAIState, IAIState>(current, next));
+    }
+    public void GotoNextState()
+    {
+
     }
     // 渡された StateTransition.next のステートがStateTransition.current として登録されている遷移リストのインデックスを返す
     int FindNextEntryPoint(IAIState next)
@@ -33,9 +42,9 @@ public class StateMachine
         int index = -1;
         for (int i = 0; i < _transition.Count; i++)
         {
-            if(_transition[i]._current == next) 
+            if (_transition[i]._current == next)
             {
-                index = i; 
+                index = i;
                 break;
             }
         }
@@ -55,8 +64,8 @@ public class StateTransition<Tcurrent, Tnext>
 }
 public struct StateTransitionInfo
 {
-    IAIState _current;
-    IAIState _next;
+    public IAIState _current;
+    public IAIState _next;
     public StateTransitionInfo(IAIState current, IAIState next)
     {
         _current = current;
@@ -65,7 +74,11 @@ public struct StateTransitionInfo
 }
 public interface IAIState
 {
-    public void Entry();
+    public void In();
     public void Tick();
-    public void Exit();
+    public void Out();
+}
+public interface IStateMachineUser
+{
+    public void OnStateWasExitted(StateTransitionInfo info);
 }
