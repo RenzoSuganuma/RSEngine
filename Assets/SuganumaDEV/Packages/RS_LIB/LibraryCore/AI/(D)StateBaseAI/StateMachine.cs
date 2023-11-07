@@ -8,13 +8,20 @@ using UnityEngine;
 public class StateMachine
 {
     List<StateTransition<IAIState, IAIState>> _transition = new();
-    int _current = 0;
+    delegate void OnStateExit(StateTransitionInfo info);
+    OnStateExit onStateExit;
+    int _currentIndex = 0;
     public void Update()
     {
-        _transition[_current]._current.Entry();
-        _transition[_current]._current.Tick();
-        _transition[_current]._current.Exit();
-        _current = FindNextEntryPoint(_transition[_current]._next);
+        // 現在エントリーしているステートの実行
+        _transition[_currentIndex]._current.Entry();
+        _transition[_currentIndex]._current.Tick();
+        _transition[_currentIndex]._current.Exit();
+        var trans = _transition[_currentIndex];
+        onStateExit(new StateTransitionInfo(trans._current, trans._next));
+        // もし条件を満たしたのなら次の遷移先のステートへとぶ
+        var work = FindNextEntryPoint(_transition[_currentIndex]._next);
+        _currentIndex = (work != -1) ? work : 0; // もし、どこにもいかないのならデフォルトのステートへいく
     }
     public void AddTransition(IAIState current, IAIState next)
     {
@@ -45,6 +52,16 @@ public class StateTransition<Tcurrent, Tnext>
     }
     public Tcurrent _current;
     public Tnext _next;
+}
+public struct StateTransitionInfo
+{
+    IAIState _current;
+    IAIState _next;
+    public StateTransitionInfo(IAIState current, IAIState next)
+    {
+        _current = current;
+        _next = next;
+    }
 }
 public interface IAIState
 {
