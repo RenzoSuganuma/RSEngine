@@ -10,23 +10,24 @@ public class StateMachine
     List<StateTransition<IAIState, IAIState>> _transition = new();
     public delegate void OnStateExit(StateTransitionInfo info);
     public event OnStateExit onStateExit;
+    bool _isCurrentStateNow = true;
     int _currentTransitionIndex = 0; // 現在の遷移のリストからのインデックス
     public void Update()
     {
         // 現在エントリーしているステートの実行
-        _transition[_currentTransitionIndex]._current.In();
-        _transition[_currentTransitionIndex]._current.Tick();
-        _transition[_currentTransitionIndex]._current.Out();
-        //
-        _transition[_currentTransitionIndex]._next.In();
-        _transition[_currentTransitionIndex]._next.Tick();
-        _transition[_currentTransitionIndex]._next.Out();
-        // 
+        if (_isCurrentStateNow)
+        {
+            _transition[_currentTransitionIndex]._current.In();
+            _transition[_currentTransitionIndex]._current.Tick();
+            _transition[_currentTransitionIndex]._current.Out();
+        }else  
+        {
+            _transition[_currentTransitionIndex]._next.In();
+            _transition[_currentTransitionIndex]._next.Tick();
+            _transition[_currentTransitionIndex]._next.Out();
+        }
         var trans = _transition[_currentTransitionIndex];
         onStateExit(new StateTransitionInfo(trans._current, trans._next));
-        // もし条件を満たしたのなら次の遷移先のステートへとぶ
-        var work = FindNextEntryPoint(_transition[_currentTransitionIndex]._next);
-        _currentTransitionIndex = (work != -1) ? work : _currentTransitionIndex; // もし、どこにもいかないのならそのステートにとどまる
     }
     public void AddTransition(IAIState current, IAIState next)
     {
@@ -34,7 +35,15 @@ public class StateMachine
     }
     public void GotoNextState()
     {
-
+        if (_isCurrentStateNow)
+        {
+            _isCurrentStateNow = false;
+        }
+        else
+        {
+            var work = FindNextEntryPoint(_transition[_currentTransitionIndex]._next);
+            _currentTransitionIndex = (work != -1) ? work : _currentTransitionIndex; // もし、どこにもいかないのならそのステートにとどまる
+        }
     }
     // 渡された StateTransition.next のステートがStateTransition.current として登録されている遷移リストのインデックスを返す
     int FindNextEntryPoint(IAIState next)

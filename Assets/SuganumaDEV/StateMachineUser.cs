@@ -10,7 +10,7 @@ public class StateMachineUser : MonoBehaviour, IStateMachineUser
     public void OnStateWasExitted(StateTransitionInfo info)
     {
         /* 呼び出しテストOK 11/07 */
-        if(info._current == a &&  info._next == b && info._isCurrentStateNow)
+        if(info._current == a &&  info._next == b)
         {
             machine.GotoNextState();
         }
@@ -19,7 +19,6 @@ public class StateMachineUser : MonoBehaviour, IStateMachineUser
     {
         machine.onStateExit += OnStateWasExitted;
         machine.AddTransition(a, b);
-        //machine.AddTransition(b, a);
     }
     private void Update()
     {
