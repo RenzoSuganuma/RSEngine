@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace RSEngine
 {
@@ -8,110 +9,179 @@ namespace RSEngine
     {
         // ステートマシン 
         // もし登録した遷移を満たす条件が合えば遷移する
+        /// <summary>  </summary>
         public class StateMachine
         {
-            List<StateTransition<IAIState, IAIState>> _transition = new();
+            /// <summary> ステートペアの遷移リスト（重複X） </summary>
+            /// 重複させない
+            HashSet<StatePairedTransition> _htransition = new();
+            List<StatePairedTransition> _transition = new();
+
+            /// <summary> ステートのリスト（重複X） </summary>
+            /// 重複させない
+            HashSet<IState> _hstates = new();
+            List<IState> _states = new();
+
+            /// <summary> 現在実行中のステート </summary>
+            int _currentTransitionIndex = -1;
+
+            /// <summary> ステートから抜けたときにステートマシン側で呼び出されるイベント </summary>
+            /// <param name="info"></param>
             public delegate void OnStateExit(StateTransitionInfo info);
+
+            /// <summary> コールバックリスナーの登録先のデリゲート </summary>
             public event OnStateExit onStateExit;
-            bool _isCurrentStateNow = true;
-            bool _nextStateDone = false; // 現在の遷移ペアの次のステートが終わったならtrue
-            int _currentTransitionIndex = 0; // 現在の遷移のリストからのインデックス
+
+            /// <summary> ステートマシン起動時に呼び出す </summary>
+            public void Initialize()
+            {
+                _transition = _htransition.ToList();
+                _states = _hstates.ToList();
+                _currentTransitionIndex = 0;
+            }
+
+            /// <summary> 毎フレーム呼び出すメソッド </summary>
             public void Update()
             {
-                // 現在エントリーしているステートの実行
-                if (_isCurrentStateNow) // ステートペア遷移元なら
+                // ステートの実行
+                var currentState = _transition[_currentTransitionIndex].Current;
+                currentState.In();
+                currentState.Tick();
+                currentState.Out();
+            }
+
+            /// <summary> 遷移IDを指定してそれに対応した条件式を代入 </summary>
+            /// <param name="transitionId"></param>
+            /// <param name="condition"></param>
+            public void UpdateCondition(int transitionId, bool condition)
+            {
+                _transition[transitionId].UpdateCondition(condition);
+            }
+
+            /// <summary> ステートの登録をする </summary>
+            /// <param name="state"></param>
+            public void AddState(IState state)
+            {
+                _hstates.Add(state);
+            }
+
+            /// <summary> ステートの登録解除をする </summary>
+            /// <param name="state"></param>
+            public void RemoveState(IState state)
+            {
+                _hstates.Remove(state);
+            }
+
+            /// <summary> リスト形式で渡されたステートを登録する </summary>
+            /// <param name="states"></param>
+            public void AddStates(List<IState> states)
+            {
+                foreach (IState state in states)
                 {
-                    _transition[_currentTransitionIndex]._current.In();
-                    _transition[_currentTransitionIndex]._current.Tick();
-                    _transition[_currentTransitionIndex]._current.Out();
-                    // current の処理が終わって次に遷移できるか判定
-                    _isCurrentStateNow = !_transition[_currentTransitionIndex]._current.ReadyToGoNext();
+                    _hstates.Add(state);
+                }
+            }
+
+            public void ClearAllStates()
+            {
+                _hstates.Clear();
+            }
+
+            /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
+            /// <param name="from"></param>
+            /// <param name="to"></param>
+            public void AddTransition(IState from, IState to)
+            {
+                _htransition.Add(new StatePairedTransition(from, to, _htransition.Count /* id => 0 ~ */));
+            }
+
+            /// <summary> すべてのステートペアの遷移をクリアする </summary>
+            public void ClearTransition()
+            {
+                _htransition.Clear();
+            }
+        }
+
+        // 遷移元と遷移先
+        /// <summary> 遷移元と遷移先の情報を保持するクラス </summary>
+        /// <typeparam name="Tcurrent"> 遷移元 </typeparam>
+        /// <typeparam name="Tnext"> 遷移先 </typeparam>
+        public class StatePairedTransition// ← 遷移の矢印に当たる 修正いらない
+        {
+            public StatePairedTransition(IState from, IState to, int transitionID)
+            {
+                _from = from;
+                _to = to;
+                _current = _from;
+                this.transitionID = transitionID;
+            }
+            IState _from; // id = 0
+            IState _to; // id = 1
+            IState _current; // id => current State
+            public IState Current => _current;
+            int transitionID; // transition id non duplication
+            /// <summary> 毎フレーム呼び出す。条件を更新する。 </summary>
+            /// <param name="condition"></param>
+            public void UpdateCondition(bool condition)
+            {
+                if (condition)
+                {
+                    _current = _to;
                 }
                 else
                 {
-                    _transition[_currentTransitionIndex]._next.In();
-                    _transition[_currentTransitionIndex]._next.Tick();
-                    _transition[_currentTransitionIndex]._next.Out();
-                    // current の処理が終わって次に遷移できるか判定
-                    var done = _transition[_currentTransitionIndex]._current.ReadyToGoNext();
-                    // 遷移ペア次ステート
-                    if (!_nextStateDone && done) { _nextStateDone = true; }
-                    // ステート選択を初期値にもどす
-                    _isCurrentStateNow = done; 
-                }
-                // ステートペアのどちらかから抜けたらイベントの発火
-                var trans = _transition[_currentTransitionIndex];
-                onStateExit(new StateTransitionInfo(trans._current, trans._next));
-                // 次の遷移ペアへ遷移
-                if (_nextStateDone)
-                {
-                    GotoNextStatePair();
-                    _nextStateDone = false;
+                    _current = _from;
                 }
             }
-            public void AddTransition(IAIState current, IAIState next)
+            /// <summary> 現在いるステートを返す </summary>
+            /// <returns></returns>
+            public int GetCurrentState()
             {
-                _transition.Add(new StateTransition<IAIState, IAIState>(current, next));
+                return (_current == _from) ? 0 : 1; // from => 0 : to => 1
             }
-            public void ClearTransition()
+            /// <summary> 遷移ＩＤを返す </summary>
+            /// <returns></returns>
+            public int GetTransitionId()
             {
-                _transition.Clear();
-            }
-            public void GotoNextStatePair()
-            {
-                var work = FindNextFirstEntryPoint(_transition[_currentTransitionIndex]._next);
-                if (work != -1)
-                {
-                    _currentTransitionIndex = work;// もし、どこにもいかないのならそのステートにとどまる
-                }
-            }
-            // 渡された StateTransition.next のステートがStateTransition.current として登録されている遷移リストのインデックスを返す
-            // 複数の遷移に対応していないので追々対応させるように
-            int FindNextFirstEntryPoint(IAIState next)
-            {
-                int index = -1;
-                for (int i = 0; i < _transition.Count; i++)
-                {
-                    if (_transition[i]._current == next)
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-                return index;
+                return transitionID;
             }
         }
-        // 遷移元と遷移先
-        public class StateTransition<Tcurrent, Tnext>
+
+        /// <summary> 現状エントリーしているステートペアの遷移のステートの情報を保持する構造体 </summary>
+        public struct StateTransitionInfo // ← わからない
         {
-            public StateTransition(Tcurrent current, Tnext next)
+            public IState _from;
+            public IState _to;
+            public int _id;
+            public StateTransitionInfo(IState from, IState to, int id)
             {
-                _current = current;
-                _next = next;
-            }
-            public Tcurrent _current;
-            public Tnext _next;
-        }
-        public struct StateTransitionInfo
-        {
-            public IAIState _current;
-            public IAIState _next;
-            public StateTransitionInfo(IAIState current, IAIState next)
-            {
-                _current = current;
-                _next = next;
+                _from = from;
+                _to = to;
+                _id = id;
             }
         }
-        public interface IAIState
+
+        /// <summary> ステートマシンが扱う遷移リストに登録するクラスが継承すべきインターフェイス </summary>
+        public interface IState // ← 修正いらない
         {
+            /// <summary> ステート突入時に呼び出される </summary>
             public void In();
+            /// <summary> ステート通過時に呼び出される </summary>
             public void Tick();
+            /// <summary> ステート脱出時に呼び出される </summary>
             public void Out();
+            /// <summary> 次のステートへ遷移しても良いのかの判定 </summary>
+            /// <returns></returns>
             public bool ReadyToGoNext();
+            /// <summary> 強制的に次ステートへ行く </summary>
             public void SendMessageGotoNext();
         }
-        public interface IStateMachineUser
+
+        /// <summary> ステートマシン利用部クラスが継承する </summary>
+        public interface IStateMachineUser // ← 修正いらない
         {
+            /// <summary> ステートの In(),Tick(),Out() 呼び出し直後に発火するイベントのリスナー </summary>
+            /// <param name="info"></param>
             public void OnStateWasExitted(StateTransitionInfo info);
         }
     }
