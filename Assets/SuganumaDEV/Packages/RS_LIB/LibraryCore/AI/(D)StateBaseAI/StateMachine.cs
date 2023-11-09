@@ -1,16 +1,35 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 namespace RSEngine
 {
     namespace AI
     {
-        // a => b, b => c : の部分吟味が必要
-        // ステートマシン 
-        // もし登録した遷移を満たす条件が合えば遷移する
-        /// <summary>  </summary>
+        #region READMEドキュメント
+        /* ----- README -----
+         * このStateMachineクラスの利用部は IStateMachineUser を 継承すること。
+         * このStateMachineクラスは以下の情報をもとに処理をしている
+         * |---------------------|
+         * |StatePairedTransition|
+         * |---------------------|
+         * -----------------------------------------------|
+         * これはトランジションで、２つのステートを結合している    |
+         * [State A] ---> [State B] の 矢印と同じ           |
+         * 遷移元(From) : [State A]|遷移先(To) : [State B]  |
+         * とする                                          |
+         * 様々な情報を保持している                           |
+         * |----------------------------------------------|
+         * |------|
+         * |IState|
+         * |------|
+         * -----------------------------------------------------------------------|
+         * [State A] のようなステートとして扱う型                                     |
+         * これを任意のクラス(インターフェイス利用部)で継承する                           |
+         * ステートマシン並びにステートペアトランジションで扱うユーザー定義クラスはこの IState|
+         * を継承しなければならない。                                                 |
+         * -----------------------------------------------------------------------|
+           ----- README -----*/
+        #endregion
+        /// <summary> ステートマシンの機能を提供する </summary>
         public class StateMachine
         {
             /// <summary> ステートペアの遷移リスト（重複X） </summary>
@@ -26,8 +45,8 @@ namespace RSEngine
             /// <summary> ステートのリスト（重複X） </summary>
             /// 重複させない
             HashSet<IState> _hstates = new();
-            /// <summary> ステートのリスト </summary>
 
+            /// <summary> ステートのリスト </summary>
             List<IState> _states = new();
 
             /// <summary> 現在実行中のステート </summary>
@@ -67,7 +86,7 @@ namespace RSEngine
             public void UpdateTransitionCondition(int transitionID, bool condition)
             {
                 var transition = _transition[transitionID];
-                // 直前に行った遷移で整合性を取れたら繊維をする
+                // 直前に行った遷移で整合性を取れたら遷移をする
                 if (_ptransition == null) // 履歴がないなら登録
                 {
                     var tTransition = _transition[transitionID];
@@ -75,19 +94,21 @@ namespace RSEngine
                 }
                 else
                 {
-                    // 例）履歴に STATE::A => STATE::B が存在し、STATE::B => STATE::C の遷移をしようとしてるなら
+                    // 例）履歴に STATE-A => STATE-B が存在し、STATE-A => STATE-B => STATE-C の遷移をしようとしてるとして、
+                    // 実際には、STATE-A => STATE-B と STATE-B => STATE-C のトランジションは違う変数なので、
+                    // TRANSITION-(B => C) の STATE-B が トランジションの遷移先として履歴に割り当てられているなら、
+                    // STATE-A => STATE-B の STATE-B を 抜けたことになっており、そのまま STATE-B => STATE-C のトランジションをしても問題ない
                     if (_ptransition.Current == transition.GetState(0))
                     {
-                        if (_ptransition.GetState(1) == _ptransition.Current)
+                        if (_ptransition.GetState(1) == _ptransition.Current) // 直前の更新前の履歴のステートの初期化
                         {
                             _ptransition.ResetTransition();
                         }
                         _currentTransitionIndex = transitionID;
                         _ptransition = _transition[transitionID];
-                        Debug.Log($"現在の遷移id<{transitionID}>");
                     }
                 }
-                transition.GotoNextCondition(condition);
+                transition.GoToNextState(condition);
             }
 
             /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
@@ -161,22 +182,8 @@ namespace RSEngine
             int transitionID; // transition id non duplication
             /// <summary> もし条件が満たされたら遷移先ステートへ移ってとどまる。 </summary>
             /// <param name="condition"></param>
-            public void GotoNextCondition(bool condition)
+            public void GoToNextState(bool condition)
             {
-                /*|| 条件式を満たしているときにのみ遷移先ステートを実行するため一時無効化 11 / 09 ||*/
-                #region 11/09 | 一時無効化処理
-                /*
-                if (condition)
-                {
-                    _current = _to;
-                }
-                else
-                {
-                    _current = _from;
-                }
-                */
-                #endregion
-                /*|| --- ||*/
                 // 条件式が真でかつまだ現状のステートが遷移元の時にのみ実行。
                 // 一度だけ遷移先に移る。
                 _current = (condition && _current == _from) ? _to : _current;
@@ -208,7 +215,7 @@ namespace RSEngine
         }
 
         /// <summary> 現状エントリーしているステートペアの遷移のステートの情報を保持する構造体 </summary>
-        public struct StateTransitionInfo // ← 修正が必要か要吟味
+        public struct StateTransitionInfo
         {
             public IState _from;
             public IState _to;
@@ -222,7 +229,7 @@ namespace RSEngine
         }
 
         /// <summary> ステートマシンが扱う遷移リストに登録するクラスが継承すべきインターフェイス </summary>
-        public interface IState // ← 修正いらない
+        public interface IState
         {
             /// <summary> ステート突入時に呼び出される </summary>
             public void In();
@@ -238,7 +245,7 @@ namespace RSEngine
         }
 
         /// <summary> ステートマシン利用部クラスが継承する </summary>
-        public interface IStateMachineUser // ← 修正いらない
+        public interface IStateMachineUser
         {
             /// <summary> ステートの In(),Tick(),Out() 呼び出し直後に発火するイベントのリスナー </summary>
             /// <param name="info"></param>
