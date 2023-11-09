@@ -1,4 +1,4 @@
-using RSEngine.AI;
+using RSEngine.AI.StateMachine;
 using UnityEngine;
 public class StateBasedAITest : MonoBehaviour, IStateMachineUser
 {
