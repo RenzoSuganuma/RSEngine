@@ -13,28 +13,37 @@ public class StateBasedAITest : MonoBehaviour, IStateMachineUser
 
     public void OnStateWasExitted(StateTransitionInfo info)
     {
-        
+
     }
+
     private void Awake()
     {
-        // ステートの登録 [1]
+        // ステートの登録  - [1]
         _smachine.AddState(_sidle);
         _smachine.AddState(_schase);
         _smachine.AddState(_sattack);
-        // ステートの遷移の登録 [2]
-        _smachine.AddTransition(_sidle, _schase);
-        //  ステートイベントのリスナーの登録 [3]より先に実行
+        // ステートの遷移の登録  - [2]
+        _smachine.AddTransition(_sidle, _schase); // id - 0
+        _smachine.AddTransition(_schase, _sattack); // id - 1
+        _smachine.AddTransition(_sattack, _sidle); // id - 2
+        _smachine.AddTransition(_schase, _sidle); // id - 3
+        //  ステートイベントのリスナーの登録  - [3]より先に実行
         _smachine.onStateExit += OnStateWasExitted;
-        //ステートマシン起動 [3]
+        //ステートマシン起動  - [3]
         _smachine.Initialize();
         // テスト実行
         _smachine.Update();
     }
+
     private void FixedUpdate()
     {
-        _smachine.UpdateCondition(0, true);
+        _smachine.UpdateCondition(0, (Input.GetButton("Fire1"))); // Mouse L | idle to chase
+        _smachine.UpdateCondition(2, (Input.GetButton("Fire2"))); // Mouse R | attack to idle
+        _smachine.UpdateCondition(3, (Input.GetButton("Fire3"))); // Mouse M | chase to idle
+        _smachine.UpdateCondition(1, (Input.GetButton("Jump")));  // Space   | chase to attack 
         _smachine.Update();
     }
+
     private void OnDisable()
     {
         _smachine.onStateExit -= OnStateWasExitted;
@@ -63,9 +72,9 @@ class Idle : IState
         _ready2GoNextState = true;
     }
 
-    public void Tick()
+    public void Do()
     {
-        Debug.Log($"Idle : {nameof(this.Tick)}");
+        Debug.Log($"Idle : {nameof(this.Do)}");
     }
 }
 class Chase : IState
@@ -91,9 +100,9 @@ class Chase : IState
         _ready2GoNextState = true;
     }
 
-    public void Tick()
+    public void Do()
     {
-        Debug.Log($"Chase : {nameof(this.Tick)}");
+        Debug.Log($"Chase : {nameof(this.Do)}");
     }
 }
 class Attack : IState
@@ -117,7 +126,8 @@ class Attack : IState
         _ready2GoNextState = true;
     }
 
-    public void Tick()
+    public void Do()
     {
+        Debug.Log($"Attack : {nameof(this.Do)}");
     }
 }

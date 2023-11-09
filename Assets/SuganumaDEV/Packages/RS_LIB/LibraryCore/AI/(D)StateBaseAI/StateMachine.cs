@@ -7,6 +7,7 @@ namespace RSEngine
 {
     namespace AI
     {
+        // a => b, b => c : の部分吟味が必要
         // ステートマシン 
         // もし登録した遷移を満たす条件が合えば遷移する
         /// <summary>  </summary>
@@ -15,11 +16,15 @@ namespace RSEngine
             /// <summary> ステートペアの遷移リスト（重複X） </summary>
             /// 重複させない
             HashSet<StatePairedTransition> _htransition = new();
+
+            /// <summary> ステートペアの遷移リスト </summary>
             List<StatePairedTransition> _transition = new();
 
             /// <summary> ステートのリスト（重複X） </summary>
             /// 重複させない
             HashSet<IState> _hstates = new();
+            /// <summary> ステートのリスト </summary>
+
             List<IState> _states = new();
 
             /// <summary> 現在実行中のステート </summary>
@@ -32,7 +37,7 @@ namespace RSEngine
             /// <summary> コールバックリスナーの登録先のデリゲート </summary>
             public event OnStateExit onStateExit;
 
-            /// <summary> ステートマシン起動時に呼び出す </summary>
+            /// <summary> ステートマシン起動時に呼び出す。ステートマシンを起動する </summary>
             public void Initialize()
             {
                 _transition = _htransition.ToList();
@@ -46,16 +51,29 @@ namespace RSEngine
                 // ステートの実行
                 var currentState = _transition[_currentTransitionIndex].Current;
                 currentState.In();
-                currentState.Tick();
+                currentState.Do();
                 currentState.Out();
             }
 
-            /// <summary> 遷移IDを指定してそれに対応した条件式を代入 </summary>
+            /// <summary> 遷移idを指定してそれに対応した条件式を代入 </summary>
             /// <param name="transitionId"></param>
             /// <param name="condition"></param>
             public void UpdateCondition(int transitionId, bool condition)
             {
-                _transition[transitionId].UpdateCondition(condition);
+                var state = _transition[transitionId];
+                if (state.GetCurrentState() == 0)
+                {
+                    // まだほかのステートペアの遷移へジャンプしない
+                    state.UpdateCondition(condition);
+                }
+                else if (condition)
+                {
+                    // ほかのステートペアへジャンプ
+                    for(int i = 0; i < _transition.Count; i++)
+                    {
+                        
+                    }
+                }
             }
 
             /// <summary> ステートの登録をする </summary>
@@ -124,6 +142,9 @@ namespace RSEngine
             /// <param name="condition"></param>
             public void UpdateCondition(bool condition)
             {
+                /*|| 条件式を満たしているときにのみ遷移先ステートを実行するため一時無効化 11 / 09 ||*/
+                #region 11/09 | 一時無効化処理
+                /*
                 if (condition)
                 {
                     _current = _to;
@@ -132,14 +153,20 @@ namespace RSEngine
                 {
                     _current = _from;
                 }
+                */
+                #endregion
+                /*|| --- ||*/
+                // 条件式が真でかつまだ現状のステートが遷移元の時にのみ実行。
+                // 一度だけ遷移先に移る。
+                _current = (condition && _current == _from) ? _to : _current;
             }
             /// <summary> 現在いるステートを返す </summary>
-            /// <returns></returns>
+            /// <returns>0 : (ステートペアの遷移元) 1 : (ステートペア遷移先)</returns>
             public int GetCurrentState()
             {
                 return (_current == _from) ? 0 : 1; // from => 0 : to => 1
             }
-            /// <summary> 遷移ＩＤを返す </summary>
+            /// <summary> 遷移idを返す </summary>
             /// <returns></returns>
             public int GetTransitionId()
             {
@@ -148,7 +175,7 @@ namespace RSEngine
         }
 
         /// <summary> 現状エントリーしているステートペアの遷移のステートの情報を保持する構造体 </summary>
-        public struct StateTransitionInfo // ← わからない
+        public struct StateTransitionInfo // ← 修正が必要か要吟味
         {
             public IState _from;
             public IState _to;
@@ -167,7 +194,7 @@ namespace RSEngine
             /// <summary> ステート突入時に呼び出される </summary>
             public void In();
             /// <summary> ステート通過時に呼び出される </summary>
-            public void Tick();
+            public void Do();
             /// <summary> ステート脱出時に呼び出される </summary>
             public void Out();
             /// <summary> 次のステートへ遷移しても良いのかの判定 </summary>
