@@ -20,7 +20,7 @@ namespace RSEngine
             /// <summary> ステートペアの遷移リスト </summary>
             List<StatePairedTransition> _transition = new();
 
-            /// <summary> 前フレームで実行した遷移の状態を保持している変数 </summary>
+            /// <summary> 前フレームで実行した遷移の履歴 </summary>
             StatePairedTransition _ptransition;
 
             /// <summary> ステートのリスト（重複X） </summary>
@@ -66,35 +66,28 @@ namespace RSEngine
             /// <param name="condition"></param>
             public void UpdateTransitionCondition(int transitionID, bool condition)
             {
+                var transition = _transition[transitionID];
                 // 直前に行った遷移で整合性を取れたら繊維をする
                 if (_ptransition == null) // 履歴がないなら登録
                 {
-                    var ptransition = _transition[transitionID];
-                    _ptransition = new(ptransition.GetState(0), ptransition.GetState(1), transitionID);
+                    var tTransition = _transition[transitionID];
+                    _ptransition = new(tTransition.GetState(0), tTransition.GetState(1), transitionID);
                 }
                 else
                 {
-                    var tID = _ptransition.GetTransitionId();
-                    //if()
-                }
-                var transition = _transition[transitionID];
-                // 条件を満たしたらステートに入った状態を維持する
-                if (transition.GetCurrentState() == 0) // まだ遷移していないなら
-                {
-                    transition.GotoNextCondition(condition);
-                }
-                else // 遷移が終わり、ステートを抜けたなら
-                {
-                    List<int> work = new(); // 進める遷移idを格納
-                    for (int i = 0; i < _transition.Count; i++)
+                    // 例）履歴に STATE::A => STATE::B が存在し、STATE::B => STATE::C の遷移をしようとしてるなら
+                    if (_ptransition.Current == transition.GetState(0))
                     {
-                        if (transition.Current == _transition[i].GetState(0))
+                        if (_ptransition.GetState(1) == _ptransition.Current)
                         {
-                            work.Add(i);
+                            _ptransition.ResetTransition();
                         }
-                    } // 次にとぶ 遷移先が遷移元としてしていされている遷移を探す
-
+                        _currentTransitionIndex = transitionID;
+                        _ptransition = _transition[transitionID];
+                        Debug.Log($"現在の遷移id<{transitionID}>");
+                    }
                 }
+                transition.GotoNextCondition(condition);
             }
 
             /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
@@ -160,7 +153,9 @@ namespace RSEngine
                 this.transitionID = transitionID;
             }
             IState _from; // id = 0
+            public IState From => _from;
             IState _to; // id = 1
+            public IState To => _to;
             IState _current; // id => current State
             public IState Current => _current;
             int transitionID; // transition id non duplication
@@ -204,6 +199,11 @@ namespace RSEngine
             public IState GetState(int stateId)
             {
                 return (stateId == 0) ? _from : _to;
+            }
+            /// <summary> 遷移の初期化 </summary>
+            public void ResetTransition()
+            {
+                _current = _from;
             }
         }
 

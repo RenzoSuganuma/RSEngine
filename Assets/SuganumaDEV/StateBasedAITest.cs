@@ -24,7 +24,6 @@ public class StateBasedAITest : MonoBehaviour, IStateMachineUser
         _smachine.AddState(_sattack);
         // ステートの遷移の登録  - [2]
         _smachine.AddTransition(_sidle, _schase); // id - 0
-        _smachine.AddTransition(_schase, _sidle); // id - 3
         _smachine.AddTransition(_schase, _sattack); // id - 1
         _smachine.AddTransition(_sattack, _sidle); // id - 2
         //  ステートイベントのリスナーの登録  - [3]より先に実行
@@ -38,9 +37,9 @@ public class StateBasedAITest : MonoBehaviour, IStateMachineUser
     private void FixedUpdate()
     {
         _smachine.UpdateTransitionCondition(0, (Input.GetButton("Fire1"))); // Mouse L | idle to chase
-        _smachine.UpdateTransitionCondition(2, (Input.GetButton("Fire2"))); // Mouse R | attack to idle
-        _smachine.UpdateTransitionCondition(3, (Input.GetButton("Fire3"))); // Mouse M | chase to idle
-        _smachine.UpdateTransitionCondition(1, (Input.GetButton("Jump")));  // Space   | chase to attack 
+        _smachine.UpdateTransitionCondition(1, (Input.GetButton("Fire2"))); // Mouse R | chase to attack 
+        _smachine.UpdateTransitionCondition(2, (Input.GetButton("Fire3"))); // Mouse M | attack to idle
+        // I => C => A => (x) I
         _smachine.Update();
     }
 
