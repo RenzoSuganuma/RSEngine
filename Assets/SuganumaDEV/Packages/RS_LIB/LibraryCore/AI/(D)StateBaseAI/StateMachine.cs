@@ -20,6 +20,9 @@ namespace RSEngine
             /// <summary> ステートペアの遷移リスト </summary>
             List<StatePairedTransition> _transition = new();
 
+            /// <summary> 前フレームで実行した遷移の状態を保持している変数 </summary>
+            StatePairedTransition _ptransition;
+
             /// <summary> ステートのリスト（重複X） </summary>
             /// 重複させない
             HashSet<IState> _hstates = new();
@@ -37,6 +40,7 @@ namespace RSEngine
             /// <summary> コールバックリスナーの登録先のデリゲート </summary>
             public event OnStateExit onStateExit;
 
+            #region Machine
             /// <summary> ステートマシン起動時に呼び出す。ステートマシンを起動する </summary>
             public void Initialize()
             {
@@ -54,55 +58,43 @@ namespace RSEngine
                 currentState.Do();
                 currentState.Out();
             }
+            #endregion
 
+            #region Transition
             /// <summary> 遷移idを指定してそれに対応した条件式を代入 </summary>
-            /// <param name="transitionId"></param>
+            /// <param name="transitionID"></param>
             /// <param name="condition"></param>
-            public void UpdateCondition(int transitionId, bool condition)
+            public void UpdateTransitionCondition(int transitionID, bool condition)
             {
-                var state = _transition[transitionId];
-                if (state.GetCurrentState() == 0)
+                // 直前に行った遷移で整合性を取れたら繊維をする
+                if (_ptransition == null) // 履歴がないなら登録
                 {
-                    // まだほかのステートペアの遷移へジャンプしない
-                    state.UpdateCondition(condition);
+                    var ptransition = _transition[transitionID];
+                    _ptransition = new(ptransition.GetState(0), ptransition.GetState(1), transitionID);
                 }
-                else if (condition)
+                else
                 {
-                    // ほかのステートペアへジャンプ
-                    for(int i = 0; i < _transition.Count; i++)
+                    var tID = _ptransition.GetTransitionId();
+                    //if()
+                }
+                var transition = _transition[transitionID];
+                // 条件を満たしたらステートに入った状態を維持する
+                if (transition.GetCurrentState() == 0) // まだ遷移していないなら
+                {
+                    transition.GotoNextCondition(condition);
+                }
+                else // 遷移が終わり、ステートを抜けたなら
+                {
+                    List<int> work = new(); // 進める遷移idを格納
+                    for (int i = 0; i < _transition.Count; i++)
                     {
-                        
-                    }
+                        if (transition.Current == _transition[i].GetState(0))
+                        {
+                            work.Add(i);
+                        }
+                    } // 次にとぶ 遷移先が遷移元としてしていされている遷移を探す
+
                 }
-            }
-
-            /// <summary> ステートの登録をする </summary>
-            /// <param name="state"></param>
-            public void AddState(IState state)
-            {
-                _hstates.Add(state);
-            }
-
-            /// <summary> ステートの登録解除をする </summary>
-            /// <param name="state"></param>
-            public void RemoveState(IState state)
-            {
-                _hstates.Remove(state);
-            }
-
-            /// <summary> リスト形式で渡されたステートを登録する </summary>
-            /// <param name="states"></param>
-            public void AddStates(List<IState> states)
-            {
-                foreach (IState state in states)
-                {
-                    _hstates.Add(state);
-                }
-            }
-
-            public void ClearAllStates()
-            {
-                _hstates.Clear();
             }
 
             /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
@@ -118,6 +110,40 @@ namespace RSEngine
             {
                 _htransition.Clear();
             }
+            #endregion
+
+            #region State
+            /// <summary> ステートの登録をする </summary>
+            /// <param name="state"></param>
+            public void AddState(IState state)
+            {
+                _hstates.Add(state);
+            }
+
+            /// <summary> ステートの登録解除をする </summary>
+            /// <param name="state"></param>
+            public void RemoveState(IState state)
+            {
+                _hstates.Remove(state);
+            }
+            #endregion
+
+            #region States
+            /// <summary> リスト形式で渡されたステートを登録する </summary>
+            /// <param name="states"></param>
+            public void AddStates(List<IState> states)
+            {
+                foreach (IState state in states)
+                {
+                    _hstates.Add(state);
+                }
+            }
+
+            public void ClearAllStates()
+            {
+                _hstates.Clear();
+            }
+            #endregion
         }
 
         // 遷移元と遷移先
@@ -138,9 +164,9 @@ namespace RSEngine
             IState _current; // id => current State
             public IState Current => _current;
             int transitionID; // transition id non duplication
-            /// <summary> 毎フレーム呼び出す。条件を更新する。 </summary>
+            /// <summary> もし条件が満たされたら遷移先ステートへ移ってとどまる。 </summary>
             /// <param name="condition"></param>
-            public void UpdateCondition(bool condition)
+            public void GotoNextCondition(bool condition)
             {
                 /*|| 条件式を満たしているときにのみ遷移先ステートを実行するため一時無効化 11 / 09 ||*/
                 #region 11/09 | 一時無効化処理
@@ -171,6 +197,13 @@ namespace RSEngine
             public int GetTransitionId()
             {
                 return transitionID;
+            }
+            /// <summary> 指定されたステートidのステートを返す </summary>
+            /// <param name="stateId"></param>
+            /// <returns></returns>
+            public IState GetState(int stateId)
+            {
+                return (stateId == 0) ? _from : _to;
             }
         }
 
