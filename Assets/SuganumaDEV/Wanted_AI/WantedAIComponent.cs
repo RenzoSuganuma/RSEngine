@@ -2,25 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RSEngine.AI.StateMachine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 /// <summary> AI機能を提供するコンポーネント </summary>
 public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
-    StateMachine _sMachine = new StateMachine();
+    StateMachine _sMachine;
 
     // ステート
     /// <summary> デフォルトステート：アイドル </summary>
-    WantedAIStateDefault _sDef = new WantedAIStateDefault();
+    WantedAIStateDefault _sDef;
     /// <summary> ステート：注視 </summary>
-    WantedAIStateGaze _sGaze = new WantedAIStateGaze();
+    WantedAIStateGaze _sGaze;
     /// <summary> ステート：追跡 </summary>
-    WantedAIStateChase _sChase = new WantedAIStateChase();
+    WantedAIStateChase _sChase;
     /// <summary> ステート：攻撃 </summary>
-    WantedAIStateAttack _sAttack = new WantedAIStateAttack();
+    WantedAIStateAttack _sAttack;
     /// <summary> ステート：死亡 </summary>
-    WantedAIStateDeath _sDeath = new WantedAIStateDeath();
+    WantedAIStateDeath _sDeath;
+    
+    // 動かすのに必要
+    NavMeshAgent _agent;
+
+    // 各レンジ
+    [SerializeField, Range(0f, 50f)] float _sightRange;
+    [SerializeField, Range(0f, 50f)] float _attackRange;
+    // 各レイヤマスク
+    [SerializeField] LayerMask _targetLayer;
+    [SerializeField] LayerMask _groundLayer;
+    // ターゲット
+    [SerializeField] Transform _target;
+    [SerializeField] int _targetLayerNum;
+    // 移動速度
+    [SerializeField] float _movespeed;
+    // 徘徊経路
+    [SerializeField] List<Transform> _patrollingPath;
 
     // AIステート判定
     bool _isDefalultNow = false;
@@ -37,13 +56,22 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
     public void OnStateWasExitted(StateTransitionInfo info)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     private void Awake()
     {
+        _agent = GetComponent<NavMeshAgent>();
+
+        // ステートマシン初期化
+        _sMachine = new StateMachine();
+
+        // 各ステート初期化
+        _sDef = new(_patrollingPath.ToArray(), _agent);
+
         // イベントリスナー登録
         _sMachine.onStateExit += OnStateWasExitted;
+
         // 各ステートの登録
         _sMachine.AddStates(new List<IState> {
         _sDef,
@@ -51,20 +79,25 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _sChase,
         _sAttack,
         _sDeath});
+
         // 通常から注視
         _sMachine.AddTransition(_sDef, _sGaze); // default to gaze id{0}
         _sMachine.AddTransition(_sGaze, _sDef); // gaze to default id{1}
+
         // 注視から追跡
         _sMachine.AddTransition(_sGaze, _sChase); // gaze to chase id{2}
         _sMachine.AddTransition(_sGaze, _sChase); // chase to gaze id{3}
+
         //　追跡から攻撃
         _sMachine.AddTransition(_sChase, _sAttack); // chase to attack id{4}
         _sMachine.AddTransition(_sAttack, _sChase); // attack to chase id{5}
+
         // 死亡ステート
         _sMachine.AddTransition(_sDef, _sDeath); // id{6}
         _sMachine.AddTransition(_sGaze, _sDeath); // id{7}
         _sMachine.AddTransition(_sChase, _sDeath); // id{8}
         _sMachine.AddTransition(_sAttack, _sDeath); // id{9}
+
         // ステートマシン起動
         _sMachine.Initialize();
     }
@@ -77,19 +110,41 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
     private void FixedUpdate()
     {
+        // 各ステート更新
+        _sDef.Update(transform);
+
         // defalut to gaze
         _sMachine.UpdateTransitionCondition(0, _isInsideSightRange);
         _sMachine.UpdateTransitionCondition(1, !_isInsideSightRange);
+
         // gaze to chase
         _sMachine.UpdateTransitionCondition(2, _isFoundTargetNow);
         _sMachine.UpdateTransitionCondition(3, !_isFoundTargetNow);
+
         // chase to attack
         _sMachine.UpdateTransitionCondition(4, _isInsideAttackingRange);
         _sMachine.UpdateTransitionCondition(5, !_isInsideAttackingRange);
+
         // any state to death
         _sMachine.UpdateTransitionCondition(6, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(7, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(8, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(9, _isNoHealthNow);
+
+        // update statemachine
+        _sMachine.Update();
     }
+
+#if UNITY_EDITOR_64
+    private void OnDrawGizmos()
+    {
+        // 視野
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _sightRange);
+
+        // 攻撃範囲
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _attackRange);
+    }
+#endif
 }

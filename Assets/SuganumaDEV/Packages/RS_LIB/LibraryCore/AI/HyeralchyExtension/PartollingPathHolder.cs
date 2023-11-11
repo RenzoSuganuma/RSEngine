@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 namespace RSEngine
 {
@@ -12,6 +13,9 @@ namespace RSEngine
             private void OnDrawGizmos()
             {
                 var points = transform.GetComponentsInChildren<Transform>();
+                var work = points.ToList();
+                work.RemoveAt(0);
+                points = work.ToArray();
                 Gizmos.color = Color.yellow;
                 foreach (var p in points)
                 {
