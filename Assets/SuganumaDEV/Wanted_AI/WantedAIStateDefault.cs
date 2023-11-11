@@ -2,8 +2,8 @@ using RSEngine.AI.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary> Wanted AI State : Idle </summary>
-public class WantedAIStateIdle : IState
+/// <summary> Wanted AI State : Default </summary>
+public class WantedAIStateDefault : IState
 {
     public void Do()
     {
