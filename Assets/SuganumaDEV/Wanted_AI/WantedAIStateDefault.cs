@@ -37,6 +37,7 @@ public class WantedAIStateDefault : IState
     }
     public void Do()
     {
+        Debug.Log("„‰ñ’†");
         Patroll();
     }
 
