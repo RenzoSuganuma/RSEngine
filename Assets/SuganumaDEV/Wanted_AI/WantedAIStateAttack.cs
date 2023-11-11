@@ -1,4 +1,5 @@
 using RSEngine.AI.StateMachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,13 +11,16 @@ public class WantedAIStateAttack : IState
     LayerMask _targetLayer;
     Transform _selfTransform;
     NavMeshAgent _agent;
+    Action onAttack;
+    public event Action OnAttack { add { onAttack += value; }remove { onAttack -= value; } }
 
-    public WantedAIStateAttack(float attackingRange, Transform selfTransform, LayerMask targetLayer, NavMeshAgent agent)
+    public WantedAIStateAttack(float attackingRange, Transform selfTransform, LayerMask targetLayer, NavMeshAgent agent, Action onAttackAction)
     {
         _attackingRange = attackingRange;
         _selfTransform = selfTransform;
         _targetLayer = targetLayer;
         _agent = agent;
+        onAttack += onAttackAction;
     }
 
     public void Update(Transform selfTransform)
@@ -29,6 +33,7 @@ public class WantedAIStateAttack : IState
         if (Physics.CheckSphere(_selfTransform.position, _attackingRange, _targetLayer))
         {
             _agent.SetDestination(_selfTransform.position);
+            if(onAttack != null) { onAttack(); }
             Debug.Log("çUåÇÇ°ÅI");
         }
     }

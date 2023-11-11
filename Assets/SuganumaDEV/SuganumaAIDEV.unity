@@ -864,6 +864,7 @@ MonoBehaviour:
   - {fileID: 1060674033}
   - {fileID: 1654512048}
   - {fileID: 893862176}
+  _health: 1
 --- !u!1 &1060674032
 GameObject:
   m_ObjectHideFlags: 0

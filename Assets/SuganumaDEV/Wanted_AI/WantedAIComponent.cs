@@ -40,6 +40,8 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
     // 徘徊経路
     [SerializeField] List<Transform> _patrollingPath;
 
+    [SerializeField] float _health;
+
     // AIトランジションフラグ
     bool _isInsideSightRange = false; // デフォルトから注視するまでの条件
     bool _isFoundTargetNow = false; // 注視が終わり、プレイヤーとして判定した場合　追跡するかの条件
@@ -76,8 +78,8 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
             } // On Target Found
             );
         _sChase = new(_sightRange, _targetLayer, transform, _agent);
-        _sAttack = new(_attackRange, transform, _targetLayer, _agent);
-        _sDeath = new();
+        _sAttack = new(_attackRange, transform, _targetLayer, _agent, () => { Debug.Log("攻撃中...."); });
+        _sDeath = new(transform, _agent);
 
         // イベントリスナー登録
         _sMachine.onStateExit += OnStateWasExitted;
@@ -124,12 +126,14 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _isInsideSightRange = Physics.CheckSphere(transform.position, _sightRange, _targetLayer);
         _isInsideAttackingRange = Physics.CheckSphere(transform.position, _attackRange, _targetLayer);
         if (!_isInsideSightRange && _isFoundTargetNow) _isFoundTargetNow = false;
+        _isNoHealthNow = _health <= 0;
 
         // 各ステート更新
         _sDef.Update(transform);
         _sGaze.Update(transform);
         _sChase.Update(transform);
         _sAttack.Update(transform);
+        _sDeath.Update(transform);
 
         // defalut to gaze
         _sMachine.UpdateTransitionCondition(0, _isInsideSightRange);

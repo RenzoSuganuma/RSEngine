@@ -2,21 +2,40 @@ using RSEngine.AI.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 /// <summary> Wanted AI State : Death </summary>
 public class WantedAIStateDeath : IState
 {
+    Transform _selfTransform;
+    NavMeshAgent _agent;
+
+    public WantedAIStateDeath(Transform selfTransform, NavMeshAgent agent)
+    {
+        _selfTransform = selfTransform;
+        _agent = agent;
+    }
+
+    public void Update(Transform selfTransform)
+    {
+        _selfTransform = selfTransform;
+    }
+
+    void Death()
+    {
+        _agent.SetDestination(_selfTransform.position);
+        Debug.Log("なん…だと…");
+    }
+
     public void Do()
     {
-        Debug.Log("なん…だと…");
+        Death();
     }
 
     public void In()
     {
-        throw new System.NotImplementedException();
     }
 
     public void Out()
     {
-        throw new System.NotImplementedException();
     }
 }
