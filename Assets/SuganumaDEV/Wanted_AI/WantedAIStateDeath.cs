@@ -7,16 +7,14 @@ public class WantedAIStateDeath : IState
 {
     public void Do()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Ç»ÇÒÅcÇæÇ∆Åc");
     }
 
     public void In()
     {
-        throw new System.NotImplementedException();
     }
 
     public void Out()
     {
-        throw new System.NotImplementedException();
     }
 }

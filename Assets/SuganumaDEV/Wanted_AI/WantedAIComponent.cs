@@ -23,7 +23,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
     WantedAIStateAttack _sAttack;
     /// <summary> ステート：死亡 </summary>
     WantedAIStateDeath _sDeath;
-    
+
     // 動かすのに必要
     NavMeshAgent _agent;
 
@@ -56,7 +56,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
     public void OnStateWasExitted(StateTransitionInfo info)
     {
-        
+        //Debug.Log(info.ToString());
     }
 
     private void Awake()
@@ -68,6 +68,15 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
         // 各ステート初期化
         _sDef = new(_patrollingPath.ToArray(), _agent);
+        _sGaze = new(_sightRange, 2, transform, _targetLayer, _agent
+            , (tTransform) =>
+            {
+                var dir = (tTransform.position - transform.position).normalized;
+                transform.forward = dir;
+            });
+        _sChase = new();
+        _sAttack = new();
+        _sDeath = new();
 
         // イベントリスナー登録
         _sMachine.onStateExit += OnStateWasExitted;
@@ -92,7 +101,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _sMachine.AddTransition(_sChase, _sAttack); // chase to attack id{4}
         _sMachine.AddTransition(_sAttack, _sChase); // attack to chase id{5}
 
-        // 死亡ステート
+        //// 死亡ステート
         _sMachine.AddTransition(_sDef, _sDeath); // id{6}
         _sMachine.AddTransition(_sGaze, _sDeath); // id{7}
         _sMachine.AddTransition(_sChase, _sDeath); // id{8}
@@ -110,8 +119,9 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
     private void FixedUpdate()
     {
-        // 各ステート更新
-        _sDef.Update(transform);
+        // 視野内かの判定
+        _isInsideSightRange = Physics.CheckSphere(transform.position, _sightRange, _targetLayer);
+        _isInsideAttackingRange = Physics.CheckSphere(transform.position, _attackRange, _targetLayer);
 
         // defalut to gaze
         _sMachine.UpdateTransitionCondition(0, _isInsideSightRange);
@@ -125,11 +135,15 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _sMachine.UpdateTransitionCondition(4, _isInsideAttackingRange);
         _sMachine.UpdateTransitionCondition(5, !_isInsideAttackingRange);
 
-        // any state to death
+        //// any state to death
         _sMachine.UpdateTransitionCondition(6, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(7, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(8, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(9, _isNoHealthNow);
+
+        // 各ステート更新
+        _sDef.Update(transform);
+        _sGaze.Update(transform);
 
         // update statemachine
         _sMachine.Update();

@@ -7,16 +7,14 @@ public class WantedAIStateChase : IState
 {
     public void Do()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("�܂āI");
     }
 
     public void In()
     {
-        throw new System.NotImplementedException();
     }
 
     public void Out()
     {
-        throw new System.NotImplementedException();
     }
 }

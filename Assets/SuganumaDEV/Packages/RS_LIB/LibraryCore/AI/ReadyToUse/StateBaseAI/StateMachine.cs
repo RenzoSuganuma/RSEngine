@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 namespace RSEngine
 {
     namespace AI
@@ -84,6 +85,7 @@ namespace RSEngine
                 /// <summary> 毎フレーム呼び出すメソッド </summary>
                 public void Update()
                 {
+                    Debug.Log(_currentTransitionIndex);
                     // ステートの実行
                     var currentTransition = _transition[_currentTransitionIndex];
                     var currentState = currentTransition.Current;
@@ -127,7 +129,7 @@ namespace RSEngine
                             _ptransition = _transition[transitionID];
                         }
                     }
-                    transition.GoToNextState(condition);
+                    transition.UpdateStateCondition(condition);
                 }
 
                 /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
@@ -201,7 +203,7 @@ namespace RSEngine
                 int transitionID; // transition id non duplication
                 /// <summary> もし条件が満たされたら遷移先ステートへ移ってとどまる。 </summary>
                 /// <param name="condition"></param>
-                public void GoToNextState(bool condition)
+                public void UpdateStateCondition(bool condition)
                 {
                     // 条件式が真でかつまだ現状のステートが遷移元の時にのみ実行。
                     // 一度だけ遷移先に移る。
@@ -244,6 +246,11 @@ namespace RSEngine
                     _from = from;
                     _to = to;
                     _id = id;
+                }
+
+                public override string ToString()
+                {
+                    return $"{_from}, {_to}, {_id}";
                 }
             }
 

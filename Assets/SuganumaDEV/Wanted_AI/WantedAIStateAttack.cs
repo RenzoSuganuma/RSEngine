@@ -7,16 +7,14 @@ public class WantedAIStateAttack : IState
 {
     public void Do()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Ç≠ÇÁÇ¶ÅI");
     }
 
     public void In()
     {
-        throw new System.NotImplementedException();
     }
 
     public void Out()
     {
-        throw new System.NotImplementedException();
     }
 }
