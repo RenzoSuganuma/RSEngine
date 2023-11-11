@@ -85,10 +85,16 @@ namespace RSEngine
                 public void Update()
                 {
                     // ステートの実行
-                    var currentState = _transition[_currentTransitionIndex].Current;
+                    var currentTransition = _transition[_currentTransitionIndex];
+                    var currentState = currentTransition.Current;
                     currentState.In();
                     currentState.Do();
                     currentState.Out();
+                    // イベント発火
+                    onStateExit.Invoke
+                        (new StateTransitionInfo(currentTransition.GetState(0)
+                        , currentTransition.GetState(1)
+                        , currentTransition.GetTransitionId()));
                 }
                 #endregion
 
@@ -255,7 +261,7 @@ namespace RSEngine
             /// <summary> ステートマシン利用部クラスが継承する </summary>
             public interface IStateMachineUser
             {
-                /// <summary> ステートの In(),Tick(),Out() 呼び出し直後に発火するイベントのリスナー </summary>
+                /// <summary> ステートの In(),Tick(),Out() をすべて呼び出した直後に発火するイベントのリスナー </summary>
                 /// <param name="info"></param>
                 public void OnStateWasExitted(StateTransitionInfo info);
             }
