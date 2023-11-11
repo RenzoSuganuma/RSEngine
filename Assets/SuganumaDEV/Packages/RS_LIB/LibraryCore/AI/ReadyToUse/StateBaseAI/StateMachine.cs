@@ -63,6 +63,9 @@ namespace RSEngine
                 /// <summary> ステートのリスト </summary>
                 List<IState> _states = new();
 
+                /// <summary> 現在のステート </summary>
+                IState _currentState;
+
                 /// <summary> 現在実行中のステート </summary>
                 int _currentTransitionIndex = -1;
 
@@ -87,10 +90,8 @@ namespace RSEngine
                 {
                     // ステートの実行
                     var currentTransition = _transition[_currentTransitionIndex];
-                    var currentState = currentTransition.Current;
-                    currentState.In();
-                    currentState.Do();
-                    currentState.Out();
+                    _currentState = currentTransition.Current;
+                    _currentState.Do();
                     // イベント発火
                     onStateExit.Invoke
                         (new StateTransitionInfo(currentTransition.GetState(0)
@@ -127,8 +128,8 @@ namespace RSEngine
                             _currentTransitionIndex = transitionID;
                             _ptransition = _transition[transitionID];
                         }
-                        transition.UpdateStateCondition(condition);
                     }
+                    transition.UpdateStateCondition(condition, _currentState);
                 }
 
                 /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
@@ -202,13 +203,15 @@ namespace RSEngine
                 int transitionID; // transition id non duplication
                 /// <summary> もし条件が満たされたら遷移先ステートへ移ってとどまる。 </summary>
                 /// <param name="condition"></param>
-                public void UpdateStateCondition(bool condition)
+                public void UpdateStateCondition(bool condition, IState currentState)
                 {
                     // 条件式が真でかつまだ現状のステートが遷移元の時にのみ実行。
                     // 一度だけ遷移先に移る。
                     if (condition && _current == _from)
                     {
+                        if (currentState != null) currentState.Out();
                         _current = _to;
+                        _current.In();
                     }
                 }
                 /// <summary> 現在いるステートを返す </summary>

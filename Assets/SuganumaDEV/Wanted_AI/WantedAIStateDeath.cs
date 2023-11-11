@@ -12,9 +12,11 @@ public class WantedAIStateDeath : IState
 
     public void In()
     {
+        throw new System.NotImplementedException();
     }
 
     public void Out()
     {
+        throw new System.NotImplementedException();
     }
 }

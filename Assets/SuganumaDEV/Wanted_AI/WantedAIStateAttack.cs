@@ -12,9 +12,11 @@ public class WantedAIStateAttack : IState
 
     public void In()
     {
+        throw new System.NotImplementedException();
     }
 
     public void Out()
     {
+        throw new System.NotImplementedException();
     }
 }

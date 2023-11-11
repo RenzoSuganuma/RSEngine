@@ -43,9 +43,11 @@ public class WantedAIStateDefault : IState
 
     public void In()
     {
+        Debug.Log("巡回を始める！");
     }
 
     public void Out()
     {
+        Debug.Log("巡回を終わる！");
     }
 }
