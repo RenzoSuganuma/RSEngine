@@ -85,7 +85,6 @@ namespace RSEngine
                 /// <summary> 毎フレーム呼び出すメソッド </summary>
                 public void Update()
                 {
-                    Debug.Log(_currentTransitionIndex);
                     // ステートの実行
                     var currentTransition = _transition[_currentTransitionIndex];
                     var currentState = currentTransition.Current;
@@ -112,7 +111,6 @@ namespace RSEngine
                     {
                         var tTransition = _transition[transitionID];
                         _ptransition = new(tTransition.GetState(0), tTransition.GetState(1), transitionID);
-                        transition.UpdateStateCondition(condition);
                     }
                     else
                     {
@@ -128,8 +126,8 @@ namespace RSEngine
                             }
                             _currentTransitionIndex = transitionID;
                             _ptransition = _transition[transitionID];
-                            transition.UpdateStateCondition(condition);
                         }
+                        transition.UpdateStateCondition(condition);
                     }
                 }
 

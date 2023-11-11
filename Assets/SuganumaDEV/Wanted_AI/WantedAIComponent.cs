@@ -72,6 +72,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
             , (tTransform) =>
             {
                 var dir = (tTransform.position - transform.position).normalized;
+                dir.y = 0;
                 transform.forward = dir;
             });
         _sChase = new();
