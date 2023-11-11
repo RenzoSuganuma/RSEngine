@@ -56,7 +56,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
     public void OnStateWasExitted(StateTransitionInfo info)
     {
-        //Debug.Log(info.ToString());
+        
     }
 
     private void Awake()
@@ -95,7 +95,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
 
         // 注視から追跡
         _sMachine.AddTransition(_sGaze, _sChase); // gaze to chase id{2}
-        _sMachine.AddTransition(_sGaze, _sChase); // chase to gaze id{3}
+        _sMachine.AddTransition(_sChase, _sGaze); // chase to gaze id{3}
 
         //　追跡から攻撃
         _sMachine.AddTransition(_sChase, _sAttack); // chase to attack id{4}
@@ -123,6 +123,10 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _isInsideSightRange = Physics.CheckSphere(transform.position, _sightRange, _targetLayer);
         _isInsideAttackingRange = Physics.CheckSphere(transform.position, _attackRange, _targetLayer);
 
+        // 各ステート更新
+        _sDef.Update(transform);
+        _sGaze.Update(transform);
+
         // defalut to gaze
         _sMachine.UpdateTransitionCondition(0, _isInsideSightRange);
         _sMachine.UpdateTransitionCondition(1, !_isInsideSightRange);
@@ -140,10 +144,6 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _sMachine.UpdateTransitionCondition(7, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(8, _isNoHealthNow);
         _sMachine.UpdateTransitionCondition(9, _isNoHealthNow);
-
-        // 各ステート更新
-        _sDef.Update(transform);
-        _sGaze.Update(transform);
 
         // update statemachine
         _sMachine.Update();

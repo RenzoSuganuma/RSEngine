@@ -112,6 +112,7 @@ namespace RSEngine
                     {
                         var tTransition = _transition[transitionID];
                         _ptransition = new(tTransition.GetState(0), tTransition.GetState(1), transitionID);
+                        transition.UpdateStateCondition(condition);
                     }
                     else
                     {
@@ -127,9 +128,9 @@ namespace RSEngine
                             }
                             _currentTransitionIndex = transitionID;
                             _ptransition = _transition[transitionID];
+                            transition.UpdateStateCondition(condition);
                         }
                     }
-                    transition.UpdateStateCondition(condition);
                 }
 
                 /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
@@ -207,7 +208,10 @@ namespace RSEngine
                 {
                     // 条件式が真でかつまだ現状のステートが遷移元の時にのみ実行。
                     // 一度だけ遷移先に移る。
-                    _current = (condition && _current == _from) ? _to : _current;
+                    if (condition && _current == _from)
+                    {
+                        _current = _to;
+                    }
                 }
                 /// <summary> 現在いるステートを返す </summary>
                 /// <returns>0 : (ステートペアの遷移元) 1 : (ステートペア遷移先)</returns>
