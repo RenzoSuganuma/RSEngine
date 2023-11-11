@@ -76,7 +76,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
             } // On Target Found
             );
         _sChase = new(_sightRange, _targetLayer, transform, _agent);
-        _sAttack = new();
+        _sAttack = new(_attackRange, transform, _targetLayer, _agent);
         _sDeath = new();
 
         // イベントリスナー登録
@@ -129,6 +129,7 @@ public class WantedAIComponent : MonoBehaviour, IStateMachineUser
         _sDef.Update(transform);
         _sGaze.Update(transform);
         _sChase.Update(transform);
+        _sAttack.Update(transform);
 
         // defalut to gaze
         _sMachine.UpdateTransitionCondition(0, _isInsideSightRange);
