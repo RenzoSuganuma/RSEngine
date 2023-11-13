@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 /// <summary> AI機能を提供するコンポーネント </summary>
-public class WantedAIComponent : MonoBehaviour, IStateMachineUser
+public class WantedAITracker : MonoBehaviour, IStateMachineUser
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
