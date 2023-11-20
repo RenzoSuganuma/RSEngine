@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Chase </summary>
-public class WantedAIStateChase : IState
+public class WantedAIStateChase : _IState
 {
     float _sightRange;
     LayerMask _targetLayer;

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Default </summary>
 /// デフォルトでは特定の経路をパトロールする。
-public class WantedAIStateDefault : IState
+public class WantedAIStateDefault : _IState
 {
     // 各必要パラメータ
     int _currentPathIndex;

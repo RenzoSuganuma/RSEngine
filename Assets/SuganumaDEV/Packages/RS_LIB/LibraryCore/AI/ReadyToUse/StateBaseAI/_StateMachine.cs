@@ -44,34 +44,34 @@ namespace RSEngine
                ----- README -----*/
             #endregion
             /// <summary> ステートマシンの機能を提供する </summary>
-            public class StateMachine
+            public class _StateMachine
             {
                 /// <summary> ステートペアの遷移リスト（重複X） </summary>
                 /// 重複させない
-                HashSet<StatePairedTransition> _htransition = new();
+                HashSet<_StatePairedTransition> _htransition = new();
 
                 /// <summary> ステートペアの遷移リスト </summary>
-                List<StatePairedTransition> _transition = new();
+                List<_StatePairedTransition> _transition = new();
 
                 /// <summary> 前フレームで実行した遷移の履歴 </summary>
-                StatePairedTransition _ptransition;
+                _StatePairedTransition _ptransition;
 
                 /// <summary> ステートのリスト（重複X） </summary>
                 /// 重複させない
-                HashSet<IState> _hstates = new();
+                HashSet<_IState> _hstates = new();
 
                 /// <summary> ステートのリスト </summary>
-                List<IState> _states = new();
+                List<_IState> _states = new();
 
                 /// <summary> 現在のステート </summary>
-                IState _currentState;
+                _IState _currentState;
 
                 /// <summary> 現在実行中のステート </summary>
                 int _currentTransitionIndex = -1;
 
                 /// <summary> ステートから抜けたときにステートマシン側で呼び出されるイベント </summary>
                 /// <param name="info"></param>
-                public delegate void OnStateExit(StateTransitionInfo info);
+                public delegate void OnStateExit(_StateTransitionInfo info);
 
                 /// <summary> コールバックリスナーの登録先のデリゲート </summary>
                 public event OnStateExit onStateExit;
@@ -94,7 +94,7 @@ namespace RSEngine
                     _currentState.Do();
                     // イベント発火
                     onStateExit.Invoke
-                        (new StateTransitionInfo(currentTransition.GetState(0)
+                        (new _StateTransitionInfo(currentTransition.GetState(0)
                         , currentTransition.GetState(1)
                         , currentTransition.GetTransitionId()));
                 }
@@ -135,9 +135,9 @@ namespace RSEngine
                 /// <summary> 遷移元と遷移先の情報を保持するステートペアを登録する。 </summary>
                 /// <param name="from"></param>
                 /// <param name="to"></param>
-                public void AddTransition(IState from, IState to)
+                public void AddTransition(_IState from, _IState to)
                 {
-                    _htransition.Add(new StatePairedTransition(from, to, _htransition.Count /* id => 0 ~ */));
+                    _htransition.Add(new _StatePairedTransition(from, to, _htransition.Count /* id => 0 ~ */));
                 }
 
                 /// <summary> すべてのステートペアの遷移をクリアする </summary>
@@ -150,14 +150,14 @@ namespace RSEngine
                 #region State
                 /// <summary> ステートの登録をする </summary>
                 /// <param name="state"></param>
-                public void AddState(IState state)
+                public void AddState(_IState state)
                 {
                     _hstates.Add(state);
                 }
 
                 /// <summary> ステートの登録解除をする </summary>
                 /// <param name="state"></param>
-                public void RemoveState(IState state)
+                public void RemoveState(_IState state)
                 {
                     _hstates.Remove(state);
                 }
@@ -166,9 +166,9 @@ namespace RSEngine
                 #region States
                 /// <summary> リスト形式で渡されたステートを登録する </summary>
                 /// <param name="states"></param>
-                public void AddStates(List<IState> states)
+                public void AddStates(List<_IState> states)
                 {
-                    foreach (IState state in states)
+                    foreach (_IState state in states)
                     {
                         _hstates.Add(state);
                     }
@@ -185,25 +185,25 @@ namespace RSEngine
             /// <summary> 遷移元と遷移先の情報を保持するクラス </summary>
             /// <typeparam name="Tcurrent"> 遷移元 </typeparam>
             /// <typeparam name="Tnext"> 遷移先 </typeparam>
-            public class StatePairedTransition
+            public class _StatePairedTransition
             {
-                public StatePairedTransition(IState from, IState to, int transitionID)
+                public _StatePairedTransition(_IState from, _IState to, int transitionID)
                 {
                     _from = from;
                     _to = to;
                     _current = _from;
                     this.transitionID = transitionID;
                 }
-                IState _from; // id = 0
-                public IState From => _from;
-                IState _to; // id = 1
-                public IState To => _to;
-                IState _current; // id => current State
-                public IState Current => _current;
+                _IState _from; // id = 0
+                public _IState From => _from;
+                _IState _to; // id = 1
+                public _IState To => _to;
+                _IState _current; // id => current State
+                public _IState Current => _current;
                 int transitionID; // transition id non duplication
                 /// <summary> もし条件が満たされたら遷移先ステートへ移ってとどまる。 </summary>
                 /// <param name="condition"></param>
-                public void UpdateStateCondition(bool condition, IState currentState)
+                public void UpdateStateCondition(bool condition, _IState currentState)
                 {
                     // 条件式が真でかつまだ現状のステートが遷移元の時にのみ実行。
                     // 一度だけ遷移先に移る。
@@ -229,7 +229,7 @@ namespace RSEngine
                 /// <summary> 指定されたステートidのステートを返す </summary>
                 /// <param name="stateId"></param>
                 /// <returns></returns>
-                public IState GetState(int stateId)
+                public _IState GetState(int stateId)
                 {
                     return (stateId == 0) ? _from : _to;
                 }
@@ -241,12 +241,12 @@ namespace RSEngine
             }
 
             /// <summary> 現状エントリーしているステートペアの遷移のステートの情報を保持する構造体 </summary>
-            public struct StateTransitionInfo
+            public struct _StateTransitionInfo
             {
-                public IState _from;
-                public IState _to;
+                public _IState _from;
+                public _IState _to;
                 public int _id;
-                public StateTransitionInfo(IState from, IState to, int id)
+                public _StateTransitionInfo(_IState from, _IState to, int id)
                 {
                     _from = from;
                     _to = to;
@@ -260,7 +260,7 @@ namespace RSEngine
             }
 
             /// <summary> ステートマシンが扱う遷移リストに登録するクラスが継承すべきインターフェイス </summary>
-            public interface IState
+            public interface _IState
             {
                 /// <summary> ステート突入時に呼び出される </summary>
                 public void In();
@@ -271,11 +271,11 @@ namespace RSEngine
             }
 
             /// <summary> ステートマシン利用部クラスが継承する </summary>
-            public interface IStateMachineUser
+            public interface _IStateMachineUser
             {
                 /// <summary> ステートの In(),Tick(),Out() をすべて呼び出した直後に発火するイベントのリスナー </summary>
                 /// <param name="info"></param>
-                public void OnStateWasExitted(StateTransitionInfo info);
+                public void OnStateWasExitted(_StateTransitionInfo info);
             }
         }
     }

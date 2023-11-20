@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Gaze(íçéã) </summary>
-public class WantedAIStateGaze : IState
+public class WantedAIStateGaze : _IState
 {
     float _sigthRange;
     float _gazingLimitTime;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Attack </summary>
-public class WantedAIStateAttack : IState
+public class WantedAIStateAttack : _IState
 {
     float _attackingRange;
     LayerMask _targetLayer;

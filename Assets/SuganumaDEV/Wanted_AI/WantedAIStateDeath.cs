@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Death </summary>
-public class WantedAIStateDeath : IState
+public class WantedAIStateDeath : _IState
 {
     Transform _selfTransform;
     NavMeshAgent _agent;

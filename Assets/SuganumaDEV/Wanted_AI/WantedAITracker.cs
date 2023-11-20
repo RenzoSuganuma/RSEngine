@@ -5,11 +5,11 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 /// <summary> AI機能を提供するコンポーネント </summary>
-public class WantedAITracker : MonoBehaviour, IStateMachineUser
+public class WantedAITracker : MonoBehaviour, _IStateMachineUser
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
-    StateMachine _sMachine;
+    _StateMachine _sMachine;
 
     // ステート
     /// <summary> デフォルトステート：アイドル </summary>
@@ -48,7 +48,7 @@ public class WantedAITracker : MonoBehaviour, IStateMachineUser
     bool _isInsideAttackingRange = false; // 追跡をしていて攻撃可能圏内にプレイヤーが入った場合　攻撃するかの条件
     bool _isNoHealthNow = false;　// 死亡をした場合
 
-    public void OnStateWasExitted(StateTransitionInfo info)
+    public void OnStateWasExitted(_StateTransitionInfo info)
     {
 
     }
@@ -58,7 +58,7 @@ public class WantedAITracker : MonoBehaviour, IStateMachineUser
         _agent = GetComponent<NavMeshAgent>();
 
         // ステートマシン初期化
-        _sMachine = new StateMachine();
+        _sMachine = new _StateMachine();
 
         // 各ステート初期化
         _sDef = new(_patrollingPath.ToArray(), _agent);
@@ -85,7 +85,7 @@ public class WantedAITracker : MonoBehaviour, IStateMachineUser
         _sMachine.onStateExit += OnStateWasExitted;
 
         // 各ステートの登録
-        _sMachine.AddStates(new List<IState> {
+        _sMachine.AddStates(new List<_IState> {
         _sDef,
         _sGaze,
         _sChase,
