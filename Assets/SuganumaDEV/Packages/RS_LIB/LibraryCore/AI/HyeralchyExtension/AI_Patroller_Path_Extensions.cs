@@ -5,7 +5,7 @@ using UnityEngine;
 using RSEngine.AI;
 public class AI_Patroller_Path_Extensions : MonoBehaviour
 {
-    [MenuItem("GameObject/RSE_AI/PatrollingPath", false, 10)]
+    [MenuItem("GameObject/RSE_AI/PatrollingPath(RSEngine)", false, 10)]
     static void CreateGameObject(MenuCommand menuCommand)
     {
         // Create a custom game object
