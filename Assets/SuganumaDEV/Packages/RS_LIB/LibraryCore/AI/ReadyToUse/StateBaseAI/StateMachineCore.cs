@@ -5,7 +5,7 @@ namespace RSEngine
 {
     namespace StateMachine
     {
-        public partial class StateMachineOrigin : MonoBehaviour
+        public partial class StateMachineCore
         {
             // ステート
             HashSet<IState> _states = new HashSet<IState>();
@@ -15,11 +15,14 @@ namespace RSEngine
             IState _currentPlayingState;
             // 現在突入しているトランジション名
             string _currentTransitionName;
+            // ステートマシンが一時停止中かのフラグ
+            bool _bIsPausing;
 
             #region 登録処理
             public void ResistState(IState state)
             {
                 _states.Add(state);
+                if (_currentPlayingState == null) { _currentPlayingState = state; }
             }
 
             // レジストするたびに終点ステートが視点ステートとして割り当てられているステート情報を何かしらのデータ構造のデータを保持する
@@ -31,26 +34,45 @@ namespace RSEngine
             #endregion
 
             #region 更新処理
-            public void UpdateConditionOfTransition(string name, bool condition2transist)
+            public void UpdateConditionOfTransition(string name, ref bool condition2transist)
             {
+                if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
                 foreach (var t in _transitions)
                 {
-                    if (t.Name == name)
+                    // 遷移する場合 // * 条件を満たしているなら前トランジションを無視してしまうのでその判定処理をはさむこと *
+                    // もし遷移条件を満たしていて遷移名が一致するなら
+                    if (condition2transist && t.Name == name) 
                     {
-                        // 遷移する場合 // * 条件を満たしているなら前トランジションを無視してしまうのでその判定処理をはさむこと *
-                        if (condition2transist)
+                        if (t.SFrom == _currentPlayingState) // 現在左ステートなら
                         {
-                            _currentPlayingState.Exit();
-                            _currentPlayingState = t.STo;
-                            _currentPlayingState.Entry();
-                            _currentTransitionName = name;
-                        }
-                        else
-                        {
-                            _currentPlayingState.Update();
+                            _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                            condition2transist = false; // 遷移条件を初期化(falseに)
+                            _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
+                            _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                            _currentTransitionName = name; // 現在の遷移ネームを更新
                         }
                     }
-                }
+                    // 遷移の条件を満たしてはいないが、遷移ネームが一致（更新されていないなら）現在のステートの更新処理を呼ぶ
+                    else if (t.Name == name)
+                    {
+                        _currentPlayingState.Update();
+                    }
+                } // 全遷移を検索。
+            }
+            #endregion
+
+            #region 起動処理
+            public void PopStateMachine()
+            {
+                _bIsPausing = false;
+                _currentPlayingState.Entry();
+            }
+            #endregion
+
+            #region 一時停止処理
+            public void PushStateMachine()
+            {
+                _bIsPausing = true;
             }
             #endregion
         }
@@ -88,7 +110,7 @@ namespace RSEngine
         // トランジションの状態の更新
 
         //開発面
-        // partialclassとして宣言して分業の難易度を下げる
+        // partial classとして宣言して分業の難易度を下げる
         #endregion
     }
 }
