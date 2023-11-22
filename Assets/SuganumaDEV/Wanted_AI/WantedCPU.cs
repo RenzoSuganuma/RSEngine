@@ -21,6 +21,8 @@ public class WantedCPU : MonoBehaviour
     WantedAIStateAttack _sAttack;
     /// <summary> ステート：死亡 </summary>
     WantedAIStateDeath _sDeath;
+    /// <summary> ダミーステート </summary>
+    DummyBehaviourClass _dStateDummy = new DummyBehaviourClass("Dummy");
 
     // 動かすのに必要
     NavMeshAgent _agent;
@@ -42,14 +44,13 @@ public class WantedCPU : MonoBehaviour
     [SerializeField] float _health;
 
     // AIトランジションフラグ
-    [SerializeField]
     bool _isInsideSightRange = false; // デフォルトから注視するまでの条件
-    [SerializeField]
     bool _isFoundTargetNow = false; // 注視が終わり、プレイヤーとして判定した場合　追跡するかの条件
-    [SerializeField]
     bool _isInsideAttackingRange = false; // 追跡をしていて攻撃可能圏内にプレイヤーが入った場合　攻撃するかの条件
-    [SerializeField]
     bool _isNoHealthNow = false;　// 死亡をした場合
+
+    [SerializeField]
+    bool _anyState;
 
     // 通常遷移タイプ
     StateMachineTransitionType _tTStd = StateMachineTransitionType.StandardState;
@@ -90,6 +91,8 @@ public class WantedCPU : MonoBehaviour
         _sAttack,
         _sDeath});
 
+        _stateMachine.ResisteStateFromAny(_dStateDummy);
+
         _stateMachine.ResistTransition(_sDef, _sGaze, "D2G"); // default to gaze id{0}
         _stateMachine.ResistTransition(_sGaze, _sDef, "G2D"); // gaze to default id{1}
 
@@ -99,11 +102,9 @@ public class WantedCPU : MonoBehaviour
         _stateMachine.ResistTransition(_sChase, _sAttack, "C2A"); // chase to attack id{4}
         _stateMachine.ResistTransition(_sAttack, _sChase, "A2C"); // attack to chase id{5}
 
-        _stateMachine.ResistTransition(_sDef, _sDeath, "D2d"); // id{6}
-        _stateMachine.ResistTransition(_sGaze, _sDeath, "G2d"); // id{7}
-        _stateMachine.ResistTransition(_sChase, _sDeath, "C2d"); // id{8}
-        _stateMachine.ResistTransition(_sAttack, _sDeath, "A2d"); // id{9}
+        _stateMachine.ResistTransitionFromAny(_dStateDummy, "DummyTransition");
 
+        _stateMachine.PopStateMachine();
     }
 
     private void FixedUpdate()
@@ -125,25 +126,22 @@ public class WantedCPU : MonoBehaviour
         _stateMachine.UpdateConditionOfTransition("D2G", ref _isInsideSightRange);
 
         // gaze to deafult
-        _stateMachine.UpdateConditionOfTransition("G2D", ref _isInsideSightRange, _tTStd, !true);
+        _stateMachine.UpdateConditionOfTransition("G2D", ref _isInsideSightRange, !true);
 
         // gaze to chase
         _stateMachine.UpdateConditionOfTransition("G2C", ref _isFoundTargetNow);
 
         // chase to gaze
-        _stateMachine.UpdateConditionOfTransition("C2G", ref _isFoundTargetNow, _tTStd, !true);
+        _stateMachine.UpdateConditionOfTransition("C2G", ref _isFoundTargetNow, !true);
 
         // chase to attack
         _stateMachine.UpdateConditionOfTransition("C2A", ref _isInsideAttackingRange);
 
         // attack to chase
-        _stateMachine.UpdateConditionOfTransition("A2C", ref _isInsideAttackingRange, _tTStd, !true);
+        _stateMachine.UpdateConditionOfTransition("A2C", ref _isInsideAttackingRange, !true);
 
         //// any state to death
-        _stateMachine.UpdateConditionOfTransition("D2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
-        _stateMachine.UpdateConditionOfTransition("G2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
-        _stateMachine.UpdateConditionOfTransition("C2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
-        _stateMachine.UpdateConditionOfTransition("A2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
+        //_stateMachine.UpdateConditionTransitionOfAnyState("DummyTransition", )
     }
 
 #if UNITY_EDITOR_64

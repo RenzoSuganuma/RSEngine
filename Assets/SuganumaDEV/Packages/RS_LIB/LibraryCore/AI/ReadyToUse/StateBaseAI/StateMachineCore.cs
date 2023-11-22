@@ -1,30 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
+using static UnityEditor.VersionControl.Asset;
 namespace RSEngine
 {
     namespace StateMachine
     {
+        /// <summary> ステートマシンの機能を提供する </summary>
         public partial class StateMachineCore
         {
-            // ステート
+            // 通常ステート
             HashSet<IState> _states = new HashSet<IState>();
+            // Anyステートからのステート
+            HashSet<IState> _statesFromAnyState = new HashSet<IState>();
             // トランジション
             HashSet<StateMachineTransition> _transitions = new HashSet<StateMachineTransition>();
+            // Anyからのトランジション
+            HashSet<StateMachineTransition> _transitionsFromAny = new HashSet<StateMachineTransition>();
             // 現在突入しているステート
             IState _currentPlayingState;
             // 現在突入しているトランジション名
             string _currentTransitionName;
             // ステートマシンが一時停止中かのフラグ
-            bool _bIsPausing;
+            bool _bIsPausing = true;
 
             #region 登録処理
+            /// <summary> ステートの登録 </summary>
+            /// <param name="state"></param>
             public void ResistState(IState state)
             {
                 _states.Add(state);
                 if (_currentPlayingState == null) { _currentPlayingState = state; }
             }
 
+            /// <summary> Anyからのステートの登録 </summary>
+            /// <param name="state"></param>
+            public void ResisteStateFromAny(IState state)
+            {
+                _statesFromAnyState.Add(state);
+            }
+
+            /// <summary> 複数のステートを引数に渡してすべての渡されたステートを登録 </summary>
+            /// <param name="states"></param>
             public void ResistStates(List<IState> states)
             {
                 foreach (IState state in states)
@@ -34,17 +52,45 @@ namespace RSEngine
                 }
             }
 
-            // レジストするたびに終点ステートが視点ステートとして割り当てられているステート情報を何かしらのデータ構造のデータを保持する
+            /// <summary> 複数のステートを引数に渡してすべての渡されたAnyからのステートを登録 </summary>
+            /// <param name="states"></param>
+            public void ResisteStatesFromAny(List<IState> states)
+            {
+                foreach (IState state in _statesFromAnyState)
+                {
+                    _states.Add(state);
+                }
+            }
+
+            /// <summary> ステート間の遷移の登録 </summary>
+            /// <param name="from"></param>
+            /// <param name="to"></param>
+            /// <param name="name"></param>
             public void ResistTransition(IState from, IState to, string name)
             {
                 var tmp = new StateMachineTransition(from, to, name);
                 _transitions.Add(tmp);
             }
+            
+            /// <summary> Anyステートからの遷移の登録 </summary>
+            /// <param name="from"></param>
+            /// <param name="to"></param>
+            /// <param name="name"></param>
+            public void ResistTransitionFromAny(IState to, string name)
+            {
+                var tmp = new StateMachineTransition(new DummyStateClass(), to, name);
+                _transitionsFromAny.Add(tmp);
+            }
 
             #endregion
 
             #region 更新処理
-            public void UpdateConditionOfTransition(string name, ref bool condition2transist, StateMachineTransitionType tType = StateMachineTransitionType.StandardState, bool equalsTo = true)
+            /// <summary> 任意のステート間遷移の遷移の状況を更新する。 </summary>
+            /// <param name="name"></param>
+            /// <param name="condition2transist"></param>
+            /// <param name="tType"></param>
+            /// <param name="equalsTo"></param>
+            public void UpdateConditionOfTransition(string name, ref bool condition2transist, bool equalsTo = true)
             {
                 if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
                 foreach (var t in _transitions)
@@ -56,10 +102,32 @@ namespace RSEngine
                         if (t.SFrom == _currentPlayingState) // 現在左ステートなら
                         {
                             _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                            _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
+                            _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                            _currentTransitionName = name; // 現在の遷移ネームを更新
+                        }
+                    }
+                    // 遷移の条件を満たしてはいないが、遷移ネームが一致（更新されていないなら）現在のステートの更新処理を呼ぶ
+                    else if (t.Name == name)
+                    {
+                        _currentPlayingState.Update();
+                    }
+                } // 全遷移を検索。
+            }
 
-                            if (tType == StateMachineTransitionType.AnyState)
-                                condition2transist = equalsTo; // 遷移条件を初期化(falseに)
-
+            public void UpdateConditionTransitionOfAnyState(string name, ref bool condition2transist, bool equalsTo = true)
+            {
+                if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
+                foreach (var t in _transitionsFromAny)
+                {
+                    // 遷移する場合 // * 条件を満たしているなら前トランジションを無視してしまうのでその判定処理をはさむこと *
+                    // もし遷移条件を満たしていて遷移名が一致するなら
+                    if ((condition2transist == equalsTo) && t.Name == name)
+                    {
+                        if (t.SFrom == _currentPlayingState) // 現在左ステートなら
+                        {
+                            _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                            condition2transist = equalsTo; // 遷移条件を初期化(falseに)
                             _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
                             _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
                             _currentTransitionName = name; // 現在の遷移ネームを更新
@@ -75,6 +143,7 @@ namespace RSEngine
             #endregion
 
             #region 起動処理
+            /// <summary> ステートマシンを起動する </summary>
             public void PopStateMachine()
             {
                 _bIsPausing = false;
@@ -83,6 +152,7 @@ namespace RSEngine
             #endregion
 
             #region 一時停止処理
+            /// <summary> ステートマシンの処理を </summary>
             public void PushStateMachine()
             {
                 _bIsPausing = true;
@@ -90,6 +160,7 @@ namespace RSEngine
             #endregion
         }
         // 各トランジションは名前を割り当てている
+        /// <summary> ステート間遷移の情報を格納している </summary>
         public partial class StateMachineTransition
         {
             IState _from;
@@ -106,6 +177,7 @@ namespace RSEngine
             }
         }
 
+        /// <summary> ステートとして登録をするクラスが継承するべきインターフェース </summary>
         public interface IState
         {
             public void Entry();
@@ -113,10 +185,27 @@ namespace RSEngine
             public void Exit();
         }
 
+        /// <summary> ダミーのステートのクラス </summary>
+        public class DummyStateClass : IState
+        {
+            public void Entry()
+            {
+            }
+
+            public void Exit()
+            {
+            }
+
+            public void Update()
+            {
+            }
+        }
+
+        /// <summary> ステート遷移のタイプ </summary>
         public enum StateMachineTransitionType
         {
-            StandardState,
-            AnyState,
+            StandardState,      // 通常 
+            AnyState,           // 一フレームのみ遷移 
         }
 
         #region ステートマシン、利用部構想
