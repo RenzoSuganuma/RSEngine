@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Splines;
 public class WantedCPU : MonoBehaviour
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
-    StateMachineCore _stateMachine;
+    StateMachineFoundation _stateMachine;
 
     // ステート
     /// <summary> デフォルトステート：アイドル </summary>
@@ -24,6 +25,7 @@ public class WantedCPU : MonoBehaviour
 
     // 動かすのに必要
     NavMeshAgent _agent;
+    SplineAnimate _splineAnimate;
 
     // 各レンジ
     [SerializeField, Range(0f, 50f)] float _sightRange;
@@ -37,7 +39,8 @@ public class WantedCPU : MonoBehaviour
     // 移動速度
     [SerializeField] float _movespeed;
     // 徘徊経路
-    [SerializeField] List<Transform> _patrollingPath;
+    //[SerializeField] List<Transform> _patrollingPath;
+    [SerializeField] SplineContainer _patrolingPath;
 
     [SerializeField] float _health;
 
@@ -55,12 +58,13 @@ public class WantedCPU : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _splineAnimate = GetComponent<SplineAnimate>();
 
         // ステートマシン初期化
         _stateMachine = new();
 
         // 各ステート初期化
-        _sDef = new(_patrollingPath.ToArray(), _agent);
+        _sDef = new(_agent, _patrolingPath, _splineAnimate);
         _sGaze = new(_sightRange, 2, transform, _targetLayer, _agent
             , (tTransform) =>
             {
