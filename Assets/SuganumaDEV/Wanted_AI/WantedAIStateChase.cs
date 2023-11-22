@@ -1,10 +1,10 @@
-using RSEngine.AI.StateMachine;
+using RSEngine.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Chase </summary>
-public class WantedAIStateChase : _IState
+public class WantedAIStateChase : IState
 {
     float _sightRange;
     LayerMask _targetLayer;
@@ -18,12 +18,17 @@ public class WantedAIStateChase : _IState
         _agent = agent;
     }
 
-    public void Update(Transform selfTransform)
+    public void UpdateSelf(Transform selfTransform)
     {
         _selfTransform = selfTransform;
     }
 
-    public void Do()
+    public void Entry()
+    {
+        Debug.Log("í«Ç§ÇºÅI");
+    }
+
+    public void Update()
     {
         Debug.Log("Ç‹ÇƒÅI");
         if (Physics.CheckSphere(_selfTransform.position, _sightRange, _targetLayer))
@@ -37,12 +42,7 @@ public class WantedAIStateChase : _IState
         }
     }
 
-    public void In()
-    {
-        Debug.Log("í«Ç§ÇºÅI");
-    }
-
-    public void Out()
+    public void Exit()
     {
         Debug.Log("Ç‡Ç§í«ÇÌÇ»Ç¢");
     }

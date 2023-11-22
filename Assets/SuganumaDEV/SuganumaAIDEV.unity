@@ -844,11 +844,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1053380073}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87b35222bd2f68541aea1b6db7a1ba17, type: 3}
+  m_Script: {fileID: 11500000, guid: 11134cf5f4790df479c93177e57459c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _sightRange: 22.4
-  _attackRange: 3.3
+  _attackRange: 2.7
   _targetLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -856,8 +856,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _target: {fileID: 233889772}
-  _targetLayerNum: 0
-  _movespeed: 0
+  _targetLayerNum: 7
+  _movespeed: 5
   _patrollingPath:
   - {fileID: 789085931}
   - {fileID: 550014038}

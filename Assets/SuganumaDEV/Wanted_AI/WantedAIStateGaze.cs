@@ -1,9 +1,9 @@
-using RSEngine.AI.StateMachine;
+using RSEngine.StateMachine;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Gaze(íçéã) </summary>
-public class WantedAIStateGaze : _IState
+public class WantedAIStateGaze : IState
 {
     float _sigthRange;
     float _gazingLimitTime;
@@ -26,7 +26,7 @@ public class WantedAIStateGaze : _IState
         _onTargetFound = onTargetFound;
     }
 
-    public void Update(Transform selfTransform)
+    public void UpdateSelf(Transform selfTransform)
     {
         _selfTransform = selfTransform;
     }
@@ -49,17 +49,17 @@ public class WantedAIStateGaze : _IState
         }
     }
 
-    public void Do()
-    {
-        GazeOrNot();
-    }
-
-    public void In()
+    public void Entry()
     {
         Debug.Log("·…ÇﬁÇºÅI");
     }
 
-    public void Out()
+    public void Update()
+    {
+        GazeOrNot();
+    }
+
+    public void Exit()
     {
         Debug.Log("·…ÇÒÇæÅI");
         _gazingTime = 0;

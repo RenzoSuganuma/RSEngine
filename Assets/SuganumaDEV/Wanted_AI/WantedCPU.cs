@@ -1,15 +1,14 @@
+using RSEngine.StateMachine;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RSEngine.AI.StateMachine;
 using UnityEngine.AI;
-
-[RequireComponent(typeof(NavMeshAgent))]
-/// <summary> AI機能を提供するコンポーネント </summary>
-public class WantedAITracker : MonoBehaviour, _IStateMachineUser
+public class WantedCPU : MonoBehaviour
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
-    _StateMachine _sMachine;
+    StateMachineCore _stateMachine;
 
     // ステート
     /// <summary> デフォルトステート：アイドル </summary>
@@ -43,22 +42,24 @@ public class WantedAITracker : MonoBehaviour, _IStateMachineUser
     [SerializeField] float _health;
 
     // AIトランジションフラグ
+    [SerializeField]
     bool _isInsideSightRange = false; // デフォルトから注視するまでの条件
+    [SerializeField]
     bool _isFoundTargetNow = false; // 注視が終わり、プレイヤーとして判定した場合　追跡するかの条件
+    [SerializeField]
     bool _isInsideAttackingRange = false; // 追跡をしていて攻撃可能圏内にプレイヤーが入った場合　攻撃するかの条件
+    [SerializeField]
     bool _isNoHealthNow = false;　// 死亡をした場合
 
-    public void OnStateWasExitted(_StateTransitionInfo info)
-    {
-
-    }
+    // 通常遷移タイプ
+    StateMachineTransitionType _tTStd = StateMachineTransitionType.StandardState;
 
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
 
         // ステートマシン初期化
-        _sMachine = new _StateMachine();
+        _stateMachine = new();
 
         // 各ステート初期化
         _sDef = new(_patrollingPath.ToArray(), _agent);
@@ -81,43 +82,28 @@ public class WantedAITracker : MonoBehaviour, _IStateMachineUser
         _sAttack = new(_attackRange, transform, _targetLayer, _agent, () => { Debug.Log("攻撃中...."); });
         _sDeath = new(transform, _agent);
 
-        // イベントリスナー登録
-        _sMachine.onStateExit += OnStateWasExitted;
-
         // 各ステートの登録
-        _sMachine.AddStates(new List<_IState> {
+        _stateMachine.ResistStates(new List<IState> {
         _sDef,
         _sGaze,
         _sChase,
         _sAttack,
         _sDeath});
 
-        // 通常から注視
-        _sMachine.AddTransition(_sDef, _sGaze); // default to gaze id{0}
-        _sMachine.AddTransition(_sGaze, _sDef); // gaze to default id{1}
+        _stateMachine.ResistTransition(_sDef, _sGaze, "D2G"); // default to gaze id{0}
+        _stateMachine.ResistTransition(_sGaze, _sDef, "G2D"); // gaze to default id{1}
 
-        // 注視から追跡
-        _sMachine.AddTransition(_sGaze, _sChase); // gaze to chase id{2}
-        _sMachine.AddTransition(_sChase, _sGaze); // chase to default id{3}
+        _stateMachine.ResistTransition(_sGaze, _sChase, "G2C"); // gaze to chase id{2}
+        _stateMachine.ResistTransition(_sChase, _sGaze, "C2G"); // chase to default id{3}
 
-        //　追跡から攻撃
-        _sMachine.AddTransition(_sChase, _sAttack); // chase to attack id{4}
-        _sMachine.AddTransition(_sAttack, _sChase); // attack to chase id{5}
+        _stateMachine.ResistTransition(_sChase, _sAttack, "C2A"); // chase to attack id{4}
+        _stateMachine.ResistTransition(_sAttack, _sChase, "A2C"); // attack to chase id{5}
 
-        //// 死亡ステート
-        _sMachine.AddTransition(_sDef, _sDeath); // id{6}
-        _sMachine.AddTransition(_sGaze, _sDeath); // id{7}
-        _sMachine.AddTransition(_sChase, _sDeath); // id{8}
-        _sMachine.AddTransition(_sAttack, _sDeath); // id{9}
+        _stateMachine.ResistTransition(_sDef, _sDeath, "D2d"); // id{6}
+        _stateMachine.ResistTransition(_sGaze, _sDeath, "G2d"); // id{7}
+        _stateMachine.ResistTransition(_sChase, _sDeath, "C2d"); // id{8}
+        _stateMachine.ResistTransition(_sAttack, _sDeath, "A2d"); // id{9}
 
-        // ステートマシン起動
-        _sMachine.Initialize();
-    }
-
-    private void OnDisable()
-    {
-        //　リスナー登録解除
-        _sMachine.onStateExit -= OnStateWasExitted;
     }
 
     private void FixedUpdate()
@@ -129,38 +115,35 @@ public class WantedAITracker : MonoBehaviour, _IStateMachineUser
         _isNoHealthNow = _health <= 0;
 
         // 各ステート更新
-        _sDef.Update(transform);
-        _sGaze.Update(transform);
-        _sChase.Update(transform);
-        _sAttack.Update(transform);
-        _sDeath.Update(transform);
+        _sDef.UpdateSelf(transform);
+        _sGaze.UpdateSelf(transform);
+        _sChase.UpdateSelf(transform);
+        _sAttack.UpdateSelf(transform);
+        _sDeath.UpdateSelf(transform);
 
         // defalut to gaze
-        _sMachine.UpdateTransitionCondition(0, _isInsideSightRange);
+        _stateMachine.UpdateConditionOfTransition("D2G", ref _isInsideSightRange);
 
         // gaze to deafult
-        _sMachine.UpdateTransitionCondition(1, !_isInsideSightRange);
+        _stateMachine.UpdateConditionOfTransition("G2D", ref _isInsideSightRange, _tTStd, !true);
 
         // gaze to chase
-        _sMachine.UpdateTransitionCondition(2, _isFoundTargetNow);
+        _stateMachine.UpdateConditionOfTransition("G2C", ref _isFoundTargetNow);
 
         // chase to gaze
-        _sMachine.UpdateTransitionCondition(3, !_isFoundTargetNow);
+        _stateMachine.UpdateConditionOfTransition("C2G", ref _isFoundTargetNow, _tTStd, !true);
 
         // chase to attack
-        _sMachine.UpdateTransitionCondition(4, _isInsideAttackingRange);
+        _stateMachine.UpdateConditionOfTransition("C2A", ref _isInsideAttackingRange);
 
         // attack to chase
-        _sMachine.UpdateTransitionCondition(5, !_isInsideAttackingRange);
+        _stateMachine.UpdateConditionOfTransition("A2C", ref _isInsideAttackingRange, _tTStd, !true);
 
         //// any state to death
-        _sMachine.UpdateTransitionCondition(6, _isNoHealthNow);
-        _sMachine.UpdateTransitionCondition(7, _isNoHealthNow);
-        _sMachine.UpdateTransitionCondition(8, _isNoHealthNow);
-        _sMachine.UpdateTransitionCondition(9, _isNoHealthNow);
-
-        // update statemachine
-        _sMachine.Update();
+        _stateMachine.UpdateConditionOfTransition("D2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
+        _stateMachine.UpdateConditionOfTransition("G2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
+        _stateMachine.UpdateConditionOfTransition("C2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
+        _stateMachine.UpdateConditionOfTransition("A2d", ref _isNoHealthNow, StateMachineTransitionType.AnyState);
     }
 
 #if UNITY_EDITOR_64

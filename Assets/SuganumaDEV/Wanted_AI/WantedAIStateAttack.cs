@@ -1,11 +1,11 @@
-using RSEngine.AI.StateMachine;
+using RSEngine.StateMachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Attack </summary>
-public class WantedAIStateAttack : _IState
+public class WantedAIStateAttack : IState
 {
     float _attackingRange;
     LayerMask _targetLayer;
@@ -23,7 +23,7 @@ public class WantedAIStateAttack : _IState
         onAttack += onAttackAction;
     }
 
-    public void Update(Transform selfTransform)
+    public void UpdateSelf(Transform selfTransform)
     {
         _selfTransform = selfTransform;
     }
@@ -38,17 +38,16 @@ public class WantedAIStateAttack : _IState
         }
     }
 
-    public void Do()
+    public void Entry()
+    {
+    }
+
+    public void Update()
     {
         Attack();
     }
 
-    public void In()
-    {
-
-    }
-
-    public void Out()
+    public void Exit()
     {
     }
 }

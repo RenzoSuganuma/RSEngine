@@ -1,10 +1,10 @@
-using RSEngine.AI.StateMachine;
+using RSEngine.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary> Wanted AI State : Death </summary>
-public class WantedAIStateDeath : _IState
+public class WantedAIStateDeath : IState
 {
     Transform _selfTransform;
     NavMeshAgent _agent;
@@ -15,7 +15,7 @@ public class WantedAIStateDeath : _IState
         _agent = agent;
     }
 
-    public void Update(Transform selfTransform)
+    public void UpdateSelf(Transform selfTransform)
     {
         _selfTransform = selfTransform;
     }
@@ -26,16 +26,16 @@ public class WantedAIStateDeath : _IState
         Debug.Log("Ç»ÇÒÅcÇæÇ∆Åc");
     }
 
-    public void Do()
+    public void Entry()
+    {
+    }
+
+    public void Update()
     {
         Death();
     }
 
-    public void In()
-    {
-    }
-
-    public void Out()
+    public void Exit()
     {
     }
 }

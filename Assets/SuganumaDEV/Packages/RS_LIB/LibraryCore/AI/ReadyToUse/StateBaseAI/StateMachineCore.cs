@@ -25,28 +25,41 @@ namespace RSEngine
                 if (_currentPlayingState == null) { _currentPlayingState = state; }
             }
 
+            public void ResistStates(List<IState> states)
+            {
+                foreach (IState state in states)
+                {
+                    _states.Add(state);
+                    if (_currentPlayingState == null) { _currentPlayingState = state; }
+                }
+            }
+
             // レジストするたびに終点ステートが視点ステートとして割り当てられているステート情報を何かしらのデータ構造のデータを保持する
             public void ResistTransition(IState from, IState to, string name)
             {
                 var tmp = new StateMachineTransition(from, to, name);
                 _transitions.Add(tmp);
             }
+
             #endregion
 
             #region 更新処理
-            public void UpdateConditionOfTransition(string name, ref bool condition2transist)
+            public void UpdateConditionOfTransition(string name, ref bool condition2transist, StateMachineTransitionType tType = StateMachineTransitionType.StandardState, bool equalsTo = true)
             {
                 if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
                 foreach (var t in _transitions)
                 {
                     // 遷移する場合 // * 条件を満たしているなら前トランジションを無視してしまうのでその判定処理をはさむこと *
                     // もし遷移条件を満たしていて遷移名が一致するなら
-                    if (condition2transist && t.Name == name) 
+                    if ((condition2transist == equalsTo) && t.Name == name)
                     {
                         if (t.SFrom == _currentPlayingState) // 現在左ステートなら
                         {
                             _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
-                            condition2transist = false; // 遷移条件を初期化(falseに)
+
+                            if (tType == StateMachineTransitionType.AnyState)
+                                condition2transist = equalsTo; // 遷移条件を初期化(falseに)
+
                             _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
                             _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
                             _currentTransitionName = name; // 現在の遷移ネームを更新
@@ -98,6 +111,12 @@ namespace RSEngine
             public void Entry();
             public void Update();
             public void Exit();
+        }
+
+        public enum StateMachineTransitionType
+        {
+            StandardState,
+            AnyState,
         }
 
         #region ステートマシン、利用部構想
