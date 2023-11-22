@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
 namespace RSEngine
 {
     namespace StateMachine
@@ -71,7 +69,7 @@ namespace RSEngine
                 var tmp = new StateMachineTransition(from, to, name);
                 _transitions.Add(tmp);
             }
-            
+
             /// <summary> Anyステートからの遷移の登録 </summary>
             /// <param name="from"></param>
             /// <param name="to"></param>
@@ -120,18 +118,14 @@ namespace RSEngine
                 if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
                 foreach (var t in _transitionsFromAny)
                 {
-                    // 遷移する場合 // * 条件を満たしているなら前トランジションを無視してしまうのでその判定処理をはさむこと *
                     // もし遷移条件を満たしていて遷移名が一致するなら
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
-                        if (t.SFrom == _currentPlayingState) // 現在左ステートなら
-                        {
-                            _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
-                            condition2transist = equalsTo; // 遷移条件を初期化(falseに)
-                            _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
-                            _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
-                            _currentTransitionName = name; // 現在の遷移ネームを更新
-                        }
+                        _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                        condition2transist = !equalsTo; // 遷移条件を初期化
+                        _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
+                        _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                        _currentTransitionName = name; // 現在の遷移ネームを更新
                     }
                     // 遷移の条件を満たしてはいないが、遷移ネームが一致（更新されていないなら）現在のステートの更新処理を呼ぶ
                     else if (t.Name == name)

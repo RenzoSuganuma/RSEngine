@@ -21,8 +21,6 @@ public class WantedCPU : MonoBehaviour
     WantedAIStateAttack _sAttack;
     /// <summary> ステート：死亡 </summary>
     WantedAIStateDeath _sDeath;
-    /// <summary> ダミーステート </summary>
-    DummyBehaviourClass _dStateDummy = new DummyBehaviourClass("Dummy");
 
     // 動かすのに必要
     NavMeshAgent _agent;
@@ -49,8 +47,7 @@ public class WantedCPU : MonoBehaviour
     bool _isInsideAttackingRange = false; // 追跡をしていて攻撃可能圏内にプレイヤーが入った場合　攻撃するかの条件
     bool _isNoHealthNow = false;　// 死亡をした場合
 
-    [SerializeField]
-    bool _anyState;
+    [SerializeField] bool _anyState;
 
     // 通常遷移タイプ
     StateMachineTransitionType _tTStd = StateMachineTransitionType.StandardState;
@@ -88,10 +85,9 @@ public class WantedCPU : MonoBehaviour
         _sDef,
         _sGaze,
         _sChase,
-        _sAttack,
-        _sDeath});
+        _sAttack,});
 
-        _stateMachine.ResisteStateFromAny(_dStateDummy);
+        _stateMachine.ResisteStateFromAny(_sDeath);
 
         _stateMachine.ResistTransition(_sDef, _sGaze, "D2G"); // default to gaze id{0}
         _stateMachine.ResistTransition(_sGaze, _sDef, "G2D"); // gaze to default id{1}
@@ -102,7 +98,7 @@ public class WantedCPU : MonoBehaviour
         _stateMachine.ResistTransition(_sChase, _sAttack, "C2A"); // chase to attack id{4}
         _stateMachine.ResistTransition(_sAttack, _sChase, "A2C"); // attack to chase id{5}
 
-        _stateMachine.ResistTransitionFromAny(_dStateDummy, "DummyTransition");
+        _stateMachine.ResistTransitionFromAny(_sDeath, "DummyTransition");
 
         _stateMachine.PopStateMachine();
     }
@@ -141,7 +137,7 @@ public class WantedCPU : MonoBehaviour
         _stateMachine.UpdateConditionOfTransition("A2C", ref _isInsideAttackingRange, !true);
 
         //// any state to death
-        //_stateMachine.UpdateConditionTransitionOfAnyState("DummyTransition", )
+        _stateMachine.UpdateConditionTransitionOfAnyState("DummyTransition", ref _anyState);
     }
 
 #if UNITY_EDITOR_64
