@@ -24,6 +24,8 @@ public class WantedAIStateDefault : IState
 
     Transform _cashedTransform;
 
+    bool _bIsNearToSpline;
+
     public WantedAIStateDefault(NavMeshAgent agent, SplineContainer splineContainer, SplineAnimate splineAnimate)
     {
         _agent = agent;
@@ -44,12 +46,21 @@ public class WantedAIStateDefault : IState
 
     void Patroll()
     {
+        _bIsNearToSpline = (_cashedTransform.position - _selfTransform.position).sqrMagnitude < 1; // if distance is equal to 0 or less than 1
+        if (_bIsNearToSpline)
+        {
+            _splineAnimate.Play();
+        }
+        else
+        {
+            _splineAnimate.Pause();
+            _agent.SetDestination(_cashedTransform.position);
+        }
     }
 
     public void Entry()
     {
         Debug.Log("巡回を始める！");
-        _splineAnimate.Play();
     }
 
     public void Update()
@@ -61,7 +72,9 @@ public class WantedAIStateDefault : IState
     public void Exit()
     {
         Debug.Log("巡回を終わる！");
+        // Stop Spline Animation
         _splineAnimate.Pause();
+        // Cash The Transform Before Exit This State
         _cashedTransform = _selfTransform;
     }
 }
