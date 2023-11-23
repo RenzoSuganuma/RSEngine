@@ -1,10 +1,11 @@
 using RSEngine.StateMachine;
+using RSEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Splines;
+using RSEngine.AI;
 public class WantedCPU : MonoBehaviour
 {
     // ステートマシン
@@ -35,10 +36,8 @@ public class WantedCPU : MonoBehaviour
     // ターゲット
     [SerializeField] Transform _target;
     [SerializeField] int _targetLayerNum;
-    // 移動速度
-    [SerializeField] float _movespeed;
     // 徘徊経路
-    [SerializeField] SplineContainer _patrolingPath;
+    [SerializeField] PathHolder _patrolingPath;
     // 体力
     [SerializeField] float _health;
 

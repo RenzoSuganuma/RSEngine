@@ -1,12 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace RSEngine
 {
-    public class OperatorOverload : MonoBehaviour
+    public static class OperatorOverload
     {
-        private void Start()
-        {
-        }
+        
     }
 }

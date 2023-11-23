@@ -10,7 +10,7 @@ public class AI_Patroller_Path_Extensions : MonoBehaviour
     {
         // Create a custom game object
         GameObject root = new();
-        root.AddComponent<PartollingPathHolder>();
+        root.AddComponent<PathHolder>();
         root.name = "AI_PatrolPath_Root";
         // Ensure it gets reparented if this was a context click (otherwise does nothing)
         GameObjectUtility.SetParentAndAlign(root, menuCommand.context as GameObject);
