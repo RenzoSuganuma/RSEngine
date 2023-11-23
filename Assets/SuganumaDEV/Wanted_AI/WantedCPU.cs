@@ -59,7 +59,7 @@ public class WantedCPU : MonoBehaviour
         _stateMachine = new();
 
         // 各ステート初期化
-        _sDef = new(_patrolingPath, _agent, ref _selfTransform);
+        _sDef = new(_agent, _selfTransform, _patrolingPath);
         _sGaze = new(_sightRange, 2, transform, _targetLayer, _agent
             , (tTransform) =>
             {

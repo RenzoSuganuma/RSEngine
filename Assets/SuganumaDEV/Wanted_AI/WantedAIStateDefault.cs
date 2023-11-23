@@ -3,6 +3,8 @@ using UnityEngine.Splines;
 using RSEngine.StateMachine;
 using UnityEngine.AI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 /// <summary> Wanted AI State : Default </summary>
 /// デフォルトでは特定の経路をパトロールする。
 public class WantedAIStateDefault : IState
@@ -10,22 +12,21 @@ public class WantedAIStateDefault : IState
     // 各必要パラメータ
     Transform _selfTransform;
 
-    SplineContainer _splineContainer;
-
     NavMeshAgent _agent;
 
-    Tuple<Vector3, Quaternion> _cashedTransform;
+    List<Vector3> _patrolPath = new();
 
-    float _length;
-    float _current;
+    int _currentPathIndex;
 
-    bool _bNeedToGoNear;
-
-    public WantedAIStateDefault(SplineContainer splineContainer, NavMeshAgent agent, ref Transform selfTransform)
+    public WantedAIStateDefault(NavMeshAgent agent, Transform selfTransform, SplineContainer spline)
     {
-        _splineContainer = splineContainer;
         _agent = agent;
         _selfTransform = selfTransform;
+
+        foreach (var path in spline.Spline.Knots.ToList())
+        {
+            _patrolPath.Add(path.Position);
+        }
     }
 
     public void UpdateSelf(Transform selfTransform)
@@ -36,32 +37,23 @@ public class WantedAIStateDefault : IState
     public void Entry()
     {
         Debug.Log("巡回を始める！");
-        _length = _splineContainer.CalculateLength();
-        if (_cashedTransform == null)
-        {
-            var pos = _selfTransform.position;
-            var rot = _selfTransform.rotation;
-            _cashedTransform = Tuple.Create(pos, rot);
-        }
     }
 
     public void Update()
     {
         Debug.Log("巡回中");
-        _current += Time.deltaTime;
-        var time = Mathf.Min(_current, _length) / _length;
-
-        _splineContainer.Evaluate(time, out var position, out var tangent, out var upVector);
-        var rotation = Quaternion.LookRotation(Vector3.Normalize(tangent), upVector);
-
-        _selfTransform.SetPositionAndRotation(position, rotation);
+        if ((_selfTransform.position - _patrolPath[_currentPathIndex]).sqrMagnitude > 1)
+        {
+            _agent.SetDestination(_patrolPath[_currentPathIndex]);
+        }
+        else
+        {
+            _currentPathIndex = (_currentPathIndex < _patrolPath.Count) ? _currentPathIndex + 1 : 0;
+        }
     }
 
     public void Exit()
     {
         Debug.Log("巡回を終わる！");
-        var pos = _selfTransform.position;
-        var rot = _selfTransform.rotation;
-        _cashedTransform = Tuple.Create(pos, rot);
     }
 }
