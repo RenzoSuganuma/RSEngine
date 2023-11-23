@@ -12,7 +12,7 @@ public class WantedCPU : MonoBehaviour
     StateMachineFoundation _stateMachine;
 
     // ステート
-    /// <summary> デフォルトステート：アイドル </summary>
+    /// <summary> デフォルトステート：パトロール </summary>
     WantedAIStateDefault _sDef;
     /// <summary> ステート：注視 </summary>
     WantedAIStateGaze _sGaze;
@@ -25,7 +25,6 @@ public class WantedCPU : MonoBehaviour
 
     // 動かすのに必要
     NavMeshAgent _agent;
-    SplineAnimate _splineAnimate;
 
     // 各レンジ
     [SerializeField, Range(0f, 50f)] float _sightRange;
@@ -39,10 +38,11 @@ public class WantedCPU : MonoBehaviour
     // 移動速度
     [SerializeField] float _movespeed;
     // 徘徊経路
-    //[SerializeField] List<Transform> _patrollingPath;
     [SerializeField] SplineContainer _patrolingPath;
-
+    // 体力
     [SerializeField] float _health;
+
+    Transform _selfTransform;
 
     // AIトランジションフラグ
     bool _isInsideSightRange = false; // デフォルトから注視するまでの条件
@@ -50,21 +50,16 @@ public class WantedCPU : MonoBehaviour
     bool _isInsideAttackingRange = false; // 追跡をしていて攻撃可能圏内にプレイヤーが入った場合　攻撃するかの条件
     bool _isNoHealthNow = false;　// 死亡をした場合
 
-    [SerializeField] bool _anyState;
-
-    // 通常遷移タイプ
-    StateMachineTransitionType _tTStd = StateMachineTransitionType.StandardState;
-
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
-        _splineAnimate = GetComponent<SplineAnimate>();
+        _selfTransform = transform;
 
         // ステートマシン初期化
         _stateMachine = new();
 
         // 各ステート初期化
-        _sDef = new(_agent, _patrolingPath, _splineAnimate);
+        _sDef = new(_patrolingPath, _agent, ref _selfTransform);
         _sGaze = new(_sightRange, 2, transform, _targetLayer, _agent
             , (tTransform) =>
             {
@@ -80,8 +75,14 @@ public class WantedCPU : MonoBehaviour
                 if (!_isFoundTargetNow) _isFoundTargetNow = true;
             } // On Target Found
             );
+
         _sChase = new(_sightRange, _targetLayer, transform, _agent);
-        _sAttack = new(_attackRange, transform, _targetLayer, _agent, () => { Debug.Log("攻撃中...."); });
+        _sAttack = new(_attackRange, transform, _targetLayer, _agent
+            , () =>
+            {
+                Debug.Log("攻撃中....");
+            }
+            );
         _sDeath = new(transform, _agent);
 
         // 各ステートの登録
@@ -140,8 +141,8 @@ public class WantedCPU : MonoBehaviour
         // attack to chase
         _stateMachine.UpdateConditionOfTransition("A2C", ref _isInsideAttackingRange, !true);
 
-        //// any state to death
-        _stateMachine.UpdateConditionTransitionOfAnyState("DummyTransition", ref _anyState);
+        // any state to death
+        _stateMachine.UpdateConditionTransitionOfAnyState("DummyTransition", ref _isNoHealthNow);
     }
 
 #if UNITY_EDITOR_64

@@ -1,10 +1,8 @@
-using RSEngine.StateMachine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Splines;
+using RSEngine.StateMachine;
+using UnityEngine.AI;
+using System;
 /// <summary> Wanted AI State : Default </summary>
 /// デフォルトでは特定の経路をパトロールする。
 public class WantedAIStateDefault : IState
@@ -12,31 +10,22 @@ public class WantedAIStateDefault : IState
     // 各必要パラメータ
     Transform _selfTransform;
 
-    int _currentPathIndex;
+    SplineContainer _splineContainer;
 
     NavMeshAgent _agent;
 
-    SplineContainer _splineContainer;
+    Tuple<Vector3, Quaternion> _cashedTransform;
 
-    List<Vector3> _patrolPath = new();
+    float _length;
+    float _current;
 
-    SplineAnimate _splineAnimate;
+    bool _bNeedToGoNear;
 
-    Transform _cashedTransform;
-
-    bool _bIsNearToSpline;
-
-    public WantedAIStateDefault(NavMeshAgent agent, SplineContainer splineContainer, SplineAnimate splineAnimate)
+    public WantedAIStateDefault(SplineContainer splineContainer, NavMeshAgent agent, ref Transform selfTransform)
     {
-        _agent = agent;
-        _currentPathIndex = 0;
         _splineContainer = splineContainer;
-        var tmp = splineContainer.Spline.Knots.ToList();
-        foreach (var item in tmp)
-        {
-            _patrolPath.Add(item.Position);
-        }
-        _splineAnimate = splineAnimate;
+        _agent = agent;
+        _selfTransform = selfTransform;
     }
 
     public void UpdateSelf(Transform selfTransform)
@@ -44,37 +33,35 @@ public class WantedAIStateDefault : IState
         _selfTransform = selfTransform;
     }
 
-    void Patroll()
-    {
-        _bIsNearToSpline = (_cashedTransform.position - _selfTransform.position).sqrMagnitude < 1; // if distance is equal to 0 or less than 1
-        if (_bIsNearToSpline)
-        {
-            _splineAnimate.Play();
-        }
-        else
-        {
-            _splineAnimate.Pause();
-            _agent.SetDestination(_cashedTransform.position);
-        }
-    }
-
     public void Entry()
     {
         Debug.Log("巡回を始める！");
+        _length = _splineContainer.CalculateLength();
+        if (_cashedTransform == null)
+        {
+            var pos = _selfTransform.position;
+            var rot = _selfTransform.rotation;
+            _cashedTransform = Tuple.Create(pos, rot);
+        }
     }
 
     public void Update()
     {
         Debug.Log("巡回中");
-        Patroll();
+        _current += Time.deltaTime;
+        var time = Mathf.Min(_current, _length) / _length;
+
+        _splineContainer.Evaluate(time, out var position, out var tangent, out var upVector);
+        var rotation = Quaternion.LookRotation(Vector3.Normalize(tangent), upVector);
+
+        _selfTransform.SetPositionAndRotation(position, rotation);
     }
 
     public void Exit()
     {
         Debug.Log("巡回を終わる！");
-        // Stop Spline Animation
-        _splineAnimate.Pause();
-        // Cash The Transform Before Exit This State
-        _cashedTransform = _selfTransform;
+        var pos = _selfTransform.position;
+        var rot = _selfTransform.rotation;
+        _cashedTransform = Tuple.Create(pos, rot);
     }
 }
