@@ -4,9 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static RSEngine.OriginalMethods;
 /// <summary> Wanted AI State : Attack </summary>
 public class WantedAIStateAttack : IState
 {
+    #region __DEBUG__
+    bool __DEBUG__ = false;
+    #endregion
+
     float _attackingRange;
     LayerMask _targetLayer;
     Transform _selfTransform;
@@ -34,7 +39,8 @@ public class WantedAIStateAttack : IState
         {
             _agent.SetDestination(_selfTransform.position);
             if(onAttack != null) { onAttack(); }
-            Debug.Log("çUåÇÇ°ÅI");
+            Tap(__DEBUG__, 
+            ()=> Debug.Log("çUåÇÇ°ÅI"));
         }
     }
 

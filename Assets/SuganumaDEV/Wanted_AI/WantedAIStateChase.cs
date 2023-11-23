@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static RSEngine.OriginalMethods;
 /// <summary> Wanted AI State : Chase </summary>
 public class WantedAIStateChase : IState
 {
+    #region __DEBUG__
+    bool __DEBUG__ = false;
+    #endregion
+
     float _sightRange;
     LayerMask _targetLayer;
     Transform _selfTransform;
@@ -25,12 +30,14 @@ public class WantedAIStateChase : IState
 
     public void Entry()
     {
-        Debug.Log("追うぞ！");
+        Tap(__DEBUG__,
+        () => Debug.Log("追うぞ！"));
     }
 
     public void Update()
     {
-        Debug.Log("まて！");
+        Tap(__DEBUG__, 
+        () => Debug.Log("まて！"));
         if (Physics.CheckSphere(_selfTransform.position, _sightRange, _targetLayer))
         {
             var cols = Physics.OverlapSphere(_selfTransform.position, _sightRange, _targetLayer);
@@ -44,6 +51,7 @@ public class WantedAIStateChase : IState
 
     public void Exit()
     {
-        Debug.Log("もう追わない");
+        Tap(__DEBUG__,
+        ()=> Debug.Log("もう追わない"));
     }
 }

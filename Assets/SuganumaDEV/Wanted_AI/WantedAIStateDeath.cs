@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static RSEngine.OriginalMethods;
 /// <summary> Wanted AI State : Death </summary>
 public class WantedAIStateDeath : IState
 {
+    #region __DEBUG__
+    bool __DEBUG__ = false;
+    #endregion
+
     Transform _selfTransform;
     NavMeshAgent _agent;
 
@@ -23,7 +28,8 @@ public class WantedAIStateDeath : IState
     void Death()
     {
         _agent.SetDestination(_selfTransform.position);
-        Debug.Log("なん…だと…");
+        Tap(__DEBUG__,
+        ()=> Debug.Log("なん…だと…"));
     }
 
     public void Entry()

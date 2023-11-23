@@ -2,9 +2,14 @@ using RSEngine.StateMachine;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using static RSEngine.OriginalMethods;
 /// <summary> Wanted AI State : Gaze(注視) </summary>
 public class WantedAIStateGaze : IState
 {
+    #region __DEBUG__
+    bool __DEBUG__ = false;
+    #endregion
+
     float _sigthRange;
     float _gazingLimitTime;
     Transform _selfTransform;
@@ -35,7 +40,8 @@ public class WantedAIStateGaze : IState
     {
         if (Physics.CheckSphere(_selfTransform.position, _sigthRange, _targetLayer))
         {
-            Debug.Log("ん？");
+            Tap(__DEBUG__,
+            () => Debug.Log("ん？"));
             _agent.SetDestination(_selfTransform.position);
             _gazingTime += Time.deltaTime;
             var cols = Physics.OverlapSphere(_selfTransform.position, _sigthRange, _targetLayer);
@@ -43,7 +49,8 @@ public class WantedAIStateGaze : IState
 
             if (_gazingTime > _gazingLimitTime)
             {
-                Debug.Log("みつけたぞ！");
+                Tap(__DEBUG__,
+                () => Debug.Log("みつけたぞ！"));
                 _onTargetFound(cols[0].transform);
             }
         }
@@ -51,7 +58,8 @@ public class WantedAIStateGaze : IState
 
     public void Entry()
     {
-        Debug.Log("睨むぞ！");
+        Tap(__DEBUG__,
+        () => Debug.Log("睨むぞ！"));
     }
 
     public void Update()
@@ -61,7 +69,8 @@ public class WantedAIStateGaze : IState
 
     public void Exit()
     {
-        Debug.Log("睨んだ！");
+        Tap(__DEBUG__,
+        () => Debug.Log("睨んだ！"));
         _gazingTime = 0;
     }
 }
