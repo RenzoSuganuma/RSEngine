@@ -356,6 +356,7 @@ MonoBehaviour:
   _onTweeningEnd:
     m_PersistentCalls:
       m_Calls: []
+  _mode: 26
 --- !u!1 &1214503145
 GameObject:
   m_ObjectHideFlags: 0

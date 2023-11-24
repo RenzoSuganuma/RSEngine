@@ -44,22 +44,33 @@ namespace RSEngine
         {
             #region Process Core
             // 移動してくる画像
-            [SerializeField] Image _movingImage;
+            [SerializeField,
+                Header("イージングさせるImageコンポーネントを含むオブジェクトをアタッチ")]
+            Image _movingImage;
             // ゴールの画面座標
-            [SerializeField] RectTransform _goalRect;
+            [SerializeField,
+                Header("終点")] 
+            RectTransform _goalRect;
             // スタートの画面座標
-            [SerializeField] RectTransform _startRect;
+            [SerializeField,
+                Header("始点")] 
+            RectTransform _startRect;
             // デュレーション
-            [SerializeField] float _duration;
+            [SerializeField, 
+                Header("イージングにかける時間")] 
+            float _duration;
             // Tweeningが完了したときのイベント
-            [SerializeField] UnityEvent _onTweeningEnd;
+            [SerializeField,
+                Header("イージングが終わった際に発火させたいイベント")] 
+            UnityEvent _onTweeningEnd;
             // TweeningMode
-            [SerializeField] UIEasingMode _mode;
+            [SerializeField,
+                Header("イージングモード")] 
+            UIEasingMode _mode;
             // アニメーションしているかのフラグ
             bool _bIsAnimating = false;
             public bool IsTweening => _bIsAnimating;
             float _elapsedTime = 0;
-            MethodInfo _mInfo;
 
             private void FixedUpdate()
             {
@@ -98,6 +109,7 @@ namespace RSEngine
                         UIEasingMode.EaseInBounce => EaseInBounce(_elapsedTime),
                         UIEasingMode.EaseOutBounce => EaseOutBounce(_elapsedTime),
                         UIEasingMode.EaseInOutBounce => EaseInOutBounce(_elapsedTime),
+                        _ => EaseInBack(_elapsedTime)
                     };
                     #endregion
 
