@@ -352,7 +352,7 @@ MonoBehaviour:
   _movingImage: {fileID: 1471302029}
   _goalRect: {fileID: 1214503146}
   _startRect: {fileID: 886364128}
-  _duration: 10
+  _duration: 1
   _onTweeningEnd:
     m_PersistentCalls:
       m_Calls: []
