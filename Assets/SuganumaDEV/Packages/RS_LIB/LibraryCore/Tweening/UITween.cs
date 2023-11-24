@@ -108,6 +108,12 @@ namespace RSEngine
             {
                 return 1 - (1 - t) * (1 - t);
             }
+            float easeInOutQuad(float t)
+            {
+                return t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
+            }
+
+
 
             float easeInOutElastic(float t)
             {
