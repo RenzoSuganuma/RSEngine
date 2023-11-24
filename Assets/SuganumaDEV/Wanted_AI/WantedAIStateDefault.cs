@@ -1,3 +1,4 @@
+// 管理者 菅沼
 using UnityEngine;
 using RSEngine.StateMachine;
 using UnityEngine.AI;
@@ -40,14 +41,14 @@ public class WantedAIStateDefault : IState
 
     public void Entry()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         () => Debug.Log("巡回を始める！"));
         _agent.SetDestination(_selfTransform.position);
     }
 
     public void Update()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
             () => Debug.Log("巡回中"));
         if ((_selfTransform.position - _patrolPath[_currentPathIndex]).sqrMagnitude < 2)
         {
@@ -61,7 +62,7 @@ public class WantedAIStateDefault : IState
 
     public void Exit()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         () => Debug.Log("巡回を終わる！"));
     }
 }

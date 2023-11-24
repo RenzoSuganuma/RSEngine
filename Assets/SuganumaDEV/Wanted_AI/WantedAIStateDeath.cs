@@ -1,3 +1,4 @@
+// ŠÇ—Ò ›À
 using RSEngine.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ public class WantedAIStateDeath : IState
     void Death()
     {
         _agent.SetDestination(_selfTransform.position);
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         ()=> Debug.Log("‚È‚ñc‚¾‚Æc"));
     }
 

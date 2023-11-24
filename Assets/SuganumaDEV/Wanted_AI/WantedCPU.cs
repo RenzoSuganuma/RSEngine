@@ -1,9 +1,10 @@
+// 管理者 菅沼
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using RSEngine;
+using static RSEngine.OriginalMethods;
 using RSEngine.AI;
 using RSEngine.StateMachine;
 public class WantedCPU : MonoBehaviour
@@ -23,6 +24,9 @@ public class WantedCPU : MonoBehaviour
     WantedAIStateAttack _sAttack;
     /// <summary> ステート：死亡 </summary>
     WantedAIStateDeath _sDeath;
+
+    /// <summary> 確保判定デリゲート </summary>
+    public event Action OnPlayerCaptured;
 
     // 動かすのに必要
     NavMeshAgent _agent;
@@ -80,6 +84,7 @@ public class WantedCPU : MonoBehaviour
             , () =>
             {
                 Debug.Log("攻撃中....");
+                Knock(OnPlayerCaptured != null, OnPlayerCaptured);
             }
             );
         _sDeath = new(transform, _agent);

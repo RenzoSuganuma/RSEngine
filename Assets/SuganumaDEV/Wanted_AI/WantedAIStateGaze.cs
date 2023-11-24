@@ -1,3 +1,4 @@
+// 管理者 菅沼
 using RSEngine.StateMachine;
 using System;
 using UnityEngine;
@@ -40,7 +41,7 @@ public class WantedAIStateGaze : IState
     {
         if (Physics.CheckSphere(_selfTransform.position, _sigthRange, _targetLayer))
         {
-            Tap(__DEBUG__,
+            Knock(__DEBUG__,
             () => Debug.Log("ん？"));
             _agent.SetDestination(_selfTransform.position);
             _gazingTime += Time.deltaTime;
@@ -49,7 +50,7 @@ public class WantedAIStateGaze : IState
 
             if (_gazingTime > _gazingLimitTime)
             {
-                Tap(__DEBUG__,
+                Knock(__DEBUG__,
                 () => Debug.Log("みつけたぞ！"));
                 _onTargetFound(cols[0].transform);
             }
@@ -58,7 +59,7 @@ public class WantedAIStateGaze : IState
 
     public void Entry()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         () => Debug.Log("睨むぞ！"));
     }
 
@@ -69,7 +70,7 @@ public class WantedAIStateGaze : IState
 
     public void Exit()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         () => Debug.Log("睨んだ！"));
         _gazingTime = 0;
     }

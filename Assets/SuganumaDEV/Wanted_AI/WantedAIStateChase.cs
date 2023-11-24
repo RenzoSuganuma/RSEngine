@@ -1,3 +1,4 @@
+// ŠÇ—ŽÒ ›À
 using RSEngine.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,13 +31,13 @@ public class WantedAIStateChase : IState
 
     public void Entry()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         () => Debug.Log("’Ç‚¤‚¼I"));
     }
 
     public void Update()
     {
-        Tap(__DEBUG__, 
+        Knock(__DEBUG__, 
         () => Debug.Log("‚Ü‚ÄI"));
         if (Physics.CheckSphere(_selfTransform.position, _sightRange, _targetLayer))
         {
@@ -51,7 +52,7 @@ public class WantedAIStateChase : IState
 
     public void Exit()
     {
-        Tap(__DEBUG__,
+        Knock(__DEBUG__,
         ()=> Debug.Log("‚à‚¤’Ç‚í‚È‚¢"));
     }
 }

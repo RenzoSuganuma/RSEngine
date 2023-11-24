@@ -1,3 +1,4 @@
+// ŠÇ—Ò ›À
 using RSEngine.StateMachine;
 using System;
 using System.Collections;
@@ -39,7 +40,7 @@ public class WantedAIStateAttack : IState
         {
             _agent.SetDestination(_selfTransform.position);
             if(onAttack != null) { onAttack(); }
-            Tap(__DEBUG__, 
+            Knock(__DEBUG__, 
             ()=> Debug.Log("UŒ‚‚¡I"));
         }
     }
