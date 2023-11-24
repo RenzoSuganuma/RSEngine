@@ -52,7 +52,7 @@ namespace RSEngine
 
             /// <summary> 複数のステートを引数に渡してすべての渡されたAnyからのステートを登録 </summary>
             /// <param name="states"></param>
-            public void ResisteStatesFromAny(List<IState> states)
+            public void ResistStatesFromAny(List<IState> states)
             {
                 foreach (IState state in _statesFromAnyState)
                 {
@@ -64,7 +64,7 @@ namespace RSEngine
             /// <param name="from"></param>
             /// <param name="to"></param>
             /// <param name="name"></param>
-            public void ResistTransition(IState from, IState to, string name)
+            public void MakeTransition(IState from, IState to, string name)
             {
                 var tmp = new StateMachineTransition(from, to, name);
                 _transitions.Add(tmp);
@@ -74,7 +74,7 @@ namespace RSEngine
             /// <param name="from"></param>
             /// <param name="to"></param>
             /// <param name="name"></param>
-            public void ResistTransitionFromAny(IState to, string name)
+            public void MakeTransitionFromAny(IState to, string name)
             {
                 var tmp = new StateMachineTransition(new DummyStateClass(), to, name);
                 _transitionsFromAny.Add(tmp);
@@ -88,7 +88,7 @@ namespace RSEngine
             /// <param name="condition2transist"></param>
             /// <param name="tType"></param>
             /// <param name="equalsTo"></param>
-            public void UpdateConditionOfTransition(string name, ref bool condition2transist, bool equalsTo = true)
+            public void UpdateTransition(string name, ref bool condition2transist, bool equalsTo = true, bool isTrigger = false)
             {
                 if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
                 foreach (var t in _transitions)
@@ -100,6 +100,7 @@ namespace RSEngine
                         if (t.SFrom == _currentPlayingState) // 現在左ステートなら
                         {
                             _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                            if (isTrigger) condition2transist = !equalsTo; // IsTrigger が trueなら
                             _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
                             _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
                             _currentTransitionName = name; // 現在の遷移ネームを更新
@@ -117,7 +118,7 @@ namespace RSEngine
             /// <param name="name"></param>
             /// <param name="condition2transist"></param>
             /// <param name="equalsTo"></param>
-            public void UpdateConditionTransitionOfAnyState(string name, ref bool condition2transist, bool equalsTo = true)
+            public void UpdateTransitionFromAnyState(string name, ref bool condition2transist, bool equalsTo = true, bool isTrigger = false)
             {
                 if (_bIsPausing) return; // もし一時停止中なら更新処理はしない。
                 foreach (var t in _transitionsFromAny)
@@ -126,7 +127,7 @@ namespace RSEngine
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
                         _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
-                        condition2transist = !equalsTo; // 遷移条件を初期化
+                        if (isTrigger) condition2transist = !equalsTo; // 遷移条件を初期化
                         _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
                         _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
                         _currentTransitionName = name; // 現在の遷移ネームを更新
@@ -214,9 +215,6 @@ namespace RSEngine
 
         // 毎フレーム処理
         // トランジションの状態の更新
-
-        //開発面
-        // partial classとして宣言して分業の難易度を下げる
         #endregion
     }
 }

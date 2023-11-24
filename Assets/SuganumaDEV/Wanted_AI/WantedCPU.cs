@@ -1,18 +1,18 @@
-using RSEngine.StateMachine;
-using RSEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using RSEngine;
 using RSEngine.AI;
+using RSEngine.StateMachine;
 public class WantedCPU : MonoBehaviour
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
     StateMachineFoundation _stateMachine;
 
-    // ステート
+    // ステート IState の 派生クラス
     /// <summary> デフォルトステート：パトロール </summary>
     WantedAIStateDefault _sDef;
     /// <summary> ステート：注視 </summary>
@@ -93,16 +93,16 @@ public class WantedCPU : MonoBehaviour
 
         _stateMachine.ResisteStateFromAny(_sDeath);
 
-        _stateMachine.ResistTransition(_sDef, _sGaze, "D2G"); // default to gaze id{0}
-        _stateMachine.ResistTransition(_sGaze, _sDef, "G2D"); // gaze to default id{1}
+        _stateMachine.MakeTransition(_sDef, _sGaze, "D2G"); // default to gaze id{0}
+        _stateMachine.MakeTransition(_sGaze, _sDef, "G2D"); // gaze to default id{1}
 
-        _stateMachine.ResistTransition(_sGaze, _sChase, "G2C"); // gaze to chase id{2}
-        _stateMachine.ResistTransition(_sChase, _sGaze, "C2G"); // chase to default id{3}
+        _stateMachine.MakeTransition(_sGaze, _sChase, "G2C"); // gaze to chase id{2}
+        _stateMachine.MakeTransition(_sChase, _sGaze, "C2G"); // chase to default id{3}
 
-        _stateMachine.ResistTransition(_sChase, _sAttack, "C2A"); // chase to attack id{4}
-        _stateMachine.ResistTransition(_sAttack, _sChase, "A2C"); // attack to chase id{5}
+        _stateMachine.MakeTransition(_sChase, _sAttack, "C2A"); // chase to attack id{4}
+        _stateMachine.MakeTransition(_sAttack, _sChase, "A2C"); // attack to chase id{5}
 
-        _stateMachine.ResistTransitionFromAny(_sDeath, "DummyTransition");
+        _stateMachine.MakeTransitionFromAny(_sDeath, "DummyTransition");
 
         _stateMachine.PopStateMachine();
     }
@@ -123,25 +123,25 @@ public class WantedCPU : MonoBehaviour
         _sDeath.UpdateSelf(transform);
 
         // defalut to gaze
-        _stateMachine.UpdateConditionOfTransition("D2G", ref _isInsideSightRange);
+        _stateMachine.UpdateTransition("D2G", ref _isInsideSightRange);
 
         // gaze to deafult
-        _stateMachine.UpdateConditionOfTransition("G2D", ref _isInsideSightRange, !true);
+        _stateMachine.UpdateTransition("G2D", ref _isInsideSightRange, !true);
 
         // gaze to chase
-        _stateMachine.UpdateConditionOfTransition("G2C", ref _isFoundTargetNow);
+        _stateMachine.UpdateTransition("G2C", ref _isFoundTargetNow);
 
         // chase to gaze
-        _stateMachine.UpdateConditionOfTransition("C2G", ref _isFoundTargetNow, !true);
+        _stateMachine.UpdateTransition("C2G", ref _isFoundTargetNow, !true);
 
         // chase to attack
-        _stateMachine.UpdateConditionOfTransition("C2A", ref _isInsideAttackingRange);
+        _stateMachine.UpdateTransition("C2A", ref _isInsideAttackingRange);
 
         // attack to chase
-        _stateMachine.UpdateConditionOfTransition("A2C", ref _isInsideAttackingRange, !true);
+        _stateMachine.UpdateTransition("A2C", ref _isInsideAttackingRange, !true);
 
         // any state to death
-        _stateMachine.UpdateConditionTransitionOfAnyState("DummyTransition", ref _isNoHealthNow);
+        _stateMachine.UpdateTransitionFromAnyState("DummyTransition", ref _isNoHealthNow, true, true);
     }
 
 #if UNITY_EDITOR_64

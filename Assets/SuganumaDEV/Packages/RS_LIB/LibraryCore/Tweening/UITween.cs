@@ -1,14 +1,48 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 namespace RSEngine
 {
     namespace Tweening
     {
+        enum UIEasingMode
+        {
+            EaseInQuad,
+            EaseOutQuad,
+            EaseInOutQuad,
+            EaseInCubic,
+            EaseOutCubic,
+            EaseInOutCubic,
+            EaseInQuart,
+            EaseOutQuart,
+            EaseInOutQuart,
+            EaseInQuint,
+            EaseOutQuint,
+            EaseInOutQuint,
+            EaseInExpo,
+            EaseOutExpo,
+            EaseInOutExpo,
+            EaseInCirc,
+            EaseOutCirc,
+            EaseInOutCirc,
+            EaseInBack,
+            EaseOutBack,
+            EaseInOutBack,
+            EaseInElastic,
+            EaseOutElastic,
+            EaseInOutElastic,
+            EaseInBounce,
+            EaseOutBounce,
+            EaseInOutBounce,
+        }
+
         public class UITween : MonoBehaviour
         {
+            #region Process Core
             // 移動してくる画像
             [SerializeField] Image _movingImage;
             // ゴールの画面座標
@@ -17,8 +51,11 @@ namespace RSEngine
             [SerializeField] RectTransform _startRect;
             // デュレーション
             [SerializeField] float _duration;
+            // Tweeningが完了したときのイベント
+            [SerializeField] UnityEvent _onTweeningEnd;
             // アニメーションしているかのフラグ
             bool _bIsAnimating = false;
+            public bool IsTweening => _bIsAnimating;
             float _elapsedTime = 0;
 
             private void FixedUpdate()
@@ -34,6 +71,7 @@ namespace RSEngine
                     {
                         _elapsedTime = 0f;
                         _bIsAnimating = false;
+                        _onTweeningEnd?.Invoke();
                     }
                 }
             }
@@ -45,6 +83,30 @@ namespace RSEngine
                 {
                     _bIsAnimating = true;
                 }
+            }
+
+            #endregion
+            #region EasingFormulas
+            float easeInSine(float t)
+            {
+                return 1 - Mathf.Cos((t * Mathf.PI) / 2.0f);
+            }
+            float easeOutSine(float t)
+            {
+                return Mathf.Sin((t * Mathf.PI) / 2.0f);
+            }
+            float easeInOutSine(float t)
+            {
+                return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
+            }
+
+            float easeInQuad(float t)
+            {
+                return t * t;
+            }
+            float easeOutQuad(float t)
+            {
+                return 1 - (1 - t) * (1 - t);
             }
 
             float easeInOutElastic(float t)
@@ -84,6 +146,7 @@ namespace RSEngine
                     return n1 * (t -= 2.625f / d1) * t + 0.984375f;
                 }
             }
+            #endregion
         }
     }
 }
