@@ -60,6 +60,10 @@ namespace RSEngine
             [SerializeField, 
                 Header("イージングにかける時間")] 
             float _duration;
+            // スケールまでもTweeningするかのフラグ
+            [SerializeField,
+                Header("拡大縮小しながらイージングするかのフラグ")]
+            bool _easeWithScale;
             // Tweeningが完了したときのイベント
             [SerializeField,
                 Header("イージングが終わった際に発火させたいイベント")] 
@@ -68,6 +72,7 @@ namespace RSEngine
             [SerializeField,
                 Header("イージングモード")] 
             UIEasingMode _mode;
+
             // アニメーションしているかのフラグ
             bool _bIsAnimating = false;
             public bool IsTweening => _bIsAnimating;
@@ -117,6 +122,13 @@ namespace RSEngine
                     float xPos = (1 - t) * _startRect.position.x + t * _goalRect.position.x;
                     float yPos = (1 - t) * _startRect.position.y + t * _goalRect.position.y;
                     _movingImage.rectTransform.position = new Vector3(xPos, yPos, 0);
+                    if (_easeWithScale)
+                    {
+                        float xScl = (1 - t) * _startRect.localScale.x + t * _goalRect.localScale.x;
+                        float yScl = (1 - t) * _startRect.localScale.y + t * _goalRect.localScale.y;
+                        _movingImage.rectTransform.localScale = new Vector3(xScl, yScl, 0);
+                    }
+
                     if (_elapsedTime > 1f)
                     {
                         _elapsedTime = 0f;
