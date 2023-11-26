@@ -122,6 +122,7 @@ namespace RSEngine
                     float xPos = (1 - t) * _startRect.position.x + t * _goalRect.position.x;
                     float yPos = (1 - t) * _startRect.position.y + t * _goalRect.position.y;
                     _movingImage.rectTransform.position = new Vector3(xPos, yPos, 0);
+
                     if (_easeWithScale)
                     {
                         float xScl = (1 - t) * _startRect.localScale.x + t * _goalRect.localScale.x;
