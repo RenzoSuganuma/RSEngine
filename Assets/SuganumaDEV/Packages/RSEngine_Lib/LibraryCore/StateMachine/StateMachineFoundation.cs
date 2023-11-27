@@ -1,4 +1,5 @@
 // 管理者 菅沼
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,10 @@ namespace RSEngine
             string _currentTransitionName;
             // ステートマシンが一時停止中かのフラグ
             bool _bIsPausing = true;
+            // デリゲート公開部
+            public event Action<string> OnEntered;
+            public event Action<string> OnUpdated;
+            public event Action<string> OnExited;
 
             #region 登録処理
             /// <summary> ステートの登録 </summary>
@@ -101,9 +106,11 @@ namespace RSEngine
                         if (t.SFrom == _currentPlayingState) // 現在左ステートなら
                         {
                             _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                            OnExited(_currentTransitionName);
                             if (isTrigger) condition2transist = !equalsTo; // IsTrigger が trueなら
                             _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
                             _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                            OnEntered(_currentTransitionName);
                             _currentTransitionName = name; // 現在の遷移ネームを更新
                         }
                     }
@@ -111,6 +118,7 @@ namespace RSEngine
                     else if (t.Name == name)
                     {
                         _currentPlayingState.Update();
+                        OnUpdated(_currentTransitionName);
                     }
                 } // 全遷移を検索。
             }
@@ -128,15 +136,18 @@ namespace RSEngine
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
                         _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                        OnExited(_currentTransitionName);
                         if (isTrigger) condition2transist = !equalsTo; // 遷移条件を初期化
                         _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
                         _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                        OnEntered(_currentTransitionName);
                         _currentTransitionName = name; // 現在の遷移ネームを更新
                     }
                     // 遷移の条件を満たしてはいないが、遷移ネームが一致（更新されていないなら）現在のステートの更新処理を呼ぶ
                     else if (t.Name == name)
                     {
                         _currentPlayingState.Update();
+                        OnUpdated(_currentTransitionName);
                     }
                 } // 全遷移を検索。
             }
@@ -161,7 +172,7 @@ namespace RSEngine
         }
         // 各トランジションは名前を割り当てている
         /// <summary> ステート間遷移の情報を格納している </summary>
-        public partial class StateMachineTransition
+        public class StateMachineTransition
         {
             IState _from;
             public IState SFrom => _from;
@@ -186,7 +197,7 @@ namespace RSEngine
         }
 
         /// <summary> ダミーのステートのクラス </summary>
-        public class DummyStateClass : IState
+        class DummyStateClass : IState
         {
             public void Entry()
             {
@@ -202,7 +213,7 @@ namespace RSEngine
         }
 
         /// <summary> ステート遷移のタイプ </summary>
-        public enum StateMachineTransitionType
+        enum StateMachineTransitionType
         {
             StandardState,      // 通常 
             AnyState,           // 一フレームのみ遷移 
