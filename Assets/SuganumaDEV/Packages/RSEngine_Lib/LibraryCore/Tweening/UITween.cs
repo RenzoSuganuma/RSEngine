@@ -82,7 +82,7 @@ namespace RSEngine
             {
                 if (_bIsAnimating)
                 {
-                    Debug.Log("Tweening");
+                    //Debug.Log("Tweening");
                     _elapsedTime += Time.deltaTime / _duration;
                     float t;
                     #region EachMethod
@@ -132,8 +132,8 @@ namespace RSEngine
 
                     if (_elapsedTime > 1f)
                     {
-                        _elapsedTime = 0f;
                         _bIsAnimating = false;
+                        _movingImage.rectTransform.position = _goalRect.position;
                         _onTweeningEnd?.Invoke();
                     }
                 }
@@ -146,6 +146,11 @@ namespace RSEngine
                 {
                     _bIsAnimating = true;
                 }
+            }
+
+            public void ResetUIElementsPosition()
+            {
+                _movingImage.rectTransform.position = _startRect.position;
             }
 
             #endregion

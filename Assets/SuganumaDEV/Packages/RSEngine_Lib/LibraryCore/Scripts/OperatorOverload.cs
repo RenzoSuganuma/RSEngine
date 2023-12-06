@@ -5,8 +5,5 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace RSEngine
 {
-    public static class OperatorOverload
-    {
-        
-    }
+    public static class OperatorOverload {}
 }
