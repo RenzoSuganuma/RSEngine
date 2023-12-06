@@ -5,6 +5,9 @@ using UnityEngine;
 using RSEngine.Tweening;
 using UnityEditor;
 /// <summary> SNSのポップアップのようなイベントの発火を時間経過でランダムにする </summary>
+#region README
+// このコンポーネントは有効の間時間カウントをするので、してほしくない場合には無効化すること
+#endregion
 [RequireComponent(typeof(UITween))]
 public class SNSPopUpEvent : MonoBehaviour
 {
