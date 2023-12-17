@@ -1,7 +1,7 @@
 // 管理者 菅沼
 using System;
 using UnityEngine;
-using RSEngine;
+using SLib;
 /*
 * 特定のインスタンスのプロパティ値プールクラス
 * のプロパティを監視するクラス

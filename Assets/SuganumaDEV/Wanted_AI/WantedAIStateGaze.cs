@@ -1,9 +1,9 @@
 // ŠÇ—Ò ›À
-using RSEngine.StateMachine;
+using SLib.StateSequencer;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using static RSEngine.OriginalMethods;
+using static SLib.OriginalMethods;
 /// <summary> Wanted AI State : Gaze(’‹) </summary>
 public class WantedAIStateGaze : IState
 {

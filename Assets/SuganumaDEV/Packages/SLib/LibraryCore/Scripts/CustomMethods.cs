@@ -1,6 +1,6 @@
 // 管理者 菅沼
 using System;
-namespace RSEngine
+namespace SLib
 {
     #region 独自メソッド Original Methods
     /// <summary> 独自のメソッドを提供するクラス </summary>

@@ -3,12 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace RSEngine
+namespace SLib
 {
-    namespace StateMachine
+    namespace StateSequencer
     {
         /// <summary> ステートマシンの機能を提供する </summary>
-        public class StateMachineFoundation
+        public class StateSequencer
         {
             // 通常ステート
             HashSet<IState> _states = new HashSet<IState>();

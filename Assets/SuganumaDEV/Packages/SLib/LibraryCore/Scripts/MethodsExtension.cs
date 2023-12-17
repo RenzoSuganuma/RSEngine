@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-namespace RSEngine
+namespace SLib
 {
     /// <summary> 拡張メソッドを提供するクラス </summary>
     public static class MethodsExtension

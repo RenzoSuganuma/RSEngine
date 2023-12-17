@@ -1,11 +1,11 @@
 // ä«óùé“ êõè¿
-using RSEngine.StateMachine;
+using SLib.StateSequencer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static RSEngine.OriginalMethods;
+using static SLib.OriginalMethods;
 /// <summary> Wanted AI State : Attack </summary>
 public class WantedAIStateAttack : IState
 {

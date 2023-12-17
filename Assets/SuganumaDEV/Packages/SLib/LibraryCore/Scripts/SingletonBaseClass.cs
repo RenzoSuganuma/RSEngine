@@ -1,7 +1,7 @@
 // ŠÇ—Ò ›À
 using System;
 using UnityEngine;
-namespace RSEngine
+namespace SLib
 {
     namespace Singleton
     {

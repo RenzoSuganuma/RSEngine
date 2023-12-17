@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RSEngine.Tweening;
+using SLib.Tweening;
 using UnityEditor;
 /// <summary> SNSのポップアップのようなイベントの発火を時間経過でランダムにする </summary>
 #region README

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-namespace RSEngine
+namespace SLib
 {
     enum DetectingMode
     {

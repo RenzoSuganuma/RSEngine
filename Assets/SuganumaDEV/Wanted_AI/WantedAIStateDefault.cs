@@ -1,11 +1,11 @@
 // 管理者 菅沼
 using UnityEngine;
-using RSEngine.StateMachine;
+using SLib.StateSequencer;
 using UnityEngine.AI;
 using System;
 using System.Collections.Generic;
-using RSEngine.AI;
-using static RSEngine.OriginalMethods;
+using SLib.AI;
+using static SLib.OriginalMethods;
 
 /// <summary> Wanted AI State : Default </summary>
 /// デフォルトでは特定の経路をパトロールする。

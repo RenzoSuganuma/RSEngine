@@ -4,14 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static RSEngine.OriginalMethods;
-using RSEngine.AI;
-using RSEngine.StateMachine;
+using static SLib.OriginalMethods;
+using SLib.AI;
+using SLib.StateSequencer;
 public class WantedCPU : MonoBehaviour
 {
     // ステートマシン
     /// <summary> AIのステートベースな処理をサポートするためのステートマシン </summary>
-    StateMachineFoundation _stateMachine;
+    StateSequencer _stateMachine;
 
     // ステート IState の 派生クラス
     /// <summary> デフォルトステート：パトロール </summary>

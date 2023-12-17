@@ -1,10 +1,10 @@
 // ä«óùé“ êõè¿
-using RSEngine.StateMachine;
+using SLib.StateSequencer;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static RSEngine.OriginalMethods;
+using static SLib.OriginalMethods;
 /// <summary> Wanted AI State : Death </summary>
 public class WantedAIStateDeath : IState
 {
