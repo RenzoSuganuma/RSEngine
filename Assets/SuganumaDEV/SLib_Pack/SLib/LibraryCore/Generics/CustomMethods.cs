@@ -4,7 +4,7 @@ namespace SLib
 {
     #region 独自メソッド Original Methods
     /// <summary> 独自のメソッドを提供するクラス </summary>
-    public static class OriginalMethods
+    public static class SLib
     {
         /// <summary> 
         /// <para>第１引数が真の時のみ第２引数の処理を実行する </para>

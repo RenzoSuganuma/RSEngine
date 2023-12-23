@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static SLib.OriginalMethods;
+using static SLib.SLib;
 /// <summary> Wanted AI State : Attack </summary>
 public class WantedAIStateAttack : IState
 {

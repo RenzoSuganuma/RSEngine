@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static SLib.OriginalMethods;
+using static SLib.SLib;
 using SLib.AI;
 using SLib.StateSequencer;
 public class WantedCPU : MonoBehaviour

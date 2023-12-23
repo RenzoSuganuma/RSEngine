@@ -3,7 +3,7 @@ using SLib.StateSequencer;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using static SLib.OriginalMethods;
+using static SLib.SLib;
 /// <summary> Wanted AI State : Gaze(íçéã) </summary>
 public class WantedAIStateGaze : IState
 {

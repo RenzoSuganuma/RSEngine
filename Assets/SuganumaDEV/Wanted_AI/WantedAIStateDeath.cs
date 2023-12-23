@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static SLib.OriginalMethods;
+using static SLib.SLib;
 /// <summary> Wanted AI State : Death </summary>
 public class WantedAIStateDeath : IState
 {

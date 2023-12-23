@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using System;
 using System.Collections.Generic;
 using SLib.AI;
-using static SLib.OriginalMethods;
+using static SLib.SLib;
 
 /// <summary> Wanted AI State : Default </summary>
 /// デフォルトでは特定の経路をパトロールする。
