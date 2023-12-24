@@ -9,14 +9,14 @@ namespace SLib
     {
         [SerializeField] InputActionAsset _inputAction;
 
-        private void Awake()
+        private void OnEnable()
         {
             GameObject.DontDestroyOnLoad(this);
         }
 
         // ƒAƒNƒVƒ‡ƒ“–¼‚ðŽw’è‚µ‚Ä‚»‚ê‚É“o˜^
-        public void BindAction(string actionMapName, string actionName
-            , Action<InputAction.CallbackContext> callbackAction, ActionInvokeFaze actionInvokingFaze)
+        public void BindAxis(string actionMapName, string actionName
+        , Action<InputAction.CallbackContext> callbackAction, ActionInvokeFaze actionInvokingFaze)
         {
             var actionMap = _inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
@@ -34,6 +34,22 @@ namespace SLib
             }
         }
 
+        public void BindAction(string actionMapName, string actionName
+        , Action<InputAction.CallbackContext> callbackAction, bool IsLongPress = false)
+        {
+            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var action = actionMap.FindAction(actionName);
+            if (!IsLongPress)
+            {
+                action.started += callbackAction;
+                action.canceled += callbackAction;
+            }
+            else
+            {
+                action.performed += callbackAction;
+            }
+        }
+
         public T GetActionValueAs<T>(string actionMapName, string actionName)
         {
             var actionMap = _inputAction.FindActionMap(actionMapName);
@@ -43,7 +59,7 @@ namespace SLib
             {
                 var input = action.ReadValueAsObject();
                 if (input != null)
-                    result = (T)input;
+                { result = (T)input; }
             }
             return result;
         }
