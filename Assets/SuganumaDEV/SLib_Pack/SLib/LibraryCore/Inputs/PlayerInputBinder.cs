@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 namespace SLib
 {
-    public class InputWindow : MonoBehaviour
+    public class PlayerInputBinder : MonoBehaviour
     {
         [SerializeField] InputActionAsset _inputAction;
 
@@ -35,18 +35,21 @@ namespace SLib
         }
 
         public void BindAction(string actionMapName, string actionName
-        , Action<InputAction.CallbackContext> callbackAction, bool IsLongPress = false)
+        , Action<InputAction.CallbackContext> callbackActionStarted
+            , Action<InputAction.CallbackContext> callbackActionCanceled
+            , Action<InputAction.CallbackContext> callBackActionOnTriggered
+            , bool IsLongPress = false)
         {
             var actionMap = _inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
             if (!IsLongPress)
             {
-                action.started += callbackAction;
-                action.canceled += callbackAction;
+                action.started += callbackActionStarted;
+                action.canceled += callbackActionCanceled;
             }
             else
             {
-                action.performed += callbackAction;
+                action.performed += callBackActionOnTriggered;
             }
         }
 
