@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using SLib;
 using UnityEngine.InputSystem;
-using System.Linq;
-
 public enum DeviceInputType
 {
     Move,
@@ -27,7 +25,7 @@ public struct DeviceInputData
     }
 }
 
-public class InputBufferSample : MonoBehaviour
+public class InputBuffer : MonoBehaviour
 {
     PlayerInputBinder _inputBinder;
 
@@ -44,22 +42,14 @@ public class InputBufferSample : MonoBehaviour
         _inputBinder.BindAxis("Player", "Move",
             (InputAction.CallbackContext context) =>
             {
-                //_mInput = context.ReadValue<Vector2>();
-
-                DeviceInputData deviceInput = new DeviceInputData(context, DeviceInputType.Move);
-
-                _inputHistory.Add(deviceInput);
+                QueueInput(context, DeviceInputType.Move);
             }
             , ActionInvokeFaze.Performed);
 
         _inputBinder.BindAxis("Player", "Look",
             (InputAction.CallbackContext context) =>
             {
-                //_lInput = context.ReadValue<Vector2>();
-
-                DeviceInputData deviceInput = new DeviceInputData(context, DeviceInputType.Look);
-
-                _inputHistory.Add(deviceInput);
+                QueueInput(context, DeviceInputType.Look);
             }, ActionInvokeFaze.Performed);
 
         _inputBinder.BindAction("Player", "Fire",
@@ -67,20 +57,14 @@ public class InputBufferSample : MonoBehaviour
             {
                 if (context.ReadValueAsButton())
                 {
-                    //_fire = true;
-                    DeviceInputData deviceInput = new DeviceInputData(context, DeviceInputType.Fire);
-
-                    _inputHistory.Add(deviceInput);
+                    QueueInput(context, DeviceInputType.Fire);
                 }
             },
             (InputAction.CallbackContext context) =>
             {
                 if (!context.ReadValueAsButton())
                 {
-                    //_fire = false;
-                    DeviceInputData deviceInput = new DeviceInputData(context, DeviceInputType.Fire);
-
-                    _inputHistory.Add(deviceInput);
+                    QueueInput(context, DeviceInputType.Fire);
                 }
             },
             (InputAction.CallbackContext context) => { }
@@ -89,6 +73,44 @@ public class InputBufferSample : MonoBehaviour
 
     private void Update()
     {
+        Vector2 move = Vector2.zero;
+        Vector2 look = Vector2.zero;
+        bool fire = false;
+
+        var temp = EnQueueInput();
+
+        move = temp.move; 
+        look = temp.look;
+        fire = temp.fire;
+
+        Debug.Log($"Move Input[{move.ToString()}] , Look Input[{look.ToString()}], Fire Input [{fire.ToString()}]");
+    }
+
+    public void QueueInput(InputAction.CallbackContext context, DeviceInputType inputType)
+    {
+        DeviceInputData deviceInput;
+        switch (inputType)
+        {
+            case DeviceInputType.Move:
+                deviceInput = new DeviceInputData(context, DeviceInputType.Move);
+                _inputHistory.Add(deviceInput);
+                break;
+            case DeviceInputType.Look:
+                deviceInput = new DeviceInputData(context, DeviceInputType.Look);
+                _inputHistory.Add(deviceInput);
+                break;
+            case DeviceInputType.Fire:
+                deviceInput = new DeviceInputData(context, DeviceInputType.Fire);
+                _inputHistory.Add(deviceInput);
+                break;
+        }
+    }
+
+    public (Vector2 move, Vector2 look, bool fire) EnQueueInput()
+    {
+        Vector2 move = Vector2.zero;
+        Vector2 look = Vector2.zero;
+        bool fire = false;
 
         if (_inputHistory.Count > 0)
         {
@@ -96,10 +118,6 @@ public class InputBufferSample : MonoBehaviour
             _inputHistory.RemoveAt(0);
 
             InputAction.CallbackContext context = InputData.Context;
-
-            Vector2 move = Vector2.zero;
-            Vector2 look = Vector2.zero;
-            bool fire = false;
 
             switch (InputData.DeviceInputType)
             {
@@ -116,9 +134,7 @@ public class InputBufferSample : MonoBehaviour
                     break;
                 default: break;
             }
-
-            Debug.Log($"Move Input[{move.ToString()}] , Look Input[{look.ToString()}], Fire Input [{fire.ToString()}]");
         }
-
+        return (move, look, fire);
     }
 }
