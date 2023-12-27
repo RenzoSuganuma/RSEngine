@@ -34,6 +34,18 @@ namespace SLib
             }
         }
 
+        public void BindAxis(string actionMapName, string actionName
+            , Action<InputAction.CallbackContext> actionOnStarted
+            , Action<InputAction.CallbackContext> actionOnPerformed
+            , Action<InputAction.CallbackContext> actionOnCanceled)
+        {
+            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var action = actionMap.FindAction(actionName);
+            action.started += actionOnStarted;
+            action.performed += actionOnPerformed;
+            action.canceled += actionOnCanceled;
+        }
+
         public void BindAction(string actionMapName, string actionName
         , Action<InputAction.CallbackContext> callbackActionStarted
             , Action<InputAction.CallbackContext> callbackActionCanceled
