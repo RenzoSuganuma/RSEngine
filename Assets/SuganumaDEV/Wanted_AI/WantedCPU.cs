@@ -97,7 +97,7 @@ public class WantedCPU : MonoBehaviour
         _sChase,
         _sAttack,});
 
-        _stateMachine.ResisteStateFromAny(_sDeath);
+        _stateMachine.ResistStateFromAny(_sDeath);
 
         _stateMachine.MakeTransition(_sDef, _sGaze, "D2G"); // default to gaze id{0}
         _stateMachine.MakeTransition(_sGaze, _sDef, "G2D"); // gaze to default id{1}
