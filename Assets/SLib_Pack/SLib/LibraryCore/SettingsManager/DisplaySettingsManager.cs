@@ -1,14 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 // 担当 菅沼
 // ディスプレイのデバイス名とリフレッシュレートの変更はできたっぽい ← ここまでは動作確認できている
+// アクティブなディスプレイ切り替え機能 実装 OK
 // Player設定 ＞ FullScreen モード 、 Default Is Native Resolution = false この設定は必ずすること
 namespace SLib
 {
     public class DisplaySettingsManager : MonoBehaviour
     {
+        [SerializeField]
+        Dropdown _displaysDD;
+        [SerializeField]
+        Dropdown _resolutionsDD;
+
+        Dictionary<string, string> ResolutionsList = new()
+        {
+            {"FHD [1920×1080 16:9]" , "1920 1080"},
+            {"WSXGA [1680×1050 16:10]" , "1680 1050"},
+            {"WQHD [2560×1440 16:9]" , "2560 1440"},
+            {"WQXGA [2560×1600 16:10]" , "2560 1600"},
+        };
+
+        #region ScriptFunctions
+
+        /// <summary> DropDownOnValueChanged </summary>
+        /// <param name="dropdown"></param>
+        /// <returns></returns>
+        int DDOnValueChanged(Dropdown dropdown)
+        {
+            return dropdown.value;
+        }
+
         public string GetResolution()
         {
             return $"{Screen.currentResolution.ToString()}";
@@ -19,6 +46,13 @@ namespace SLib
             List<DisplayInfo> list = new List<DisplayInfo>();
             Screen.GetDisplayLayout(list);
             return list[index].name;
+        }
+
+        public List<DisplayInfo> GetDisplays()
+        {
+            List<DisplayInfo> list = new List<DisplayInfo>();
+            Screen.GetDisplayLayout(list);
+            return list;
         }
 
         /// <summary> 空白区切りでピクセル数の指定をする </summary>
@@ -41,6 +75,58 @@ namespace SLib
         public void SetRefreshRate(int rate)
         {
             Application.targetFrameRate = rate;
+        }
+
+        #endregion
+
+        public void ChangeGameDisplay(Dropdown dropdown)
+        {
+            int displayIndex = DDOnValueChanged(dropdown);
+            var displays = GetDisplays();
+            var display = displays[displayIndex];
+            Screen.MoveMainWindowTo(display, display.workArea.position);
+        }
+
+        public void ChangeGameResolutions(Dropdown dropdown)
+        {
+            int resolutionIndex = DDOnValueChanged(dropdown);
+            var resolutionRaw = ResolutionsList.Values.ToList();
+            var resolution = resolutionRaw[resolutionIndex];
+            SetDisplayResolutions(resolution);
+        }
+
+        void SetupActiveDisplaysDropdown()  // アクティブなディスプレイをドロップダウンへ名前のみ渡す
+        {
+            _displaysDD.options.Clear();
+            var displays = GetDisplays();
+            List<Dropdown.OptionData> optionData = new();
+            foreach (var display in displays)
+            {
+                var data = new Dropdown.OptionData();
+                data.text = display.name;
+                optionData.Add(data);
+            }
+            _displaysDD.options = optionData;
+        }
+
+        void SetupResolutionsDropDown()
+        {
+            _resolutionsDD.options.Clear();
+            List<Dropdown.OptionData> optionData = new();
+            var resolutions = ResolutionsList.Keys.ToList();
+            foreach (var resolution in resolutions)
+            {
+                Dropdown.OptionData data = new Dropdown.OptionData();
+                data.text = resolution;
+                optionData.Add(data);
+            }
+            _resolutionsDD.options = optionData;
+        }
+
+        private void Start()
+        {
+            SetupActiveDisplaysDropdown();
+            SetupResolutionsDropDown();
         }
     }
 }
