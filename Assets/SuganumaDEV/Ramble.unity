@@ -152,8 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034d734266082bc4dbb5dcc91c5a8419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lSpd: 0
-  rSpd: 0
+  _rumbleTable: []
 --- !u!4 &80682967
 Transform:
   m_ObjectHideFlags: 0
