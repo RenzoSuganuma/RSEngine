@@ -3,16 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using SLib.Devicies;
 // ì¬ F ›À
 namespace SLib
 {
-    namespace Device
+    namespace Devicies
     {
+        /// <summary> ƒQ[ƒ€ƒpƒbƒh‚ÌU“®‚ğ‚³‚¹‚é‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
         public class GamepadRumbler : MonoBehaviour
         {
             Gamepad _gamepad;
-            /// <summary> RumbleInfo ¶‚©‚ç ¶‚ÌU“® ‰E‚ÌU“® U“®‚ÌŠÔ </summary>
-            [SerializeField] List<RumbleInfo<float, float, float>> _rumbleTable;
+            /// <summary> U“®ƒvƒŠƒZƒbƒg ¶‚©‚ç ¶‚ÌU“® ‰E‚ÌU“® U“®‚ÌŠÔ </summary>
+            [SerializeField] GamepadRamblePreset _rumblePreset;
 
             private void Start()
             {
@@ -47,7 +49,7 @@ namespace SLib
 
             public IEnumerator RumbleByTable()
             {
-                foreach (var table in _rumbleTable)
+                foreach (var table in _rumblePreset.Rumbles)
                 {
                     _gamepad.SetMotorSpeeds(table.LeftStrength, table.RightStrength);
 
@@ -61,17 +63,17 @@ namespace SLib
         [Serializable]
         public class RumbleInfo<T, T1, T2>
         {
-            [SerializeField] T _strengthL;
-            public T LeftStrength { get { return _strengthL; } }
-            [SerializeField] T1 _strengthR;
-            public T1 RightStrength { get { return _strengthR; } }
+            [SerializeField] T _lowFreq_L;
+            public T LeftStrength { get { return _lowFreq_L; } }
+            [SerializeField] T1 _highFreq_R;
+            public T1 RightStrength { get { return _highFreq_R; } }
             [SerializeField] T2 _rumblingTime;
             public T2 Time { get { return _rumblingTime; } }
 
             public RumbleInfo(T leftStrength, T1 rightStrength, T2 rumbleTime)
             {
-                _strengthL = leftStrength;
-                _strengthR = rightStrength;
+                _lowFreq_L = leftStrength;
+                _highFreq_R = rightStrength;
                 _rumblingTime = rumbleTime;
             }
         }
