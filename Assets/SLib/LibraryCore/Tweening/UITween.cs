@@ -1,8 +1,4 @@
 // ŠÇ—ŽÒ ›À
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -119,18 +115,18 @@ namespace SgLib
                     };
                     #endregion
 
-                    float xPos = (1 - t) * startRect.position.x + t * goalRect.position.x;
-                    float yPos = (1 - t) * startRect.position.y + t * goalRect.position.y;
-                    movingImage.rectTransform.position = new Vector3(xPos, yPos, 0);
+                    float xPos = (1.0f - t) * startRect.position.x + t * goalRect.position.x;
+                    float yPos = (1.0f - t) * startRect.position.y + t * goalRect.position.y;
+                    movingImage.rectTransform.position = new Vector3(xPos, yPos, 0f);
 
                     if (easeWithScale)
                     {
-                        float xScl = (1 - t) * startRect.localScale.x + t * goalRect.localScale.x;
-                        float yScl = (1 - t) * startRect.localScale.y + t * goalRect.localScale.y;
-                        movingImage.rectTransform.localScale = new Vector3(xScl, yScl, 0);
+                        float xScl = (1.0f - t) * startRect.localScale.x + t * goalRect.localScale.x;
+                        float yScl = (1.0f - t) * startRect.localScale.y + t * goalRect.localScale.y;
+                        movingImage.rectTransform.localScale = new Vector3(xScl, yScl, 0f);
                     }
 
-                    if (_elapsedTime > 1f)
+                    if (_elapsedTime > 1.0f)
                     {
                         _bIsAnimating = false;
                         movingImage.rectTransform.position = goalRect.position;

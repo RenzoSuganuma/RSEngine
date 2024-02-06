@@ -102,8 +102,6 @@ public class ObjectiveMapIndicator : MonoBehaviour
 {
     [SerializeField, Header("Indicator Sprite Image")]
     Image ImageIcon;
-    [SerializeField, Header("Image Icon Size [px]")]
-    Vector2 Size2D;
     [SerializeField, Header("Player Tag")]
     string PlayerTag;
     [SerializeField, Header("Camera Tag")]
@@ -111,16 +109,16 @@ public class ObjectiveMapIndicator : MonoBehaviour
     [SerializeField, Header("Objective Tag")]
     string ObjTag;
 
-    Transform _targetTf;
-    public Transform Target { get { return _targetTf; } }
+    Transform _target;
+    public Transform Target { get { return _target; } }
 
     Camera _mainCam;
     RectTransform _rect;
 
     public void SetTarget(Transform target)
     {
-        _targetTf = target;
-        ImageIcon.color= (_targetTf == null) ? Color.clear : Color.white;
+        _target = target;
+        ImageIcon.color= (_target == null) ? Color.clear : Color.white;
 
         if (GameObject.FindGameObjectWithTag(CameraTag).GetComponent<Camera>() != null)
         {
@@ -143,23 +141,20 @@ public class ObjectiveMapIndicator : MonoBehaviour
             _mainCam = GameObject.FindGameObjectWithTag(CameraTag).GetComponentInChildren<Camera>();
         }
         _rect = ImageIcon.gameObject.GetComponent<RectTransform>();
-        ImageIcon.color = (_targetTf == null) ? Color.clear : Color.white;
+        ImageIcon.color = (_target == null) ? Color.clear : Color.white;
     }
 
     private void Update()
     {
         if (GameObject.FindAnyObjectByType<GameInfo>().GetSceneStatus != GameInfo.SceneTransitStatus.ToInGame)
-        {
-            Debug.Log("MAP ICON RETURNING");
-            return;
-        }
+        { return; }
 
         _rect = ImageIcon.gameObject.GetComponent<RectTransform>();
 
         float canvasScale = transform.root.localScale.z;
         var center = 0.5f * new Vector3(Screen.width, Screen.height);
 
-        var pos = _mainCam.WorldToScreenPoint(_targetTf.position) - center;
+        var pos = _mainCam.WorldToScreenPoint(_target.position) - center;
         if (pos.z < 0f)
         {
             pos.x = -pos.x;
@@ -185,7 +180,5 @@ public class ObjectiveMapIndicator : MonoBehaviour
             pos.y /= d;
         }
         _rect.anchoredPosition = pos / canvasScale;
-
-        Debug.Log($"Screen Pos {pos.ToString()}");
     }
 }
