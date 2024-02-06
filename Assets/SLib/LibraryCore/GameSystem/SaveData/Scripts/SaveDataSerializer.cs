@@ -9,7 +9,7 @@ namespace SgLib
 {
     namespace Systems
     {
-        public class PlayerSaveDataSerializer : SingletonBaseClass<PlayerSaveDataSerializer> // セーブデータの展開
+        public class SaveDataSerializer : SingletonBaseClass<SaveDataSerializer> // セーブデータの展開
         {
             protected override void ToDoAtAwakeSingleton() { }
 
@@ -27,8 +27,8 @@ namespace SgLib
                 {
                     var t = GameObject.FindGameObjectWithTag("Player_Pos_OnNoData").transform;
                     var data = new SaveDataTemplate();
-                    data._lastStandingRotation = t.rotation;
-                    data._lastStandingPosition = t.position;
+                    data.lastLookingRotation = t.rotation;
+                    data.lastStandingPosition = t.position;
 
                     return data;
                 }
