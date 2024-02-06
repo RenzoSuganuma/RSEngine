@@ -12,8 +12,8 @@ namespace SgLib
         public class GamepadRamblePreset : ScriptableObject
         {
             /// <summary> RumbleInfo ¶‚©‚ç ¶‚ÌU“® ‰E‚ÌU“® U“®‚ÌŠÔ </summary>
-            [SerializeField] List<RumbleInfo<float, float, float>> _rumbleTable;
-            public List<RumbleInfo<float, float, float>> Rumbles { get { return _rumbleTable; } }
+            [SerializeField] List<RumbleInfo<float, float, float>> rumbleTable;
+            public List<RumbleInfo<float, float, float>> Rumbles { get { return rumbleTable; } }
         }
     }
 }

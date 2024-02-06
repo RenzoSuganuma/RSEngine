@@ -47,31 +47,31 @@ namespace SgLib
             // 移動してくる画像
             [SerializeField,
                 Header("イージングさせるImageコンポーネントを含むオブジェクトをアタッチ")]
-            Image _movingImage;
+            Image movingImage;
             // ゴールの画面座標
             [SerializeField,
                 Header("終点")] 
-            RectTransform _goalRect;
+            RectTransform goalRect;
             // スタートの画面座標
             [SerializeField,
                 Header("始点")] 
-            RectTransform _startRect;
+            RectTransform startRect;
             // デュレーション
             [SerializeField, 
                 Header("イージングにかける時間")] 
-            float _duration;
+            float duration;
             // スケールまでもTweeningするかのフラグ
             [SerializeField,
                 Header("拡大縮小しながらイージングするかのフラグ")]
-            bool _easeWithScale;
+            bool easeWithScale;
             // Tweeningが完了したときのイベント
             [SerializeField,
                 Header("イージングが終わった際に発火させたいイベント")] 
-            UnityEvent _onTweeningEnd;
+            UnityEvent onTweeningEnd;
             // TweeningMode
             [SerializeField,
                 Header("イージングモード")] 
-            UIEasingMode _mode;
+            UIEasingMode mode;
 
             // アニメーションしているかのフラグ
             bool _bIsAnimating = false;
@@ -83,10 +83,10 @@ namespace SgLib
                 if (_bIsAnimating)
                 {
                     //Debug.Log("Tweening");
-                    _elapsedTime += Time.deltaTime / _duration;
+                    _elapsedTime += Time.deltaTime / duration;
                     float t;
                     #region EachMethod
-                    t = _mode switch
+                    t = mode switch
                     {
                         UIEasingMode.EaseInQuad => EaseInQuad(_elapsedTime),
                         UIEasingMode.EaseOutQuad => EaseOutQuad(_elapsedTime),
@@ -119,22 +119,22 @@ namespace SgLib
                     };
                     #endregion
 
-                    float xPos = (1 - t) * _startRect.position.x + t * _goalRect.position.x;
-                    float yPos = (1 - t) * _startRect.position.y + t * _goalRect.position.y;
-                    _movingImage.rectTransform.position = new Vector3(xPos, yPos, 0);
+                    float xPos = (1 - t) * startRect.position.x + t * goalRect.position.x;
+                    float yPos = (1 - t) * startRect.position.y + t * goalRect.position.y;
+                    movingImage.rectTransform.position = new Vector3(xPos, yPos, 0);
 
-                    if (_easeWithScale)
+                    if (easeWithScale)
                     {
-                        float xScl = (1 - t) * _startRect.localScale.x + t * _goalRect.localScale.x;
-                        float yScl = (1 - t) * _startRect.localScale.y + t * _goalRect.localScale.y;
-                        _movingImage.rectTransform.localScale = new Vector3(xScl, yScl, 0);
+                        float xScl = (1 - t) * startRect.localScale.x + t * goalRect.localScale.x;
+                        float yScl = (1 - t) * startRect.localScale.y + t * goalRect.localScale.y;
+                        movingImage.rectTransform.localScale = new Vector3(xScl, yScl, 0);
                     }
 
                     if (_elapsedTime > 1f)
                     {
                         _bIsAnimating = false;
-                        _movingImage.rectTransform.position = _goalRect.position;
-                        _onTweeningEnd?.Invoke();
+                        movingImage.rectTransform.position = goalRect.position;
+                        onTweeningEnd?.Invoke();
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace SgLib
 
             public void ResetUIElementsPosition()
             {
-                _movingImage.rectTransform.position = _startRect.position;
+                movingImage.rectTransform.position = startRect.position;
             }
 
             #endregion

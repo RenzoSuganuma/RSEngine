@@ -18,11 +18,11 @@ namespace SgLib
         public class DisplaySettingsManager : MonoBehaviour
         {
             [SerializeField]
-            Dropdown _displaysDD;
+            Dropdown displaysDD;
             [SerializeField]
-            Dropdown _resolutionsDD;
+            Dropdown resolutionsDD;
             [SerializeField]
-            Dropdown _refreshRateDD;
+            Dropdown refreshRateDD;
 
             int _resolutionIndex;
             public int ResolutionIndex => _resolutionIndex;
@@ -137,7 +137,7 @@ namespace SgLib
 
             void SetupActiveDisplaysDropdown()  // アクティブなディスプレイをドロップダウンへ名前のみ渡す
             {
-                _displaysDD.options.Clear();
+                displaysDD.options.Clear();
                 var displays = GetDisplays();
                 List<Dropdown.OptionData> optionData = new();
                 foreach (var display in displays)
@@ -146,12 +146,12 @@ namespace SgLib
                     data.text = display.name;
                     optionData.Add(data);
                 }
-                _displaysDD.options = optionData;
+                displaysDD.options = optionData;
             }
 
             void SetupResolutionsDropDown()
             {
-                _resolutionsDD.options.Clear();
+                resolutionsDD.options.Clear();
                 List<Dropdown.OptionData> optionData = new();
                 var resolutions = ResolutionsList.Keys.ToList();
                 foreach (var resolution in resolutions)
@@ -160,12 +160,12 @@ namespace SgLib
                     data.text = resolution;
                     optionData.Add(data);
                 }
-                _resolutionsDD.options = optionData;
+                resolutionsDD.options = optionData;
             }
 
             void SetupRefreshRateDropDown()
             {
-                _refreshRateDD.options.Clear();
+                refreshRateDD.options.Clear();
                 List<Dropdown.OptionData> optionData = new();
                 var rates = RefreshRateList.Keys.ToList();
                 foreach (var rate in rates)
@@ -174,7 +174,7 @@ namespace SgLib
                     data.text = rate;
                     optionData.Add(data);
                 }
-                _refreshRateDD.options = optionData;
+                refreshRateDD.options = optionData;
             }
 
             void Setup()

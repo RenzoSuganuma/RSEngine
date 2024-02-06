@@ -8,7 +8,7 @@ namespace SgLib
 {
     public class PlayerInputBinder : SingletonBaseClass<PlayerInputBinder>
     {
-        [SerializeField] InputActionAsset _inputAction;
+        [SerializeField] InputActionAsset inputAction;
 
         private void OnEnable()
         {
@@ -19,7 +19,7 @@ namespace SgLib
         public void BindAxis(string actionMapName, string actionName
         , Action<InputAction.CallbackContext> callbackAction, ActionInvokeFaze actionInvokingFaze)
         {
-            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var actionMap = inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
             switch (actionInvokingFaze)
             {
@@ -40,7 +40,7 @@ namespace SgLib
             , Action<InputAction.CallbackContext> actionOnPerformed
             , Action<InputAction.CallbackContext> actionOnCanceled)
         {
-            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var actionMap = inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
             action.started += actionOnStarted;
             action.performed += actionOnPerformed;
@@ -53,7 +53,7 @@ namespace SgLib
             , Action<InputAction.CallbackContext> callBackActionOnTriggered
             , bool IsLongPress = false)
         {
-            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var actionMap = inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
             if (!IsLongPress)
             {
@@ -68,7 +68,7 @@ namespace SgLib
 
         public T GetActionValueAs<T>(string actionMapName, string actionName)
         {
-            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var actionMap = inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
             T result = default;
             if (action != null)
@@ -82,7 +82,7 @@ namespace SgLib
 
         public bool GetActionValueAsButton(string actionMapName, string actionName)
         {
-            var actionMap = _inputAction.FindActionMap(actionMapName);
+            var actionMap = inputAction.FindActionMap(actionMapName);
             var action = actionMap.FindAction(actionName);
             return action.IsPressed();
         }

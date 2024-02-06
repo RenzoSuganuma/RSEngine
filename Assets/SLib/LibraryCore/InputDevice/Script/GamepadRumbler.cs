@@ -14,7 +14,7 @@ namespace SgLib
         {
             Gamepad _gamepad;
             /// <summary> U“®ƒvƒŠƒZƒbƒg ¶‚©‚ç ¶‚ÌU“® ‰E‚ÌU“® U“®‚ÌŠÔ </summary>
-            [SerializeField] GamepadRamblePreset _rumblePreset;
+            [SerializeField] GamepadRamblePreset rumblePreset;
 
             private void Start()
             {
@@ -49,7 +49,7 @@ namespace SgLib
 
             public IEnumerator RumbleByTable()
             {
-                foreach (var table in _rumblePreset.Rumbles)
+                foreach (var table in rumblePreset.Rumbles)
                 {
                     _gamepad.SetMotorSpeeds(table.LeftStrength, table.RightStrength);
 
@@ -63,17 +63,17 @@ namespace SgLib
         [Serializable]
         public class RumbleInfo<T, T1, T2>
         {
-            [SerializeField] T _lowFreq_L;
-            public T LeftStrength { get { return _lowFreq_L; } }
-            [SerializeField] T1 _highFreq_R;
-            public T1 RightStrength { get { return _highFreq_R; } }
+            [SerializeField] T _lowFreqL;
+            public T LeftStrength { get { return _lowFreqL; } }
+            [SerializeField] T1 _highFreqR;
+            public T1 RightStrength { get { return _highFreqR; } }
             [SerializeField] T2 _rumblingTime;
             public T2 Time { get { return _rumblingTime; } }
 
             public RumbleInfo(T leftStrength, T1 rightStrength, T2 rumbleTime)
             {
-                _lowFreq_L = leftStrength;
-                _highFreq_R = rightStrength;
+                _lowFreqL = leftStrength;
+                _highFreqR = rightStrength;
                 _rumblingTime = rumbleTime;
             }
         }

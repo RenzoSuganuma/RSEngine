@@ -111,12 +111,11 @@ public class ObjectiveMapIndicator : MonoBehaviour
     [SerializeField, Header("Objective Tag")]
     string ObjTag;
 
-    [SerializeField] bool experimental;
+    Transform _targetTf;
+    public Transform Target { get { return _targetTf; } }
 
-    Transform _targetTf, _player;
     Camera _mainCam;
     RectTransform _rect;
-    public Transform Target => _targetTf;
 
     public void SetTarget(Transform target)
     {
