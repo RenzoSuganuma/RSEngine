@@ -13,10 +13,10 @@ namespace SgLib
     /// <summary> “n‚³‚ê‚½•¶š—ñ‚ğ‚½‚¾DebugƒƒO‚Öo—Í‚·‚éB </summary>
     public class DummyLogger : MonoBehaviour
     {
-        [SerializeField] LoggingMode _mode;
+        [SerializeField] LoggingMode mode;
         public void DummyLoggerOutputLog(string message)
         {
-            switch (_mode)
+            switch (mode)
             {
                 case LoggingMode.Warning:
                     Debug.LogWarning(message);
