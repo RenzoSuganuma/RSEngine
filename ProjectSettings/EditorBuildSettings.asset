@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/SuganumaDEV/Scene.unity
+    path: Assets/Scenes/Scene.unity
     guid: f991f9e8d77de3746baa8739740eef0f
   - enabled: 1
     path: Assets/SuganumaDEV/save2.unity
