@@ -10,19 +10,26 @@ public class GameInfo : SingletonBaseClass<GameInfo>
     /// <summary> 遷移先シーンがどのようなものかを選択、保持する </summary>
     public enum SceneTransitStatus
     {
-        To_TitleScene,
-        To_UniqueScene,
-        To_InGameScene,
+        ToTitle,
+        ToUnique,
+        ToInGame,
     }
 
     [SerializeField]
-    string _titleSceneName;
+    SceneTransitStatus sceneStatus;
     [SerializeField]
-    SceneTransitStatus _sceneStat;
-    // 外部から覗かれるプロパティ
-    public SceneTransitStatus SceneStatus { get { return _sceneStat; } set { _sceneStat = value; } }
+    List<string> titleSceneNames;
+    [SerializeField]
+    List<string> inGameSceneNames;
+    [SerializeField]
+    List<string> uniqueSceneNames;
 
-    public string TitleSceneName { get { return _titleSceneName; } }
+    // 外部から覗かれるプロパティ
+    public SceneTransitStatus GetSceneStatus { get { return sceneStatus; }}
+
+    public List<string> SetTitleSceneName { set { this.titleSceneNames = value; } }
+    public List<string> SetInGameSceneName { set { this.inGameSceneNames = value; } }
+    public List<string> SetUniqueSceneName { set { this.uniqueSceneNames = value; } }
 
     protected override void ToDoAtAwakeSingleton()
     {
@@ -30,18 +37,36 @@ public class GameInfo : SingletonBaseClass<GameInfo>
 
         void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
         {
-            if (arg1.name == "Prolougue" || arg1.name == "Epilougue" || arg1.name == "StaffRoll")
+            #region [For-Each Loop] 
+            /// !!!-2/6 ここnull参照でバグ発生源かも
+            foreach (var name in titleSceneNames)
             {
-                _sceneStat = GameInfo.SceneTransitStatus.To_UniqueScene;
+                if (arg1.name == name)
+                {
+                    sceneStatus = SceneTransitStatus.ToTitle;
+                    break;
+                }
             }
-            else if (arg1.name == "InGame" || arg1.name == "LastScene" || arg0.name == TitleSceneName)
+
+            foreach (var name in inGameSceneNames)
             {
-                _sceneStat = GameInfo.SceneTransitStatus.To_InGameScene;
+                if (arg1.name == name)
+                {
+                    sceneStatus = SceneTransitStatus.ToInGame;
+                    break;
+                }
             }
-            else
+
+            foreach (var name in uniqueSceneNames)
             {
-                _sceneStat = GameInfo.SceneTransitStatus.To_TitleScene;
+                if (arg1.name == name)
+                {
+                    sceneStatus = SceneTransitStatus.ToUnique;
+                    break;
+                }
             }
+            /// !!!-
+            #endregion
         }
     }
 }

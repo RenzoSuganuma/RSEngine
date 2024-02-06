@@ -1,10 +1,7 @@
 using SgLib.Singleton;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 // çÏê¨ Ç∑Ç™Ç Ç‹
 namespace SgLib
 {
@@ -12,15 +9,24 @@ namespace SgLib
     {
         public class ApplicationQuitter : SingletonBaseClass<ApplicationQuitter>
         {
-            Transform _playerTransform;
+            [SerializeField, Header("Player Tag")]
+            string PlayerTag;
 
-            PlayerSaveDataCreator _playerSaveDataCreator;
-            GameInfo _gameInfo;
+            event Action<GameInfo.SceneTransitStatus> eventOnTransit;
+
+            public event Action<GameInfo.SceneTransitStatus>
+                EventOnTransit
+            {
+                add { eventOnTransit += value; }
+                remove { eventOnTransit -= value; }
+            }
+
+            Transform _pTrans;
+            GameInfo _gInfo;
 
             protected override void ToDoAtAwakeSingleton()
             {
-                _playerSaveDataCreator = GameObject.FindFirstObjectByType<PlayerSaveDataCreator>();
-                _gameInfo = GameObject.FindFirstObjectByType<GameInfo>();
+                _gInfo = GameObject.FindFirstObjectByType<GameInfo>();
             }
             public void QuitApplication()
             {
@@ -30,18 +36,8 @@ namespace SgLib
 #endif
                 #endregion
 
-                switch (_gameInfo.SceneStatus)
-                {
-                    case GameInfo.SceneTransitStatus.To_InGameScene:
-                        if (_playerTransform == null)
-                        {
-                            _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-                        }
-                        _playerSaveDataCreator.SavePlayerData(_playerTransform, SceneManager.GetActiveScene().name);
-                        break;
-                    case GameInfo.SceneTransitStatus.To_TitleScene: break;
-                    case GameInfo.SceneTransitStatus.To_UniqueScene: break;
-                }
+                eventOnTransit(_gInfo.GetSceneStatus);
+
                 Application.Quit();
             }
         }

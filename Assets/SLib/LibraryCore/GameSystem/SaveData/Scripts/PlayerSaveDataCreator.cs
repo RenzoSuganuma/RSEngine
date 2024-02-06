@@ -35,11 +35,11 @@ namespace SgLib
 
             public void SavePlayerDataAutomatically()
             {
-                switch (_gameInfo.SceneStatus)
+                switch (_gameInfo.GetSceneStatus)
                 {
-                    case GameInfo.SceneTransitStatus.To_TitleScene:
+                    case GameInfo.SceneTransitStatus.ToTitle:
                         break;
-                    case GameInfo.SceneTransitStatus.To_InGameScene:
+                    case GameInfo.SceneTransitStatus.ToInGame:
                         if (_playerTransform == null)
                         {
                             _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;

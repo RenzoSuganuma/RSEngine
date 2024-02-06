@@ -150,7 +150,7 @@ public class ObjectiveMapIndicator : MonoBehaviour
 
     private void Update()
     {
-        if (GameObject.FindAnyObjectByType<GameInfo>().SceneStatus != GameInfo.SceneTransitStatus.To_InGameScene)
+        if (GameObject.FindAnyObjectByType<GameInfo>().GetSceneStatus != GameInfo.SceneTransitStatus.ToInGame)
         {
             Debug.Log("MAP ICON RETURNING");
             return;
