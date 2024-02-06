@@ -10,29 +10,29 @@ namespace SgLib
         /// <summary> list 登録されたHUDを管理する </summary>
         public class HUDManager : SingletonBaseClass<HUDManager>     // list 最後尾が一番後ろ
         {
-            [SerializeField, Header("各HUDの親オブジェクト")]
-            GameObject _allHUDParent;
-            [SerializeField, Header("各HUDモジュール \n＃モジュールを＋で追加すること。絶対に並び変えない＃")]
-            List<GameObject> _huds;
+            [SerializeField, Header("The Object All HUD's Parent")]
+            GameObject allHUDParent;
+            [SerializeField, Header("Each HUD DO NOT RE ORDER")]
+            List<GameObject> hud;
 
-            public List<GameObject> HUDs => _huds;
+            public List<GameObject> HUDs => hud;
 
-            SceneLoader _sceneLoader;
+            SceneLoader _sLoader;
 
             public void ToFront(int index)
             {
-                var huds = _allHUDParent.GetChildObjects();
-                for (int i = 0; i < _allHUDParent.transform.childCount; i++)
+                var huds = allHUDParent.GetChildObjects();
+                for (int i = 0; i < allHUDParent.transform.childCount; i++)
                 {
                     huds[i].gameObject.GetComponent<CanvasGroup>().alpha = 0.0f;
                 }
-                _huds[index].transform.SetAsLastSibling();
-                _huds[index].gameObject.GetComponent<CanvasGroup>().alpha = 1.0f;
+                hud[index].transform.SetAsLastSibling();
+                hud[index].gameObject.GetComponent<CanvasGroup>().alpha = 1.0f;
             }
 
-            public void KillAll()
+            public void HideAll()
             {
-                var huds = _allHUDParent.GetChildObjects();
+                var huds = allHUDParent.GetChildObjects();
                 foreach (var hud in huds)
                 {
                     hud.gameObject.GetComponent<CanvasGroup>().alpha = 0.0f;
@@ -41,8 +41,8 @@ namespace SgLib
 
             protected override void ToDoAtAwakeSingleton()
             {
-                GameObject.DontDestroyOnLoad(_allHUDParent);
-                _sceneLoader = GameObject.FindFirstObjectByType<SceneLoader>();
+                GameObject.DontDestroyOnLoad(allHUDParent);
+                _sLoader = GameObject.FindFirstObjectByType<SceneLoader>();
             }
         }
     }

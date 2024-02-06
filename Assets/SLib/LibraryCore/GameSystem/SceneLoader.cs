@@ -15,12 +15,12 @@ namespace SgLib
     {
         public class SceneLoader : SingletonBaseClass<SceneLoader>
         {
-            [SerializeField, Header("Now Loading 表示のパネル")]
-            GameObject _nowLoadingPanel;
-            [SerializeField, Header("ローディングのテキスト")]
-            Text _loadingText;
-            [SerializeField, Header("シーン遷移時に必ず発火されるイベント")]
-            public UnityEvent<Scene> _eventOnSceneLoaded;
+            [SerializeField, Header("Now Loading Panel")]
+            GameObject nowLoadingPanel;
+            [SerializeField, Header("Loading Text")]
+            Text loadingText;
+            [SerializeField, Header("The Fired Event On Transit Scene")]
+            public UnityEvent<Scene> eventOnSceneLoaded;
 
             public void LoadSceneByName(string sceneName)
             {
@@ -29,17 +29,17 @@ namespace SgLib
 
             protected override void ToDoAtAwakeSingleton()
             {
-                _nowLoadingPanel.SetActive(false);
-                _nowLoadingPanel.transform.SetAsFirstSibling();
+                nowLoadingPanel.SetActive(false);
+                nowLoadingPanel.transform.SetAsFirstSibling();
                 SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
             }
 
             void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
             {
-                _eventOnSceneLoaded.Invoke(arg1);   // 他クラスから
+                eventOnSceneLoaded.Invoke(arg1);   // 他クラスから
 
-                _nowLoadingPanel.transform.SetAsFirstSibling();
-                _nowLoadingPanel.SetActive(false);
+                nowLoadingPanel.transform.SetAsFirstSibling();
+                nowLoadingPanel.SetActive(false);
             }
 
             IEnumerator LoadSceneAcyncByName(string sceneName)
@@ -47,8 +47,8 @@ namespace SgLib
                 AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
                 while (!asyncLoad.isDone)
                 {
-                    _nowLoadingPanel.transform.SetAsLastSibling();
-                    _nowLoadingPanel.SetActive(!false);
+                    nowLoadingPanel.transform.SetAsLastSibling();
+                    nowLoadingPanel.SetActive(!false);
 #if false
                     _loadingText.DOText("Loading...", 1);
 #endif
