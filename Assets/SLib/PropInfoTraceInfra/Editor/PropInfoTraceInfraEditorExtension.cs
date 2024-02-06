@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 public class PropInfoTraceInfraEditorExtension
 {
-    [MenuItem("GameObject/PropInfoTraceInfra(RSEngine)/Observer", false, 10)]
+    [MenuItem("GameObject/PropInfoTraceInfra(SgLib)/Observer", false, 10)]
     static void CreateObserverGameObject(MenuCommand menuCommand)
     {
         // Create a custom game object
@@ -15,7 +15,7 @@ public class PropInfoTraceInfraEditorExtension
         Selection.activeObject = go;
         go.AddComponent<PropertyInfoObserver>();
     }
-    [MenuItem("GameObject/PropInfoTraceInfra(RSEngine)/UserLinker", false, 10)]
+    [MenuItem("GameObject/PropInfoTraceInfra(SgLib)/UserLinker", false, 10)]
     static void CreateLinkerGameObject(MenuCommand menuCommand)
     {
         // Create a custom game object

@@ -134,7 +134,6 @@ public class ObjectiveMapIndicator : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag(PlayerTag).transform;
         if (GameObject.FindGameObjectWithTag(CameraTag).GetComponent<Camera>() != null)
         {
             _mainCam = GameObject.FindGameObjectWithTag(CameraTag).GetComponent<Camera>();
