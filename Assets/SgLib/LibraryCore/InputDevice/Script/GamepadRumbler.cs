@@ -1,19 +1,19 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using SgLib.Devicies;
-// ì¬ F ›À
+// ä½œæˆ ï¼š è…æ²¼
 namespace SgLib
 {
     namespace Devicies
     {
-        /// <summary> ƒQ[ƒ€ƒpƒbƒh‚ÌU“®‚ğ‚³‚¹‚é‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
+        /// <summary> ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰ã®æŒ¯å‹•ã‚’ã•ã›ã‚‹æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </summary>
         public class GamepadRumbler : MonoBehaviour
         {
             Gamepad _gamepad;
-            /// <summary> U“®ƒvƒŠƒZƒbƒg ¶‚©‚ç ¶‚ÌU“® ‰E‚ÌU“® U“®‚ÌŠÔ </summary>
+            /// <summary> æŒ¯å‹•ãƒ—ãƒªã‚»ãƒƒãƒˆ å·¦ã‹ã‚‰ å·¦ã®æŒ¯å‹• å³ã®æŒ¯å‹• æŒ¯å‹•ã®æ™‚é–“ </summary>
             [SerializeField] GamepadRamblePreset rumblePreset;
 
             private void Start()

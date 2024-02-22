@@ -1,4 +1,4 @@
-using SgLib.Singleton;
+Ôªøusing SgLib.Singleton;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -36,7 +36,7 @@ namespace SgLib
 
             void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
             {
-                eventOnSceneLoaded.Invoke(arg1);   // ëºÉNÉâÉXÇ©ÇÁ
+                eventOnSceneLoaded.Invoke(arg1);   // ‰ªñ„ÇØ„É©„Çπ„Åã„Çâ
 
                 nowLoadingPanel.transform.SetAsFirstSibling();
                 nowLoadingPanel.SetActive(false);

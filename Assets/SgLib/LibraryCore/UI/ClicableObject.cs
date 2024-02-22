@@ -1,11 +1,11 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-#region Ql•¶Œ£
+#region å‚è€ƒæ–‡çŒ®
 // https://qiita.com/sune2/items/cf9ef9d197b47b2d7a10
 // https://www.nttpc.co.jp/technology/number_algorithm.html
 #endregion
@@ -13,7 +13,7 @@ using UnityEngine.Events;
 namespace SgLib.UI
 {
     /// <summary> 
-    /// <para> ƒ{ƒ^ƒ“‚Ì‚æ‚¤‚È‹@”\‚ğ’ñ‹Ÿ‚·‚é </para>
+    /// <para> ãƒœã‚¿ãƒ³ã®ã‚ˆã†ãªæ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </para>
     /// This Component Works As Button
     /// </summary>
     public class ClicableObject : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasRaycastFilter
@@ -39,17 +39,17 @@ namespace SgLib.UI
             var rectT = (RectTransform)transform;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectT, sp, eventCamera, out local))
             {
-                // ‰æ–Ê“à‚ÌRectTransform‚Ì•½–Ê‚Éray‚ªƒqƒbƒg‚·‚ê‚Îtrue ‚±‚±‚Å‚Íƒqƒbƒg‚µ‚È‚©‚Á‚½ê‡
+                // ç”»é¢å†…ã®RectTransformã®å¹³é¢ã«rayãŒãƒ’ãƒƒãƒˆã™ã‚Œã°true ã“ã“ã§ã¯ãƒ’ãƒƒãƒˆã—ãªã‹ã£ãŸå ´åˆ
                 return false;
             }
             var rect = rectT.rect;
-            // ƒXƒvƒ‰ƒCƒg“à‚É“–‚½‚Á‚½ê‡A‚»‚ÌÀ•W‚ğ‹‚ß‚é
+            // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå†…ã«å½“ãŸã£ãŸå ´åˆã€ãã®åº§æ¨™ã‚’æ±‚ã‚ã‚‹
             var pivot = rectT.pivot;
             var sprite = _image.sprite;
             var x = (local.x / rect.width + pivot.x - .5f) * sprite.rect.width / sprite.pixelsPerUnit;
             var y = (local.y / rect.height + pivot.y - .5f) * sprite.rect.height / sprite.pixelsPerUnit;
             var p = new Vector2(x, y);
-            // “àŠO”»’è
+            // å†…å¤–åˆ¤å®š
             var physicShapeCnt = sprite.GetPhysicsShapeCount();
             for (int i = 0; i < physicShapeCnt; i++)
             {
@@ -66,30 +66,30 @@ namespace SgLib.UI
             return a.x * b.y - a.y * b.x;
         }
 
-        // ’¸“_‚Æ“_‚‚ğ“n‚µ‚Ä“àŠO”»’è‚ğ‚·‚é
+        // é ‚ç‚¹ã¨ç‚¹ï½ã‚’æ¸¡ã—ã¦å†…å¤–åˆ¤å®šã‚’ã™ã‚‹
         bool IsInside(List<Vector2> verts, Vector2 point)
         {
-            #region ‚¾‚ß‚¾‚Á‚½ƒAƒ‹ƒSƒŠƒYƒ€
+            #region ã ã‚ã ã£ãŸã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ 
 #if false
             int cnt = 0;
             for (int i = 0; i < verts.Count - 1; i++)
             {
-                // ãŒü‚«‚Ì•Ó [ “_‚‚ª‚™²•ûŒü‚É‚Â‚¢‚ÄAn“_‚ÆI“_‚ÌŠÔ‚É‚ ‚èI“_‚ğŠÜ‚ñ‚Å‚¢‚È‚¢
+                // ä¸Šå‘ãã®è¾º ãƒ¼ ç‚¹ï½ãŒï½™è»¸æ–¹å‘ã«ã¤ã„ã¦ã€å§‹ç‚¹ã¨çµ‚ç‚¹ã®é–“ã«ã‚ã‚Šçµ‚ç‚¹ã‚’å«ã‚“ã§ã„ãªã„
                 if (((verts[i].y <= point.y) && (verts[i + 1].y > point.y))
-                    // ‰ºŒü‚«‚Ì•Ó [ “_‚‚ª‚™²•ûŒü‚É‚Â‚¢‚ÄAn“_‚ÆI“_‚ÌŠÔ‚É‚ ‚èAn“_‚ğŠÜ‚ñ‚Å‚¢‚È‚¢
+                    // ä¸‹å‘ãã®è¾º ãƒ¼ ç‚¹ï½ãŒï½™è»¸æ–¹å‘ã«ã¤ã„ã¦ã€å§‹ç‚¹ã¨çµ‚ç‚¹ã®é–“ã«ã‚ã‚Šã€å§‹ç‚¹ã‚’å«ã‚“ã§ã„ãªã„
                     || (verts[i].y > point.y) && (verts[i + 1].y <= point.y))
                 {
                     var vt = (point.y - verts[i].y) / (verts[i + 1].y - verts[i].y);
-                    // •Ó‚Í“_‚‚æ‚è‚à‰E‘¤‚É‚ ‚é‚ªd‚È‚ç‚È‚¢
-                    // •Ó‚ª“_‚‚Æ“¯‚¶‚‚³‚É‚È‚éˆÊ’u‚ğ“Á’èA‚»‚Ì‚Ì‚˜‚Ì’l‚Æ“_‚‚Ì‚˜‚Ì’l‚ğ”äŠr
-                    // ‚à‚µ¬‚³‚¢ê‡i¶‘¤‚É‚ ‚éj
+                    // è¾ºã¯ç‚¹ï½ã‚ˆã‚Šã‚‚å³å´ã«ã‚ã‚‹ãŒé‡ãªã‚‰ãªã„
+                    // è¾ºãŒç‚¹ï½ã¨åŒã˜é«˜ã•ã«ãªã‚‹ä½ç½®ã‚’ç‰¹å®šã€ãã®æ™‚ã®ï½˜ã®å€¤ã¨ç‚¹ï½ã®ï½˜ã®å€¤ã‚’æ¯”è¼ƒ
+                    // ã‚‚ã—å°ã•ã„å ´åˆï¼ˆå·¦å´ã«ã‚ã‚‹ï¼‰
                     if (point.x < (verts[i].x + (vt * verts[i + 1].x - verts[i].x)))
                     {
                         ++cnt;
                     }
                 }
             }
-            return !(cnt % 2 == 0); // Œğ·‰ñ”‚ª‹ô”‚Ìê‡‚É‚Í“à•”‚É‚Í‚È‚¢
+            return !(cnt % 2 == 0); // äº¤å·®å›æ•°ãŒå¶æ•°ã®å ´åˆã«ã¯å†…éƒ¨ã«ã¯ãªã„
 #endif
             #endregion
             var n = verts.Count;

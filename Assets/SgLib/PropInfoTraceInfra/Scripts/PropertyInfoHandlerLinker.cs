@@ -1,15 +1,15 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary> ƒvƒƒpƒeƒBî•ñƒnƒ“ƒhƒ‰[‚Ç‚¤‚µ‚ÌƒŠƒ“ƒJ‚Ì‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
+/// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ãƒãƒ³ãƒ‰ãƒ©ãƒ¼ã©ã†ã—ã®ãƒªãƒ³ã‚«ã®æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </summary>
 public class PropertyInfoHandlerLinker : MonoBehaviour
 {
-    /// <summary> ƒvƒƒpƒeƒBQÆŒ³‚Ìî•ñƒnƒ“ƒhƒ‰[ </summary>
-    [SerializeField] PropertyInfoHandler _sender; // ƒvƒƒpƒeƒBQÆŒ³
+    /// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å‚ç…§å…ƒã®æƒ…å ±ãƒãƒ³ãƒ‰ãƒ©ãƒ¼ </summary>
+    [SerializeField] PropertyInfoHandler _sender; // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å‚ç…§å…ƒ
     public PropertyInfoHandler Sender => _sender;
-    /// <summary> ƒvƒƒpƒeƒBQÆŒ³‚Ìƒf[ƒ^‚Ì‰Šú‰»æiƒ^[ƒQƒbƒgj </summary>
-    [SerializeField] PropertyInfoHandler _receiver; // ƒvƒƒpƒeƒBQÆ’l‚Ì‰Šú‰»æ
+    /// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å‚ç…§å…ƒã®ãƒ‡ãƒ¼ã‚¿ã®åˆæœŸåŒ–å…ˆï¼ˆã‚¿ãƒ¼ã‚²ãƒƒãƒˆï¼‰ </summary>
+    [SerializeField] PropertyInfoHandler _receiver; // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å‚ç…§å€¤ã®åˆæœŸåŒ–å…ˆ
     public PropertyInfoHandler Receiver => _receiver;
     List<string> _senderResisters = new();
     public List<string> SenderResisters => _senderResisters;
@@ -28,8 +28,8 @@ public class PropertyInfoHandlerLinker : MonoBehaviour
         if (_sender == null && _receiver == null)
         { throw new Exception("You Need Assing Both Sender And Receiver"); }
     }
-    #region ‹¤’Ê•”
-    /// <summary> ƒf[ƒ^‚Ì‰¡—¬‚µ‚ğƒTƒ|[ƒg‚·‚éƒƒ\ƒbƒhSender‚©‚çReceiver‚Ö—¬‚· </summary>
+    #region å…±é€šéƒ¨
+    /// <summary> ãƒ‡ãƒ¼ã‚¿ã®æ¨ªæµã—ã‚’ã‚µãƒãƒ¼ãƒˆã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰Senderã‹ã‚‰Receiverã¸æµã™ </summary>
     /// <param name="senderPropHandler"></param>
     /// <param name="senderReristerName"></param>
     /// <param name="receiverPropHandler"></param>
@@ -38,14 +38,14 @@ public class PropertyInfoHandlerLinker : MonoBehaviour
     {
         receiverPropHandler.DataMap[receiverResisterName] = senderPropHandler.DataMap[senderReristerName];
     }
-    /// <summary> “o˜^‚µ‚½’l‚ÌXV </summary>
+    /// <summary> ç™»éŒ²ã—ãŸå€¤ã®æ›´æ–° </summary>
     /// <param name="resisterName"></param>
     /// <param name="value"></param>
-    void UpdateData(PropertyInfoHandler propHandler, string resisterName, object value) // ƒvƒƒpƒeƒBQÆŒ³‚É“o˜^‚³‚ê‚Ä‚¢‚é“o˜^–¼‚É‘Î‰‚µ‚½’l‚ÌXV
+    void UpdateData(PropertyInfoHandler propHandler, string resisterName, object value) // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å‚ç…§å…ƒã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ç™»éŒ²åã«å¯¾å¿œã—ãŸå€¤ã®æ›´æ–°
     {
         propHandler.DataMap[resisterName] = value;
     }
-    /// <summary> ƒf[ƒ^ƒx[ƒX‚©‚ç‚Ìƒf[ƒ^‚Ì’Šo </summary>
+    /// <summary> ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿ã®æŠ½å‡º </summary>
     /// <param name="resisterIndex"></param>
     /// <returns></returns>
     object ExtractData(PropertyInfoHandler propHandler, string resisterName)
@@ -53,66 +53,66 @@ public class PropertyInfoHandlerLinker : MonoBehaviour
         return propHandler.DataMap[resisterName];
     }
     #endregion
-    #region ƒvƒƒpƒeƒBî•ñƒZƒ“ƒ_
-    /// <summary> ƒZƒ“ƒ_[“o˜^–¼ƒŠƒXƒg‚Ì“o˜^ </summary>
+    #region ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚»ãƒ³ãƒ€
+    /// <summary> ã‚»ãƒ³ãƒ€ãƒ¼ç™»éŒ²åãƒªã‚¹ãƒˆã®ç™»éŒ² </summary>
     /// <param name="resisterNames"></param>
-    public void ApplySenderResisterList(List<string> resisterNames) // QÆŒ³‚©‚çŒÄ‚Ño‚³‚ê‚é
+    public void ApplySenderResisterList(List<string> resisterNames) // å‚ç…§å…ƒã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹
     {
         _senderResisters = resisterNames;
     }
-    /// <summary> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚½ƒŒƒV[ƒo[‚Ìƒf[ƒ^‚ğƒZƒ“ƒ_[‚É“o˜^‚³‚ê‚Ä‚é’l‚É‚·‚é </summary>
-    /// <param name="senderResisterName"> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒZƒ“ƒ_[‚Ì•Û‚·‚éƒŒƒWƒXƒ^–¼ </param>
-    /// <param name="receiverResisterName"> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚éƒŒƒV[ƒo[‚Ì•Û‚·‚éƒŒƒWƒXƒ^–¼ </param>
+    /// <summary> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚ŒãŸãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒ³ãƒ€ãƒ¼ã«ç™»éŒ²ã•ã‚Œã¦ã‚‹å€¤ã«ã™ã‚‹ </summary>
+    /// <param name="senderResisterName"> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã‚»ãƒ³ãƒ€ãƒ¼ã®ä¿æŒã™ã‚‹ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
+    /// <param name="receiverResisterName"> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã‚‹ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ä¿æŒã™ã‚‹ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
     public void SendDataSenderToReceiver(string senderResisterName, string receiverResisterName)
     {
         PassData(_sender, senderResisterName, _receiver, receiverResisterName);
         if (OnSenderDataSendedToReceiver != null) { OnSenderDataSendedToReceiver(); }
     }
-    /// <summary> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒZƒ“ƒ_[‚ÌƒŒƒWƒXƒ^‚Ìƒf[ƒ^‚ğXV‚·‚é </summary>
-    /// <param name="resisterName"> ƒZƒ“ƒ_[‚ÌƒŒƒWƒXƒ^–¼ </param>
-    /// <param name="value"> XVŒã‚Ì’l </param>
+    /// <summary> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã‚»ãƒ³ãƒ€ãƒ¼ã®ãƒ¬ã‚¸ã‚¹ã‚¿ã®ãƒ‡ãƒ¼ã‚¿ã‚’æ›´æ–°ã™ã‚‹ </summary>
+    /// <param name="resisterName"> ã‚»ãƒ³ãƒ€ãƒ¼ã®ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
+    /// <param name="value"> æ›´æ–°å¾Œã®å€¤ </param>
     public void UpdateSenderData(string resisterName, object value)
     {
         UpdateData(_sender, resisterName, value);
         if (OnSenderDataUpdated != null) { OnSenderDataUpdated(); }
     }
-    /// <summary> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒZƒ“ƒ_[‚©‚ç’l‚ğ’Šo‚·‚é </summary>
-    /// <param name="resisterName"> ƒZƒ“ƒ_[‘¤‚ÌƒŒƒWƒXƒ^–¼ </param>
+    /// <summary> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã‚»ãƒ³ãƒ€ãƒ¼ã‹ã‚‰å€¤ã‚’æŠ½å‡ºã™ã‚‹ </summary>
+    /// <param name="resisterName"> ã‚»ãƒ³ãƒ€ãƒ¼å´ã®ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
     /// <returns></returns>
-    /// <exception cref="Exception"> ƒf[ƒ^‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚É“Š‚°‚ç‚ê‚é </exception>
+    /// <exception cref="Exception"> ãƒ‡ãƒ¼ã‚¿ãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã«æŠ•ã’ã‚‰ã‚Œã‚‹ </exception>
     public object ExtractDataFromSender(string resisterName)
     {
         var ret = ExtractData(_sender, resisterName);
         return (ret != null) ? ret : throw new Exception("Data Wasnt Found");
     }
     #endregion
-    #region ƒvƒƒpƒeƒBî•ñƒŒƒV[ƒo
-    /// <summary> ƒŒƒV[ƒo[“o˜^–¼‚ÌƒŠƒXƒg‚Ì“o˜^ </summary>
+    #region ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ãƒ¬ã‚·ãƒ¼ãƒ
+    /// <summary> ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ç™»éŒ²åã®ãƒªã‚¹ãƒˆã®ç™»éŒ² </summary>
     /// <param name="resisterNames"></param>
-    public void ApplyReceiverResisterList(List<string> resisterNames) // QÆŒ³‚©‚çŒÄ‚Ño‚³‚ê‚é
+    public void ApplyReceiverResisterList(List<string> resisterNames) // å‚ç…§å…ƒã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹
     {
         _receiverResisters = resisterNames;
     }
-    /// <summary> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚½ƒZƒ“ƒ_[‚ÌƒŒƒWƒXƒ^‚Ì“o˜^’l‚ğƒŒƒV[ƒo[‚ÌƒŒƒWƒXƒ^‚É“o˜^‚³‚ê‚Ä‚é’l‚É‚·‚é </summary>
-    /// <param name="receiverResisterName"> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚éƒŒƒV[ƒo[‚Ì•Û‚·‚éƒŒƒWƒXƒ^–¼ </param>
-    /// <param name="senderResisterName"> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒZƒ“ƒ_[‚Ì•Û‚·‚éƒŒƒWƒXƒ^–¼ </param>
+    /// <summary> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚ŒãŸã‚»ãƒ³ãƒ€ãƒ¼ã®ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç™»éŒ²å€¤ã‚’ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ãƒ¬ã‚¸ã‚¹ã‚¿ã«ç™»éŒ²ã•ã‚Œã¦ã‚‹å€¤ã«ã™ã‚‹ </summary>
+    /// <param name="receiverResisterName"> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã‚‹ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ä¿æŒã™ã‚‹ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
+    /// <param name="senderResisterName"> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã‚»ãƒ³ãƒ€ãƒ¼ã®ä¿æŒã™ã‚‹ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
     public void SendDataReceiverToSender(string receiverResisterName, string senderResisterName)
     {
         PassData(_receiver, receiverResisterName, _sender, senderResisterName);
         if (OnReceiverrDataSendedToSender != null) { OnReceiverrDataSendedToSender(); }
     }
-    /// <summary> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒŒƒV[ƒo[‚Ìƒf[ƒ^‚ÌXV </summary>
-    /// <param name="resisterName"> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒŒƒV[ƒo[‚ÌƒŒƒWƒXƒ^–¼ </param>
-    /// <param name="value"> XVŒã‚Ì’l </param>
+    /// <summary> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–° </summary>
+    /// <param name="resisterName"> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
+    /// <param name="value"> æ›´æ–°å¾Œã®å€¤ </param>
     public void UpdateReceiverData(string resisterName, object value)
     {
         UpdateData(_receiver, resisterName, value);
         if (OnReceiverDataUpdated != null) { OnReceiverDataUpdated(); }
     }
-    /// <summary> ƒŠƒ“ƒJ‚Éw’è‚³‚ê‚Ä‚¢‚éƒŒƒV[ƒo[‚©‚çƒf[ƒ^‚Ì’Šo‚ğ‚·‚é </summary>
-    /// <param name="resisterName"> ƒŒƒV[ƒo[‚ÌƒŒƒWƒXƒ^–¼ </param>
+    /// <summary> ãƒªãƒ³ã‚«ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã®æŠ½å‡ºã‚’ã™ã‚‹ </summary>
+    /// <param name="resisterName"> ãƒ¬ã‚·ãƒ¼ãƒãƒ¼ã®ãƒ¬ã‚¸ã‚¹ã‚¿å </param>
     /// <returns></returns>
-    /// <exception cref="Exception"> ƒf[ƒ^‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚É“Š‚°‚ç‚ê‚é </exception>
+    /// <exception cref="Exception"> ãƒ‡ãƒ¼ã‚¿ãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã«æŠ•ã’ã‚‰ã‚Œã‚‹ </exception>
     public object ExtractDataFromReceiver(string resisterName)
     {
         var ret = ExtractData(_receiver, resisterName);

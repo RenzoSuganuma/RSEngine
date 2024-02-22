@@ -1,4 +1,4 @@
-using SgLib.Systems;
+ï»¿using SgLib.Systems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,10 +6,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ’S“– ›À
-// ƒfƒBƒXƒvƒŒƒC‚ÌƒfƒoƒCƒX–¼‚ÆƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg‚Ì•ÏX‚Í‚Å‚«‚½‚Á‚Û‚¢ © ‚±‚±‚Ü‚Å‚Í“®ìŠm”F‚Å‚«‚Ä‚¢‚é
-// ƒAƒNƒeƒBƒu‚ÈƒfƒBƒXƒvƒŒƒCØ‚è‘Ö‚¦‹@”\ À‘• OK © “®ìŠm”F OK
-// Playerİ’è „ FullScreen ƒ‚[ƒh A Default Is Native Resolution = false ‚±‚Ìİ’è‚Í•K‚¸‚·‚é‚±‚Æ
+// æ‹…å½“ è…æ²¼
+// ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã®ãƒ‡ãƒã‚¤ã‚¹åã¨ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆã®å¤‰æ›´ã¯ã§ããŸã£ã½ã„ â† ã“ã“ã¾ã§ã¯å‹•ä½œç¢ºèªã§ãã¦ã„ã‚‹
+// ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤åˆ‡ã‚Šæ›¿ãˆæ©Ÿèƒ½ å®Ÿè£… OK â† å‹•ä½œç¢ºèª OK
+// Playerè¨­å®š ï¼ FullScreen ãƒ¢ãƒ¼ãƒ‰ ã€ Default Is Native Resolution = false ã“ã®è¨­å®šã¯å¿…ãšã™ã‚‹ã“ã¨
 
 namespace SgLib
 {
@@ -33,16 +33,16 @@ namespace SgLib
 
             
 
-            /// <summary> ‰ğ‘œ“x‚Ìˆê——BKey -> •\¦‚·‚é‚Ì‚Éæ“¾AValue -> ŠÖ”‚É“n‚· </summary>
+            /// <summary> è§£åƒåº¦ã®ä¸€è¦§ã€‚Key -> è¡¨ç¤ºã™ã‚‹ã®ã«å–å¾—ã€Value -> é–¢æ•°ã«æ¸¡ã™ </summary>
             Dictionary<string, string> ResolutionsList = new()
         {
-            {"FHD [1920~1080 16:9]" , "1920 1080"},
-            {"WSXGA [1680~1050 16:10]" , "1680 1050"},
-            {"WQHD [2560~1440 16:9]" , "2560 1440"},
-            {"WQXGA [2560~1600 16:10]" , "2560 1600"},
+            {"FHD [1920Ã—1080 16:9]" , "1920 1080"},
+            {"WSXGA [1680Ã—1050 16:10]" , "1680 1050"},
+            {"WQHD [2560Ã—1440 16:9]" , "2560 1440"},
+            {"WQXGA [2560Ã—1600 16:10]" , "2560 1600"},
         };
 
-            /// <summary> ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg‚Ìˆê——BKey -> •\¦‚·‚é‚Ì‚Éæ“¾AValue -> ŠÖ”‚É“n‚· </summary>
+            /// <summary> ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆã®ä¸€è¦§ã€‚Key -> è¡¨ç¤ºã™ã‚‹ã®ã«å–å¾—ã€Value -> é–¢æ•°ã«æ¸¡ã™ </summary>
             Dictionary<string, int> RefreshRateList = new()
         {
             {"60Hz" , 60},
@@ -81,7 +81,7 @@ namespace SgLib
                 return list;
             }
 
-            /// <summary> ‹ó”’‹æØ‚è‚ÅƒsƒNƒZƒ‹”‚Ìw’è‚ğ‚·‚é </summary>
+            /// <summary> ç©ºç™½åŒºåˆ‡ã‚Šã§ãƒ”ã‚¯ã‚»ãƒ«æ•°ã®æŒ‡å®šã‚’ã™ã‚‹ </summary>
             /// <param name="resolution"></param>
             public void SetDisplayResolutions(string resolution)
             {
@@ -135,7 +135,7 @@ namespace SgLib
                 SetRefreshRate(rate);
             }
 
-            void SetupActiveDisplaysDropdown()  // ƒAƒNƒeƒBƒu‚ÈƒfƒBƒXƒvƒŒƒC‚ğƒhƒƒbƒvƒ_ƒEƒ“‚Ö–¼‘O‚Ì‚İ“n‚·
+            void SetupActiveDisplaysDropdown()  // ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã‚’ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³ã¸åå‰ã®ã¿æ¸¡ã™
             {
                 displaysDD.options.Clear();
                 var displays = GetDisplays();

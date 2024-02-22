@@ -1,35 +1,29 @@
-using SgLib.Singleton;
+ï»¿using SgLib.Singleton;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// auth ›À
+// auth è…æ²¼
 public class GameInfo : SingletonBaseClass<GameInfo>
 {
-    /// <summary> ‘JˆÚæƒV[ƒ“‚ª‚Ç‚Ì‚æ‚¤‚È‚à‚Ì‚©‚ğ‘I‘ğA•Û‚·‚é </summary>
+    /// <summary> é·ç§»å…ˆã‚·ãƒ¼ãƒ³ãŒã©ã®ã‚ˆã†ãªã‚‚ã®ã‹ã‚’é¸æŠã€ä¿æŒã™ã‚‹ </summary>
     public enum SceneTransitStatus
     {
-        ToTitle,
-        ToUnique,
-        ToInGame,
+        WentToTitleScene, // ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³
+        WentToUniqueScene, // ãƒ ãƒ¼ãƒ“ãƒ¼ã‚·ãƒ¼ãƒ³ãªã©ã®ç‰¹æ®Šã‚·ãƒ¼ãƒ³
+        WentToInGameScene, // ã‚¤ãƒ³ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
     }
 
-    [SerializeField]
-    SceneTransitStatus sceneStatus;
-    [SerializeField]
-    List<string> titleSceneNames;
-    [SerializeField]
-    List<string> inGameSceneNames;
-    [SerializeField]
-    List<string> uniqueSceneNames;
+    [SerializeField] SceneTransitStatus sceneStatus;
 
-    // ŠO•”‚©‚ç”`‚©‚ê‚éƒvƒƒpƒeƒB
-    public SceneTransitStatus GetSceneStatus { get { return sceneStatus; }}
+    [SerializeField] SceneInfo sInfo;
 
-    public List<string> SetTitleSceneName { set { this.titleSceneNames = value; } }
-    public List<string> SetInGameSceneName { set { this.inGameSceneNames = value; } }
-    public List<string> SetUniqueSceneName { set { this.uniqueSceneNames = value; } }
+    public SceneTransitStatus GetSceneStatus
+    {
+        get { return sceneStatus; }
+    }
 
     protected override void ToDoAtAwakeSingleton()
     {
@@ -37,36 +31,41 @@ public class GameInfo : SingletonBaseClass<GameInfo>
 
         void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
         {
-            #region [For-Each Loop] 
-            /// !!!-2/6 ‚±‚±nullQÆ‚ÅƒoƒO”­¶Œ¹‚©‚à
-            foreach (var name in titleSceneNames)
+            #region [For-Each Loop]
+
+            var titles = sInfo.TitleScenes.Select(_ => _.name).ToList();
+            var ingames = sInfo.IngameScenes.Select(_ => _.name).ToList();
+            var uniques = sInfo.UniqueScenes.Select(_ => _.name).ToList();
+
+            foreach (var title in titles)
             {
-                if (arg1.name == name)
+                if (title == arg1.name)
                 {
-                    sceneStatus = SceneTransitStatus.ToTitle;
+                    sceneStatus = SceneTransitStatus.WentToTitleScene;
                     break;
                 }
             }
 
-            foreach (var name in inGameSceneNames)
+
+            foreach (var ingame in ingames)
             {
-                if (arg1.name == name)
+                if (ingame == arg1.name)
                 {
-                    sceneStatus = SceneTransitStatus.ToInGame;
+                    sceneStatus = SceneTransitStatus.WentToInGameScene;
                     break;
                 }
             }
 
-            foreach (var name in uniqueSceneNames)
+            foreach (var unique in uniques)
             {
-                if (arg1.name == name)
+                if (unique == arg1.name)
                 {
-                    sceneStatus = SceneTransitStatus.ToUnique;
+                    sceneStatus = SceneTransitStatus.WentToUniqueScene;
                     break;
                 }
             }
-            /// !!!-
-            #endregion
         }
+
+        #endregion
     }
 }

@@ -1,20 +1,20 @@
-// ŠÇ—ŽÒ ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 using UnityEngine;
 using SgLib;
 /*
-* “Á’è‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ÌƒvƒƒpƒeƒB’lƒv[ƒ‹ƒNƒ‰ƒX
-* ‚ÌƒvƒƒpƒeƒB‚ðŠÄŽ‹‚·‚éƒNƒ‰ƒX
+* ç‰¹å®šã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å€¤ãƒ—ãƒ¼ãƒ«ã‚¯ãƒ©ã‚¹
+* ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’ç›£è¦–ã™ã‚‹ã‚¯ãƒ©ã‚¹
 */
-/// <summary> ƒŒƒWƒXƒ^‚Æƒf[ƒ^‚ÌƒyƒA‚©‚ç‚È‚éƒf[ƒ^\‘¢‚ÅA
-/// ƒŒƒWƒXƒ^–¼‚É‰ž‚¶‚½ƒf[ƒ^‚ð‚½‚ß‚Ä‚¨‚­ƒf[ƒ^ƒx[ƒX </summary>
+/// <summary> ãƒ¬ã‚¸ã‚¹ã‚¿ã¨ãƒ‡ãƒ¼ã‚¿ã®ãƒšã‚¢ã‹ã‚‰ãªã‚‹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã§ã€
+/// ãƒ¬ã‚¸ã‚¹ã‚¿åã«å¿œã˜ãŸãƒ‡ãƒ¼ã‚¿ã‚’ãŸã‚ã¦ãŠããƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ </summary>
 public class PropertyInfoHandler : MonoBehaviour
 {
     DataDictionary<string, object> _dataMap = new();
     public DataDictionary<string, object> DataMap => _dataMap;
-    public event Action OnPropResisted = () => {Debug.Log("ƒvƒƒpƒeƒB‚ªƒŒƒWƒXƒg‚³‚ê‚½"); };
-    public event Action OnPropUnResisted = () => { Debug.Log("ƒvƒƒpƒeƒB‚ªƒAƒ“ƒŒƒWƒXƒg‚³‚ê‚½"); };
-    /// <summary> ƒŒƒWƒXƒ^–¼‚Æƒf[ƒ^‚Ì“o˜^ </summary>
+    public event Action OnPropResisted = () => {Debug.Log("ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒãƒ¬ã‚¸ã‚¹ãƒˆã•ã‚ŒãŸ"); };
+    public event Action OnPropUnResisted = () => { Debug.Log("ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒã‚¢ãƒ³ãƒ¬ã‚¸ã‚¹ãƒˆã•ã‚ŒãŸ"); };
+    /// <summary> ãƒ¬ã‚¸ã‚¹ã‚¿åã¨ãƒ‡ãƒ¼ã‚¿ã®ç™»éŒ² </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="resistName"></param>
     /// <param name="value"></param>
@@ -24,7 +24,7 @@ public class PropertyInfoHandler : MonoBehaviour
         if (OnPropResisted != null) { OnPropResisted(); }
         else { throw new Exception("Assing Some Function!"); }
     }
-    /// <summary> ƒŒƒWƒXƒ^–¼‚ðŽw’è‚µ‚ÄA ‚»‚ÌƒŒƒWƒXƒ^–¼‚É‚ ‚Á‚½“o˜^î•ñ‚ðƒf[ƒ^ƒx[ƒX‚©‚çÁ‚·</summary>
+    /// <summary> ãƒ¬ã‚¸ã‚¹ã‚¿åã‚’æŒ‡å®šã—ã¦ã€ ãã®ãƒ¬ã‚¸ã‚¹ã‚¿åã«ã‚ã£ãŸç™»éŒ²æƒ…å ±ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰æ¶ˆã™</summary>
     /// <param name="resistedName"></param>
     public void UnResist(string resistedName)
     {
@@ -32,7 +32,7 @@ public class PropertyInfoHandler : MonoBehaviour
         if (OnPropUnResisted != null) { OnPropUnResisted(); }
         else { throw new Exception("Assing Some Function!"); }
     }
-    /// <summary> Žw’è‚µ‚½ƒŒƒWƒXƒ^–¼‚É‘Î‰ž‚µ‚½ƒf[ƒ^ƒyƒA‚ªƒf[ƒ^ƒx[ƒX‚É‘¶Ý‚·‚é‚©ŒŸõ‚·‚é </summary>
+    /// <summary> æŒ‡å®šã—ãŸãƒ¬ã‚¸ã‚¹ã‚¿åã«å¯¾å¿œã—ãŸãƒ‡ãƒ¼ã‚¿ãƒšã‚¢ãŒãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã«å­˜åœ¨ã™ã‚‹ã‹æ¤œç´¢ã™ã‚‹ </summary>
     /// <param name="resistName"></param>
     /// <returns></returns>
     public bool GetExist(string resistName)

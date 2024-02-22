@@ -1,4 +1,4 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using UnityEditor;
 using UnityEngine;
 public class PropInfoTraceInfraEditorExtension

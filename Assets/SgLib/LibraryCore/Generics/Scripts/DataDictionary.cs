@@ -1,20 +1,20 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 namespace SgLib
 {
-    /// <summary> “Á’è‚Ì“o˜^–¼‚É‘Î‰‚µ‚½’l‚ğŠi”[‚·‚é‚½‚ß‚Ì‹@”\‚ğ’ñ‹Ÿ‚·‚éƒNƒ‰ƒX‚ÅA«‘‚Á‚Û‚¢‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
+    /// <summary> ç‰¹å®šã®ç™»éŒ²åã«å¯¾å¿œã—ãŸå€¤ã‚’æ ¼ç´ã™ã‚‹ãŸã‚ã®æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ã‚¯ãƒ©ã‚¹ã§ã€è¾æ›¸ã£ã½ã„æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </summary>
     /// <typeparam name="TDataKey"></typeparam>
     /// <typeparam name="TDataValue"></typeparam>
     [Serializable]
     public class DataDictionary<TDataKey, TDataValue>
     {
-        //”Ä—pƒf[ƒ^ƒyƒA
+        //æ±ç”¨ãƒ‡ãƒ¼ã‚¿ãƒšã‚¢
         DataPair<TDataKey, TDataValue>[] _coreDataBase;
-        public DataDictionary()//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        public DataDictionary()//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         {
-            _coreDataBase = new DataPair<TDataKey, TDataValue>[0];//ƒf[ƒ^ƒx[ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰»
+            _coreDataBase = new DataPair<TDataKey, TDataValue>[0];//ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
         }
-        ~DataDictionary()//ƒfƒXƒgƒ‰ƒNƒ^
+        ~DataDictionary()//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         {
             _coreDataBase = null;
         }
@@ -28,7 +28,7 @@ namespace SgLib
             get { return this.Find(dataValue); }
             set { this.SetAt(dataValue, value); }
         }
-        /// <summary> ƒf[ƒ^‚Ì“o˜^ </summary>
+        /// <summary> ãƒ‡ãƒ¼ã‚¿ã®ç™»éŒ² </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void Add(TDataKey key, TDataValue value)
@@ -44,7 +44,7 @@ namespace SgLib
             //Append Element
             _coreDataBase[_coreDataBase.Length - 1] = new DataPair<TDataKey, TDataValue>(key, value);
         }
-        /// <summary> ƒf[ƒ^‚Ì“o˜^‰ğœ </summary>
+        /// <summary> ãƒ‡ãƒ¼ã‚¿ã®ç™»éŒ²è§£é™¤ </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void Remove(TDataKey key, TDataValue value)
@@ -64,7 +64,7 @@ namespace SgLib
                 }
             }//Serach Pairs
         }
-        /// <summary> Dictionary‚ÌValue‚©‚çKey‚ğ•Ô‚· </summary>
+        /// <summary> Dictionaryã®Valueã‹ã‚‰Keyã‚’è¿”ã™ </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public TDataKey Find(TDataValue value)
@@ -78,7 +78,7 @@ namespace SgLib
             }
             return default(TDataKey);
         }
-        /// <summary> Dictionary‚ÌKey‚©‚çValue‚ğ•Ô‚· </summary>
+        /// <summary> Dictionaryã®Keyã‹ã‚‰Valueã‚’è¿”ã™ </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public TDataValue Find(TDataKey key)
@@ -92,7 +92,7 @@ namespace SgLib
             }
             return default(TDataValue);
         }
-        /// <summary> Value‚É‘Î‰‚·‚éƒf[ƒ^‚ğ“n‚³‚ê‚½Key‚Ì’l‚É‚·‚é </summary>
+        /// <summary> Valueã«å¯¾å¿œã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚’æ¸¡ã•ã‚ŒãŸKeyã®å€¤ã«ã™ã‚‹ </summary>
         /// <param name="value"></param>
         /// <param name="key"></param>
         public void SetAt(TDataValue value, TDataKey key)//Set Key By Value
@@ -106,7 +106,7 @@ namespace SgLib
                 }
             }
         }
-        /// <summary> Key‚É‘Î‰‚·‚éƒf[ƒ^‚ğ“n‚³‚ê‚½Value‚Ì’l‚É‚·‚é </summary>
+        /// <summary> Keyã«å¯¾å¿œã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚’æ¸¡ã•ã‚ŒãŸValueã®å€¤ã«ã™ã‚‹ </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void SetAt(TDataKey key, TDataValue value)//Set Value By Key
@@ -120,14 +120,14 @@ namespace SgLib
                 }
             }
         }
-        /// <summary> ƒf[ƒ^ƒyƒA‚ğ•Ô‚· </summary>
+        /// <summary> ãƒ‡ãƒ¼ã‚¿ãƒšã‚¢ã‚’è¿”ã™ </summary>
         /// <param name="index"></param>
         /// <returns></returns>
         public DataPair<TDataKey, TDataValue> GetDataPair(int index)
         {
             return (_coreDataBase[index] != null) ? _coreDataBase[index] : null;
         }
-        /// <summary> “Á’è‚ÌƒCƒ“ƒfƒbƒNƒX‚Éƒf[ƒ^‚ğ‰Šú‰» </summary>
+        /// <summary> ç‰¹å®šã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«ãƒ‡ãƒ¼ã‚¿ã‚’åˆæœŸåŒ– </summary>
         /// <param name="pair"></param>
         /// <param name="index"></param>
         public void SetDataPair(DataPair<TDataKey, TDataValue> pair, int index)
@@ -136,8 +136,8 @@ namespace SgLib
         }
     }
     /// <summary> 
-    /// Dictionary‚İ‚½‚¢‚Èƒf[ƒ^ƒyƒA‚ÌƒNƒ‰ƒXB
-    /// List‚Æ‚Ì•¹—p‚ğ‘z’è‚µ‚ÄİŒv‚µ‚Ä‚¢‚éB
+    /// Dictionaryã¿ãŸã„ãªãƒ‡ãƒ¼ã‚¿ãƒšã‚¢ã®ã‚¯ãƒ©ã‚¹ã€‚
+    /// Listã¨ã®ä½µç”¨ã‚’æƒ³å®šã—ã¦è¨­è¨ˆã—ã¦ã„ã‚‹ã€‚
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
@@ -148,29 +148,29 @@ namespace SgLib
         public TKey Key => _key;
         TValue _value;
         public TValue Value => _value;
-        /// <summary> •¶š—ñŒ^‚ÌKey‚Ì’l </summary>
+        /// <summary> æ–‡å­—åˆ—å‹ã®Keyã®å€¤ </summary>
         public string SKey => _key.ToString();
-        /// <summary> •¶š—ñŒ^‚ÌValue‚Ì’l </summary>
+        /// <summary> æ–‡å­—åˆ—å‹ã®Valueã®å€¤ </summary>
         public string SValue => _value.ToString();
-        public DataPair(TKey key, TValue value)//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        public DataPair(TKey key, TValue value)//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         {
             _key = key;
             _value = value;
         }
-        /// <summary> Key‚ğƒZƒbƒg </summary>
+        /// <summary> Keyã‚’ã‚»ãƒƒãƒˆ </summary>
         /// <param name="key"></param>
         public void SetKey(TKey key)
         {
             this._key = key;
         }
-        /// <summary> Value‚ğƒZƒbƒg </summary>
+        /// <summary> Valueã‚’ã‚»ãƒƒãƒˆ </summary>
         public void SetValue(TValue value)
         {
             this._value = value;
         }
-        /// <summary> Key‚ÌŒ^‚ğ•Ô‚· </summary>
+        /// <summary> Keyã®å‹ã‚’è¿”ã™ </summary>
         public Type KeyType => _key.GetType();
-        /// <summary> Value‚ÌŒ^‚ğ•Ô‚· </summary>
+        /// <summary> Valueã®å‹ã‚’è¿”ã™ </summary>
         public Type ValueType => _value.GetType();
     }
 }

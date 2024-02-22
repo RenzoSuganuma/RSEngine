@@ -1,28 +1,28 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace SgLib
 {
-    /// <summary> Šg’£ƒƒ\ƒbƒh‚ğ’ñ‹Ÿ‚·‚éƒNƒ‰ƒX </summary>
+    /// <summary> æ‹¡å¼µãƒ¡ã‚½ãƒƒãƒ‰ã‚’æä¾›ã™ã‚‹ã‚¯ãƒ©ã‚¹ </summary>
     public static class MethodsExtension
     {
         /* GameObjects */
-        /// <summary>w’è‚³‚ê‚½ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ÌqƒIƒuƒWƒFƒNƒg‚É‚·‚é</summary>
+        /// <summary>æŒ‡å®šã•ã‚ŒãŸãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã™ã‚‹</summary>
         /// <param name="obj"></param>
         /// <param name="parent"></param>
         public static void ToChildObject(this GameObject obj, Transform parent)
         {
             obj.transform.parent = parent;
         }
-        /// <summary>ƒIƒuƒWƒFƒNƒg‚ÌeqŠÖŒW‚ğØ‚é</summary>
+        /// <summary>ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¦ªå­é–¢ä¿‚ã‚’åˆ‡ã‚‹</summary>
         /// <param name="obj"></param>
         public static void ToParenObject(this GameObject obj)
         {
             obj.transform.parent = null;
         }
-        /// <summary>qƒIƒuƒWƒFƒNƒg‚Ì‚İæ“¾‚·‚é</summary>
+        /// <summary>å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã¿å–å¾—ã™ã‚‹</summary>
         /// <param name="parent"></param>
         /// <returns></returns>
         public static List<Transform> GetChildObjects(this GameObject parent)

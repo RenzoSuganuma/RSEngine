@@ -1,4 +1,4 @@
-// ŠÇ—ŽÒ ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -40,36 +40,36 @@ namespace SgLib
         public class UITween : MonoBehaviour
         {
             #region Process Core
-            // ˆÚ“®‚µ‚Ä‚­‚é‰æ‘œ
+            // ç§»å‹•ã—ã¦ãã‚‹ç”»åƒ
             [SerializeField,
-                Header("ƒC[ƒWƒ“ƒO‚³‚¹‚éImageƒRƒ“ƒ|[ƒlƒ“ƒg‚ðŠÜ‚ÞƒIƒuƒWƒFƒNƒg‚ðƒAƒ^ƒbƒ`")]
+                Header("ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã•ã›ã‚‹Imageã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å«ã‚€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚¢ã‚¿ãƒƒãƒ")]
             Image movingImage;
-            // ƒS[ƒ‹‚Ì‰æ–ÊÀ•W
+            // ã‚´ãƒ¼ãƒ«ã®ç”»é¢åº§æ¨™
             [SerializeField,
-                Header("I“_")] 
+                Header("çµ‚ç‚¹")] 
             RectTransform goalRect;
-            // ƒXƒ^[ƒg‚Ì‰æ–ÊÀ•W
+            // ã‚¹ã‚¿ãƒ¼ãƒˆã®ç”»é¢åº§æ¨™
             [SerializeField,
-                Header("Žn“_")] 
+                Header("å§‹ç‚¹")] 
             RectTransform startRect;
-            // ƒfƒ…ƒŒ[ƒVƒ‡ƒ“
+            // ãƒ‡ãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
             [SerializeField, 
-                Header("ƒC[ƒWƒ“ƒO‚É‚©‚¯‚éŽžŠÔ")] 
+                Header("ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã«ã‹ã‘ã‚‹æ™‚é–“")] 
             float duration;
-            // ƒXƒP[ƒ‹‚Ü‚Å‚àTweening‚·‚é‚©‚Ìƒtƒ‰ƒO
+            // ã‚¹ã‚±ãƒ¼ãƒ«ã¾ã§ã‚‚Tweeningã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
             [SerializeField,
-                Header("Šg‘åk¬‚µ‚È‚ª‚çƒC[ƒWƒ“ƒO‚·‚é‚©‚Ìƒtƒ‰ƒO")]
+                Header("æ‹¡å¤§ç¸®å°ã—ãªãŒã‚‰ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°")]
             bool easeWithScale;
-            // Tweening‚ªŠ®—¹‚µ‚½‚Æ‚«‚ÌƒCƒxƒ“ƒg
+            // TweeningãŒå®Œäº†ã—ãŸã¨ãã®ã‚¤ãƒ™ãƒ³ãƒˆ
             [SerializeField,
-                Header("ƒC[ƒWƒ“ƒO‚ªI‚í‚Á‚½Û‚É”­‰Î‚³‚¹‚½‚¢ƒCƒxƒ“ƒg")] 
+                Header("ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãŒçµ‚ã‚ã£ãŸéš›ã«ç™ºç«ã•ã›ãŸã„ã‚¤ãƒ™ãƒ³ãƒˆ")] 
             UnityEvent onTweeningEnd;
             // TweeningMode
             [SerializeField,
-                Header("ƒC[ƒWƒ“ƒOƒ‚[ƒh")] 
+                Header("ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãƒ¢ãƒ¼ãƒ‰")] 
             UIEasingMode mode;
 
-            // ƒAƒjƒ[ƒVƒ‡ƒ“‚µ‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO
+            // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã—ã¦ã„ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
             bool _bIsAnimating = false;
             public bool IsTweening => _bIsAnimating;
             float _elapsedTime = 0;

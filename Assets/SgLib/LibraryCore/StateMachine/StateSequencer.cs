@@ -1,4 +1,4 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,30 +7,30 @@ namespace SgLib
 {
     namespace StateSequencer
     {
-        /// <summary> ƒXƒe[ƒgƒ}ƒVƒ“‚Ì‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
+        /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã®æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </summary>
         public class StateSequencer
         {
-            // ’ÊíƒXƒe[ƒg
+            // é€šå¸¸ã‚¹ãƒ†ãƒ¼ãƒˆ
             HashSet<IState> _states = new HashSet<IState>();
-            // AnyƒXƒe[ƒg‚©‚ç‚ÌƒXƒe[ƒg
+            // Anyã‚¹ãƒ†ãƒ¼ãƒˆã‹ã‚‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
             HashSet<IState> _statesFromAnyState = new HashSet<IState>();
-            // ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“
+            // ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³
             HashSet<StateMachineTransition> _transitions = new HashSet<StateMachineTransition>();
-            // Any‚©‚ç‚Ìƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“
+            // Anyã‹ã‚‰ã®ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³
             HashSet<StateMachineTransition> _transitionsFromAny = new HashSet<StateMachineTransition>();
-            // Œ»İ“Ë“ü‚µ‚Ä‚¢‚éƒXƒe[ƒg
+            // ç¾åœ¨çªå…¥ã—ã¦ã„ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆ
             IState _currentPlayingState;
-            // Œ»İ“Ë“ü‚µ‚Ä‚¢‚éƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“–¼
+            // ç¾åœ¨çªå…¥ã—ã¦ã„ã‚‹ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³å
             string _currentTransitionName;
-            // ƒXƒe[ƒgƒ}ƒVƒ“‚ªˆê’â~’†‚©‚Ìƒtƒ‰ƒO
+            // ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ãŒä¸€æ™‚åœæ­¢ä¸­ã‹ã®ãƒ•ãƒ©ã‚°
             bool _bIsPausing = true;
-            // ƒfƒŠƒQ[ƒgŒöŠJ•”
+            // ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå…¬é–‹éƒ¨
             public event Action<string> OnEntered;
             public event Action<string> OnUpdated;
             public event Action<string> OnExited;
 
-            #region “o˜^ˆ—
-            /// <summary> ƒXƒe[ƒg‚Ì“o˜^ </summary>
+            #region ç™»éŒ²å‡¦ç†
+            /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆã®ç™»éŒ² </summary>
             /// <param name="state"></param>
             public void ResistState(IState state)
             {
@@ -38,14 +38,14 @@ namespace SgLib
                 if (_currentPlayingState == null) { _currentPlayingState = state; }
             }
 
-            /// <summary> Any‚©‚ç‚ÌƒXƒe[ƒg‚Ì“o˜^ </summary>
+            /// <summary> Anyã‹ã‚‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®ç™»éŒ² </summary>
             /// <param name="state"></param>
             public void ResistStateFromAny(IState state)
             {
                 _statesFromAnyState.Add(state);
             }
 
-            /// <summary> •¡”‚ÌƒXƒe[ƒg‚ğˆø”‚É“n‚µ‚Ä‚·‚×‚Ä‚Ì“n‚³‚ê‚½ƒXƒe[ƒg‚ğ“o˜^ </summary>
+            /// <summary> è¤‡æ•°ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¼•æ•°ã«æ¸¡ã—ã¦ã™ã¹ã¦ã®æ¸¡ã•ã‚ŒãŸã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç™»éŒ² </summary>
             /// <param name="states"></param>
             public void ResistStates(List<IState> states)
             {
@@ -56,7 +56,7 @@ namespace SgLib
                 }
             }
 
-            /// <summary> •¡”‚ÌƒXƒe[ƒg‚ğˆø”‚É“n‚µ‚Ä‚·‚×‚Ä‚Ì“n‚³‚ê‚½Any‚©‚ç‚ÌƒXƒe[ƒg‚ğ“o˜^ </summary>
+            /// <summary> è¤‡æ•°ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¼•æ•°ã«æ¸¡ã—ã¦ã™ã¹ã¦ã®æ¸¡ã•ã‚ŒãŸAnyã‹ã‚‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç™»éŒ² </summary>
             /// <param name="states"></param>
             public void ResistStatesFromAny(List<IState> states)
             {
@@ -66,7 +66,7 @@ namespace SgLib
                 }
             }
 
-            /// <summary> ƒXƒe[ƒgŠÔ‚Ì‘JˆÚ‚Ì“o˜^ </summary>
+            /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆé–“ã®é·ç§»ã®ç™»éŒ² </summary>
             /// <param name="from"></param>
             /// <param name="to"></param>
             /// <param name="name"></param>
@@ -76,7 +76,7 @@ namespace SgLib
                 _transitions.Add(tmp);
             }
 
-            /// <summary> AnyƒXƒe[ƒg‚©‚ç‚Ì‘JˆÚ‚Ì“o˜^ </summary>
+            /// <summary> Anyã‚¹ãƒ†ãƒ¼ãƒˆã‹ã‚‰ã®é·ç§»ã®ç™»éŒ² </summary>
             /// <param name="from"></param>
             /// <param name="to"></param>
             /// <param name="name"></param>
@@ -88,79 +88,79 @@ namespace SgLib
 
             #endregion
 
-            #region XVˆ—
-            /// <summary> ”CˆÓ‚ÌƒXƒe[ƒgŠÔ‘JˆÚ‚Ì‘JˆÚ‚Ìó‹µ‚ğXV‚·‚éB </summary>
+            #region æ›´æ–°å‡¦ç†
+            /// <summary> ä»»æ„ã®ã‚¹ãƒ†ãƒ¼ãƒˆé–“é·ç§»ã®é·ç§»ã®çŠ¶æ³ã‚’æ›´æ–°ã™ã‚‹ã€‚ </summary>
             /// <param name="name"></param>
             /// <param name="condition2transist"></param>
             /// <param name="tType"></param>
             /// <param name="equalsTo"></param>
             public void UpdateTransition(string name, ref bool condition2transist, bool equalsTo = true, bool isTrigger = false)
             {
-                if (_bIsPausing) return; // ‚à‚µˆê’â~’†‚È‚çXVˆ—‚Í‚µ‚È‚¢B
+                if (_bIsPausing) return; // ã‚‚ã—ä¸€æ™‚åœæ­¢ä¸­ãªã‚‰æ›´æ–°å‡¦ç†ã¯ã—ãªã„ã€‚
                 foreach (var t in _transitions)
                 {
-                    // ‘JˆÚ‚·‚éê‡ // * ğŒ‚ğ–‚½‚µ‚Ä‚¢‚é‚È‚ç‘Oƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“‚ğ–³‹‚µ‚Ä‚µ‚Ü‚¤‚Ì‚Å‚»‚Ì”»’èˆ—‚ğ‚Í‚³‚Ş‚±‚Æ *
-                    // ‚à‚µ‘JˆÚğŒ‚ğ–‚½‚µ‚Ä‚¢‚Ä‘JˆÚ–¼‚ªˆê’v‚·‚é‚È‚ç
+                    // é·ç§»ã™ã‚‹å ´åˆ // * æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ã‚‹ãªã‚‰å‰ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã‚’ç„¡è¦–ã—ã¦ã—ã¾ã†ã®ã§ãã®åˆ¤å®šå‡¦ç†ã‚’ã¯ã•ã‚€ã“ã¨ *
+                    // ã‚‚ã—é·ç§»æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ã¦é·ç§»åãŒä¸€è‡´ã™ã‚‹ãªã‚‰
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
-                        if (t.SFrom == _currentPlayingState) // Œ»İ¶ƒXƒe[ƒg‚È‚ç
+                        if (t.SFrom == _currentPlayingState) // ç¾åœ¨å·¦ã‚¹ãƒ†ãƒ¼ãƒˆãªã‚‰
                         {
-                            _currentPlayingState.Exit(); // ‰EƒXƒe[ƒg‚Ö‚Ì‘JˆÚğŒ‚ğ–‚½‚µ‚½‚Ì‚Å”²‚¯‚é
+                            _currentPlayingState.Exit(); // å³ã‚¹ãƒ†ãƒ¼ãƒˆã¸ã®é·ç§»æ¡ä»¶ã‚’æº€ãŸã—ãŸã®ã§æŠœã‘ã‚‹
                             if (OnExited != null)
                                 OnExited(_currentTransitionName);
-                            if (isTrigger) condition2transist = !equalsTo; // IsTrigger ‚ª true‚È‚ç
-                            _currentPlayingState = t.STo; // Œ»İ‚ÌƒXƒe[ƒg‚ğ‰EƒXƒe[ƒg‚ÉXVA‘JˆÚ‚Í‚»‚Ì‚Ü‚Ü
-                            _currentPlayingState.Entry(); // Œ»İ‚ÌƒXƒe[ƒg‚Ì‰‰ñ‹N“®ˆ—‚ğŒÄ‚Ô
+                            if (isTrigger) condition2transist = !equalsTo; // IsTrigger ãŒ trueãªã‚‰
+                            _currentPlayingState = t.STo; // ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å³ã‚¹ãƒ†ãƒ¼ãƒˆã«æ›´æ–°ã€é·ç§»ã¯ãã®ã¾ã¾
+                            _currentPlayingState.Entry(); // ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®åˆå›èµ·å‹•å‡¦ç†ã‚’å‘¼ã¶
                             if (OnEntered != null)
                                 OnEntered(_currentTransitionName);
-                            _currentTransitionName = name; // Œ»İ‚Ì‘JˆÚƒl[ƒ€‚ğXV
+                            _currentTransitionName = name; // ç¾åœ¨ã®é·ç§»ãƒãƒ¼ãƒ ã‚’æ›´æ–°
                         }
                     }
-                    // ‘JˆÚ‚ÌğŒ‚ğ–‚½‚µ‚Ä‚Í‚¢‚È‚¢‚ªA‘JˆÚƒl[ƒ€‚ªˆê’viXV‚³‚ê‚Ä‚¢‚È‚¢‚È‚çjŒ»İ‚ÌƒXƒe[ƒg‚ÌXVˆ—‚ğŒÄ‚Ô
+                    // é·ç§»ã®æ¡ä»¶ã‚’æº€ãŸã—ã¦ã¯ã„ãªã„ãŒã€é·ç§»ãƒãƒ¼ãƒ ãŒä¸€è‡´ï¼ˆæ›´æ–°ã•ã‚Œã¦ã„ãªã„ãªã‚‰ï¼‰ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®æ›´æ–°å‡¦ç†ã‚’å‘¼ã¶
                     else if (t.Name == name)
                     {
                         _currentPlayingState.Update();
                         if (OnUpdated != null)
                             OnUpdated(_currentTransitionName);
                     }
-                } // ‘S‘JˆÚ‚ğŒŸõB
+                } // å…¨é·ç§»ã‚’æ¤œç´¢ã€‚
             }
 
-            /// <summary> ANYƒXƒe[ƒg‚©‚ç‚Ì‘JˆÚ‚ÌğŒ‚ğXV </summary>
+            /// <summary> ANYã‚¹ãƒ†ãƒ¼ãƒˆã‹ã‚‰ã®é·ç§»ã®æ¡ä»¶ã‚’æ›´æ–° </summary>
             /// <param name="name"></param>
             /// <param name="condition2transist"></param>
             /// <param name="equalsTo"></param>
             public void UpdateTransitionFromAnyState(string name, ref bool condition2transist, bool equalsTo = true, bool isTrigger = false)
             {
-                if (_bIsPausing) return; // ‚à‚µˆê’â~’†‚È‚çXVˆ—‚Í‚µ‚È‚¢B
+                if (_bIsPausing) return; // ã‚‚ã—ä¸€æ™‚åœæ­¢ä¸­ãªã‚‰æ›´æ–°å‡¦ç†ã¯ã—ãªã„ã€‚
                 foreach (var t in _transitionsFromAny)
                 {
-                    // ‚à‚µ‘JˆÚğŒ‚ğ–‚½‚µ‚Ä‚¢‚Ä‘JˆÚ–¼‚ªˆê’v‚·‚é‚È‚ç
+                    // ã‚‚ã—é·ç§»æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ã¦é·ç§»åãŒä¸€è‡´ã™ã‚‹ãªã‚‰
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
-                        _currentPlayingState.Exit(); // ‰EƒXƒe[ƒg‚Ö‚Ì‘JˆÚğŒ‚ğ–‚½‚µ‚½‚Ì‚Å”²‚¯‚é
+                        _currentPlayingState.Exit(); // å³ã‚¹ãƒ†ãƒ¼ãƒˆã¸ã®é·ç§»æ¡ä»¶ã‚’æº€ãŸã—ãŸã®ã§æŠœã‘ã‚‹
                         if (OnExited != null)
                             OnExited(_currentTransitionName);
-                        if (isTrigger) condition2transist = !equalsTo; // ‘JˆÚğŒ‚ğ‰Šú‰»
-                        _currentPlayingState = t.STo; // Œ»İ‚ÌƒXƒe[ƒg‚ğ‰EƒXƒe[ƒg‚ÉXVA‘JˆÚ‚Í‚»‚Ì‚Ü‚Ü
-                        _currentPlayingState.Entry(); // Œ»İ‚ÌƒXƒe[ƒg‚Ì‰‰ñ‹N“®ˆ—‚ğŒÄ‚Ô
+                        if (isTrigger) condition2transist = !equalsTo; // é·ç§»æ¡ä»¶ã‚’åˆæœŸåŒ–
+                        _currentPlayingState = t.STo; // ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å³ã‚¹ãƒ†ãƒ¼ãƒˆã«æ›´æ–°ã€é·ç§»ã¯ãã®ã¾ã¾
+                        _currentPlayingState.Entry(); // ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®åˆå›èµ·å‹•å‡¦ç†ã‚’å‘¼ã¶
                         if (OnEntered != null)
                             OnEntered(_currentTransitionName);
-                        _currentTransitionName = name; // Œ»İ‚Ì‘JˆÚƒl[ƒ€‚ğXV
+                        _currentTransitionName = name; // ç¾åœ¨ã®é·ç§»ãƒãƒ¼ãƒ ã‚’æ›´æ–°
                     }
-                    // ‘JˆÚ‚ÌğŒ‚ğ–‚½‚µ‚Ä‚Í‚¢‚È‚¢‚ªA‘JˆÚƒl[ƒ€‚ªˆê’viXV‚³‚ê‚Ä‚¢‚È‚¢‚È‚çjŒ»İ‚ÌƒXƒe[ƒg‚ÌXVˆ—‚ğŒÄ‚Ô
+                    // é·ç§»ã®æ¡ä»¶ã‚’æº€ãŸã—ã¦ã¯ã„ãªã„ãŒã€é·ç§»ãƒãƒ¼ãƒ ãŒä¸€è‡´ï¼ˆæ›´æ–°ã•ã‚Œã¦ã„ãªã„ãªã‚‰ï¼‰ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®æ›´æ–°å‡¦ç†ã‚’å‘¼ã¶
                     else if (t.Name == name)
                     {
                         _currentPlayingState.Update();
                         if (OnUpdated != null)
                             OnUpdated(_currentTransitionName);
                     }
-                } // ‘S‘JˆÚ‚ğŒŸõB
+                } // å…¨é·ç§»ã‚’æ¤œç´¢ã€‚
             }
             #endregion
 
-            #region ‹N“®ˆ—
-            /// <summary> ƒXƒe[ƒgƒ}ƒVƒ“‚ğ‹N“®‚·‚é </summary>
+            #region èµ·å‹•å‡¦ç†
+            /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã‚’èµ·å‹•ã™ã‚‹ </summary>
             public void PopStateMachine()
             {
                 _bIsPausing = false;
@@ -168,16 +168,16 @@ namespace SgLib
             }
             #endregion
 
-            #region ˆê’â~ˆ—
-            /// <summary> ƒXƒe[ƒgƒ}ƒVƒ“‚Ìˆ—‚ğˆê’â~ </summary>
+            #region ä¸€æ™‚åœæ­¢å‡¦ç†
+            /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã®å‡¦ç†ã‚’ä¸€æ™‚åœæ­¢ </summary>
             public void PushStateMachine()
             {
                 _bIsPausing = true;
             }
             #endregion
         }
-        // Šeƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“‚Í–¼‘O‚ğŠ„‚è“–‚Ä‚Ä‚¢‚é
-        /// <summary> ƒXƒe[ƒgŠÔ‘JˆÚ‚Ìî•ñ‚ğŠi”[‚µ‚Ä‚¢‚é </summary>
+        // å„ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã¯åå‰ã‚’å‰²ã‚Šå½“ã¦ã¦ã„ã‚‹
+        /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆé–“é·ç§»ã®æƒ…å ±ã‚’æ ¼ç´ã—ã¦ã„ã‚‹ </summary>
         public class StateMachineTransition
         {
             IState _from;
@@ -194,7 +194,7 @@ namespace SgLib
             }
         }
 
-        /// <summary> ƒXƒe[ƒg‚Æ‚µ‚Ä“o˜^‚ğ‚·‚éƒNƒ‰ƒX‚ªŒp³‚·‚é‚×‚«ƒCƒ“ƒ^[ƒtƒF[ƒX </summary>
+        /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆã¨ã—ã¦ç™»éŒ²ã‚’ã™ã‚‹ã‚¯ãƒ©ã‚¹ãŒç¶™æ‰¿ã™ã‚‹ã¹ãã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ </summary>
         public interface IState
         {
             public void Entry();
@@ -202,7 +202,7 @@ namespace SgLib
             public void Exit();
         }
 
-        /// <summary> ƒ_ƒ~[‚ÌƒXƒe[ƒg‚ÌƒNƒ‰ƒX </summary>
+        /// <summary> ãƒ€ãƒŸãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®ã‚¯ãƒ©ã‚¹ </summary>
         class DummyStateClass : IState
         {
             public void Entry()
@@ -218,21 +218,21 @@ namespace SgLib
             }
         }
 
-        /// <summary> ƒXƒe[ƒg‘JˆÚ‚Ìƒ^ƒCƒv </summary>
+        /// <summary> ã‚¹ãƒ†ãƒ¼ãƒˆé·ç§»ã®ã‚¿ã‚¤ãƒ— </summary>
         enum StateMachineTransitionType
         {
-            StandardState,      // ’Êí 
-            AnyState,           // ˆêƒtƒŒ[ƒ€‚Ì‚İ‘JˆÚ 
+            StandardState,      // é€šå¸¸ 
+            AnyState,           // ä¸€ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã¿é·ç§» 
         }
 
-        #region ƒXƒe[ƒgƒ}ƒVƒ“A—˜—p•”\‘z
-        // ƒCƒjƒVƒƒƒ‰ƒCƒYˆ—
-        // ƒXƒe[ƒgƒ}ƒVƒ“ƒCƒ“ƒXƒ^ƒ“ƒX‰»ƒXƒe[ƒg‚Ì“o˜^
-        // ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“‚Ì“o˜^
-        // ƒXƒe[ƒgƒ}ƒVƒ“‚ÌXV
+        #region ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã€åˆ©ç”¨éƒ¨æ§‹æƒ³
+        // ã‚¤ãƒ‹ã‚·ãƒ£ãƒ©ã‚¤ã‚ºå‡¦ç†
+        // ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã‚¹ãƒ†ãƒ¼ãƒˆã®ç™»éŒ²
+        // ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã®ç™»éŒ²
+        // ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã®æ›´æ–°
 
-        // –ˆƒtƒŒ[ƒ€ˆ—
-        // ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“‚Ìó‘Ô‚ÌXV
+        // æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
+        // ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ã®æ›´æ–°
         #endregion
     }
 }

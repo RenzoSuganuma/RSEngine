@@ -1,13 +1,13 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 namespace SgLib
 {
-    #region “Æ©ƒƒ\ƒbƒh Original Methods
-    /// <summary> “Æ©‚Ìƒƒ\ƒbƒh‚ğ’ñ‹Ÿ‚·‚éƒNƒ‰ƒX </summary>
+    #region ç‹¬è‡ªãƒ¡ã‚½ãƒƒãƒ‰ Original Methods
+    /// <summary> ç‹¬è‡ªã®ãƒ¡ã‚½ãƒƒãƒ‰ã‚’æä¾›ã™ã‚‹ã‚¯ãƒ©ã‚¹ </summary>
     public static class SLib
     {
         /// <summary> 
-        /// <para>‘æ‚Pˆø”‚ª^‚Ì‚Ì‚İ‘æ‚Qˆø”‚Ìˆ—‚ğÀs‚·‚é </para>
+        /// <para>ç¬¬ï¼‘å¼•æ•°ãŒçœŸã®æ™‚ã®ã¿ç¬¬ï¼’å¼•æ•°ã®å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ </para>
         /// When 1st Argument is True, Do 2nd Arguments Process
         /// </summary>
         /// <param name="condition"></param>

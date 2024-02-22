@@ -1,25 +1,25 @@
-using SgLib.Singleton;
+﻿using SgLib.Singleton;
 using System;
 using UnityEditor;
 using UnityEngine;
-// �쐬 �����ʂ�
+
+// 作成 すがぬま
 namespace SgLib
 {
     namespace Systems
     {
         public class ApplicationQuitter : SingletonBaseClass<ApplicationQuitter>
         {
-            [SerializeField, Header("Player Tag")]
-            string PlayerTag;
+            [SerializeField, Header("Player Tag")] string PlayerTag;
 
             event Action<GameInfo.SceneTransitStatus> eventOnTransit;
 
             public event Action<GameInfo.SceneTransitStatus>
-                EventOnTransit
-            {
-                add { eventOnTransit += value; }
-                remove { eventOnTransit -= value; }
-            }
+                EventOnQuitApp
+                {
+                    add { eventOnTransit += value; }
+                    remove { eventOnTransit -= value; }
+                }
 
             Transform _pTrans;
             GameInfo _gInfo;
@@ -28,12 +28,16 @@ namespace SgLib
             {
                 _gInfo = GameObject.FindFirstObjectByType<GameInfo>();
             }
+
+            /// <summary> アプリケーションを閉じる </summary>
             public void QuitApplication()
             {
-                #region PreProcess
+                #region TaskOnEditor
+
 #if UNITY_EDITOR
                 EditorApplication.isPlaying = false;
 #endif
+
                 #endregion
 
                 eventOnTransit(_gInfo.GetSceneStatus);
@@ -41,6 +45,5 @@ namespace SgLib
                 Application.Quit();
             }
         }
-
     }
 }

@@ -1,4 +1,4 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,32 +10,32 @@ namespace SgLib
         LayerMask,
         Transform,
     }
-    /// <summary> “Á’è‚Ì‘ÎÛ‚ª”CˆÓ‚ÌÀ•W‚Ì‹ß‚­‚É‚¢‚é‚Ì‚ğŒŸ’m‚µ‚½‚ÌƒCƒxƒ“ƒg </summary>
+    /// <summary> ç‰¹å®šã®å¯¾è±¡ãŒä»»æ„ã®åº§æ¨™ã®è¿‘ãã«ã„ã‚‹ã®ã‚’æ¤œçŸ¥ã—ãŸæ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆ </summary>
     public class DetectTargetNearBy : MonoBehaviour
     {
-        // ŒŸ’mŒ—“à‚Ì‚Æ‚éŒ`i‹…j‚Ì”¼Œa
+        // æ¤œçŸ¥åœå†…ã®ã¨ã‚‹å½¢ï¼ˆçƒï¼‰ã®åŠå¾„
         [SerializeField, Range(0, 5),
-            Header("‹«ŠEü‚Ì”¼ŒaB\nƒXƒ‰ƒCƒ_[‚ğ“®‚©‚·‚ÆA‹«ŠEü‚ªL‚ª‚é")]
+            Header("å¢ƒç•Œç·šã®åŠå¾„ã€‚\nã‚¹ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å‹•ã‹ã™ã¨ã€å¢ƒç•Œç·šãŒåºƒãŒã‚‹")]
         float borderRadius;
-        // ŒŸ’m‘ÎÛ‚ÌƒŒƒCƒ„[ƒ}ƒXƒN
+        // æ¤œçŸ¥å¯¾è±¡ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒã‚¹ã‚¯
         [SerializeField,
-            Header("ŒŸ’m‘ÎÛ‚ÌƒŒƒCƒ„[‚Éƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ğ“ü‚ê‚ê‚Î‚æ‚¢")]
+            Header("æ¤œçŸ¥å¯¾è±¡ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã‚’å…¥ã‚Œã‚Œã°ã‚ˆã„")]
         LayerMask targetLayer;
-        // ŒŸ’m‘ÎÛ‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+        // æ¤œçŸ¥å¯¾è±¡ã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
         [SerializeField,
-            Header("ŒŸ’mƒ‚[ƒh‚ªTransform‚Ìê‡\nŒŸ’m‘ÎÛ‚Ì‚ğ‚±‚±‚Éƒhƒ‰ƒbƒOƒAƒ“ƒhƒhƒƒbƒv‚ÅŠ„‚è“–‚Ä‚é")]
+            Header("æ¤œçŸ¥ãƒ¢ãƒ¼ãƒ‰ãŒTransformã®å ´åˆ\næ¤œçŸ¥å¯¾è±¡ã®ã‚’ã“ã“ã«ãƒ‰ãƒ©ãƒƒã‚°ã‚¢ãƒ³ãƒ‰ãƒ‰ãƒ­ãƒƒãƒ—ã§å‰²ã‚Šå½“ã¦ã‚‹")]
         Transform targetTransform;
-        // ŒŸ’m‚µ‚½‚ÌƒCƒxƒ“ƒg
+        // æ¤œçŸ¥ã—ãŸæ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆ
         [SerializeField,
-            Header("‚±‚±‚ÉŒŸ’m‘ÎÛ‚ğŒŸ’m‚µ‚½ê‡\n”­‰Î‚µ‚Ä‚Ù‚µ‚¢ƒCƒxƒ“ƒg‚ğŠ„‚è“–‚Ä‚é")]
+            Header("ã“ã“ã«æ¤œçŸ¥å¯¾è±¡ã‚’æ¤œçŸ¥ã—ãŸå ´åˆ\nç™ºç«ã—ã¦ã»ã—ã„ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‰²ã‚Šå½“ã¦ã‚‹")]
         UnityEvent eventDetectedInsideBorder;
-        // ŒŸ’mŒ—“à‚Ì’†S‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
-        [SerializeField, Header("ŒŸ’mƒ‚[ƒh‚ªTransform‚Ì\nŒŸ’mŠî€À•WiƒIƒuƒWƒFƒNƒgj‚ğ‚±‚±‚ÉŠ„‚è“–‚Ä‚é")]
+        // æ¤œçŸ¥åœå†…ã®ä¸­å¿ƒã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
+        [SerializeField, Header("æ¤œçŸ¥ãƒ¢ãƒ¼ãƒ‰ãŒTransformã®æ™‚\næ¤œçŸ¥åŸºæº–åº§æ¨™ï¼ˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰ã‚’ã“ã“ã«å‰²ã‚Šå½“ã¦ã‚‹")]
         Transform centerTransform;
-        // ŒŸ’mƒ‚[ƒh
-        [SerializeField, Header("=ŒŸ’mƒ‚[ƒh=\n" +
-            "LayerMask:\nƒAƒ^ƒbƒ`‚µ‚½ƒIƒuƒWƒFƒNƒg‚ÌÀ•W‚ğ‚à‚Æ‚ÉŒŸ’m‚·‚é\n‚P‚Â‚ÌƒIƒuƒWƒFƒNƒg‚ÌN“ü‚Ì‚İŒŸ’m‚·‚é‚Æ‚«‚Ég‚¤‚Æ‚æ‚¢\n" +
-            "Transform:\nŠ„‚è“–‚Ä‚½ƒŒƒCƒ„[‚Ì•s“Á’è”‚ÌƒIƒuƒWƒFƒNƒg‚ÌN“ü‚ğŒŸ’m‚·‚é‚Æ‚«‚Ég‚¤‚Æ‚æ‚¢")]
+        // æ¤œçŸ¥ãƒ¢ãƒ¼ãƒ‰
+        [SerializeField, Header("=æ¤œçŸ¥ãƒ¢ãƒ¼ãƒ‰=\n" +
+            "LayerMask:\nã‚¢ã‚¿ãƒƒãƒã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åº§æ¨™ã‚’ã‚‚ã¨ã«æ¤œçŸ¥ã™ã‚‹\nï¼‘ã¤ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¾µå…¥ã®ã¿æ¤œçŸ¥ã™ã‚‹ã¨ãã«ä½¿ã†ã¨ã‚ˆã„\n" +
+            "Transform:\nå‰²ã‚Šå½“ã¦ãŸãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä¸ç‰¹å®šæ•°ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¾µå…¥ã‚’æ¤œçŸ¥ã™ã‚‹ã¨ãã«ä½¿ã†ã¨ã‚ˆã„")]
         DetectingMode mode;
         private void Update()
         {
@@ -50,7 +50,7 @@ namespace SgLib
                         eventDetectedInsideBorder?.Invoke();
                     break;
                 default:
-                    throw new System.Exception("ŒŸ’mƒ‚[ƒh‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+                    throw new System.Exception("æ¤œçŸ¥ãƒ¢ãƒ¼ãƒ‰ãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã¾ã›ã‚“");
             }
         }
 #if UNITY_EDITOR

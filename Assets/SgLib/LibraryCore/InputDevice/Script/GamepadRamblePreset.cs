@@ -1,9 +1,9 @@
-using SgLib.Devicies;
+ï»¿using SgLib.Devicies;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ì¬ ›À
+// ä½œæˆ è…æ²¼
 namespace SgLib
 {
     namespace Devicies
@@ -11,7 +11,7 @@ namespace SgLib
         [CreateAssetMenu(fileName = "PadRamblingPreset", menuName = "GamepadRamblingPreset", order = 1)]
         public class GamepadRamblePreset : ScriptableObject
         {
-            /// <summary> RumbleInfo ¶‚©‚ç ¶‚ÌU“® ‰E‚ÌU“® U“®‚ÌŠÔ </summary>
+            /// <summary> RumbleInfo å·¦ã‹ã‚‰ å·¦ã®æŒ¯å‹• å³ã®æŒ¯å‹• æŒ¯å‹•ã®æ™‚é–“ </summary>
             [SerializeField] List<RumbleInfo<float, float, float>> rumbleTable;
             public List<RumbleInfo<float, float, float>> Rumbles { get { return rumbleTable; } }
         }

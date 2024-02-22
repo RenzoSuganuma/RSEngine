@@ -1,15 +1,15 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-/// <summary> ƒvƒƒpƒeƒBî•ñƒCƒ“ƒtƒ‰‚Ì—˜—p•”‚ÌƒNƒ‰ƒX‚ªŒp³‚·‚é‚×‚«ƒCƒ“ƒ^[ƒtƒFƒCƒX </summary>
+/// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚¤ãƒ³ãƒ•ãƒ©ã®åˆ©ç”¨éƒ¨ã®ã‚¯ãƒ©ã‚¹ãŒç¶™æ‰¿ã™ã‚‹ã¹ãã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ </summary>
 public interface IPropInfoUser
 {
     PropertyInfoHandlerLinker PropInfoHandlerLinker { get; set; }
     PropertyInfoHandler PropInfoHandler { get; set; }
     List<string> ResisterNameList { get; set; }
 }
-/// <summary> ƒvƒƒpƒeƒBî•ñƒCƒ“ƒtƒ‰—˜—p•”‚ÌŠî’êƒNƒ‰ƒXB‹@”\‚ğ—˜—p‚·‚é‚½‚ß‚É‚±‚ê‚ğŒp³‚·‚é </summary>
+/// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚¤ãƒ³ãƒ•ãƒ©åˆ©ç”¨éƒ¨ã®åŸºåº•ã‚¯ãƒ©ã‚¹ã€‚æ©Ÿèƒ½ã‚’åˆ©ç”¨ã™ã‚‹ãŸã‚ã«ã“ã‚Œã‚’ç¶™æ‰¿ã™ã‚‹ </summary>
 [RequireComponent(typeof(PropertyInfoHandler))]
 public abstract class PropInfoUser : MonoBehaviour
 {

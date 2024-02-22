@@ -1,10 +1,10 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using SgLib;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary> ƒvƒƒpƒeƒBî•ñ‚Ì\‘¢‘ÌBƒŒƒWƒXƒ^–¼Aƒf[ƒ^AŒ^‚ğæ“¾‚Å‚«‚é </summary>
-public struct PropInfoCallBackContext // © ‚Ç‚ÌƒŒƒWƒXƒ^–¼‚Ìƒf[ƒ^‚ª•Ï‰»‚µ‚½‚©‚Ì\‘¢‘Ì
+/// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã®æ§‹é€ ä½“ã€‚ãƒ¬ã‚¸ã‚¹ã‚¿åã€ãƒ‡ãƒ¼ã‚¿ã€å‹ã‚’å–å¾—ã§ãã‚‹ </summary>
+public struct PropInfoCallBackContext // â† ã©ã®ãƒ¬ã‚¸ã‚¹ã‚¿åã®ãƒ‡ãƒ¼ã‚¿ãŒå¤‰åŒ–ã—ãŸã‹ã®æ§‹é€ ä½“
 {
     public string _resisterName;
     public object _resisterData;
@@ -20,13 +20,13 @@ public struct PropInfoCallBackContext // © ‚Ç‚ÌƒŒƒWƒXƒ^–¼‚Ìƒf[ƒ^‚ª•Ï‰»‚µ‚½‚©‚Ì
         return $"[{_resisterName} : {_resisterData} : {_resisterDataType}]";
     }
 }
-/// <summary> ƒvƒƒpƒeƒBî•ñƒIƒuƒU[ƒo[‚Ì”h¶ƒNƒ‰ƒX‚ªŒp³‚·‚é‚×‚«ƒCƒ“ƒ^[ƒtƒFƒCƒX </summary>
+/// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚ªãƒ–ã‚¶ãƒ¼ãƒãƒ¼ã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ãŒç¶™æ‰¿ã™ã‚‹ã¹ãã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ </summary>
 public interface IPropInfoObserver
 {
     void OnSenderPropertyValueChanged(PropInfoCallBackContext context);
     void OnReciverPropertyValueChanged(PropInfoCallBackContext context);
 }
-/// <summary> ƒvƒƒpƒeƒBî•ñ‚Ì•Ï‰»‚ğŠÄ‹‚·‚éƒNƒ‰ƒXBŠÄ‹‚É•K—v‚È‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
+/// <summary> ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã®å¤‰åŒ–ã‚’ç›£è¦–ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚ç›£è¦–ã«å¿…è¦ãªæ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </summary>
 public class PropertyInfoObserver : MonoBehaviour
 {
     [SerializeField] PropertyInfoHandlerLinker _targetPropInfoHandlerLinker;

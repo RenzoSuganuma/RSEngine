@@ -1,19 +1,19 @@
-using System.Linq;
+ï»¿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 #region 3DTransform To 2DScreenPosition
-/// <summary> —^‚¦‚ç‚ê‚½‚RŸŒ³‚Ì•ûŒü‚©‚ç‚QŸŒ³‚Ì•ûŒü‚Ì³‹K‰»‚µ‚½ƒxƒNƒgƒ‹‚ğ•Ô‚· </summary>
+/// <summary> ä¸ãˆã‚‰ã‚ŒãŸï¼“æ¬¡å…ƒã®æ–¹å‘ã‹ã‚‰ï¼’æ¬¡å…ƒã®æ–¹å‘ã®æ­£è¦åŒ–ã—ãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ </summary>
 /// <param name="direction"></param>
 /// <returns></returns>
 //Vector2 Calculate3DPosTo2DViewPos(Vector3 target, Vector3 origin, Vector3 cameraForward, Vector3 cameraRight)
 //{
-/// l‚¦•û
-/// 3d ‚Å‚Ì–Ú•W‚ÆƒvƒŒƒCƒ„[‚ÌƒxƒNƒgƒ‹‚ğD
-/// 3d ‚Å‚ÌƒvƒŒƒCƒ„[‚Ì³–ÊƒxƒNƒgƒ‹‚ğF
-/// 2d ‚Å‚Ì³–ÊƒxƒNƒgƒ‹F1‚Í(0,1)
-/// F ‚©‚ç‰½“x‰ñ“]‚µ‚½•ûŒü‚ÉD‚ª‚ ‚é‚©’m‚è‚½‚¢‚Ì‚Å F E D ‚ğ‹‚ß‚é
-/// ‚±‚ê‚ğ2d ã‚ÅÄŒ»‚·‚ê‚Î‚æ‚¢‚©‚à
+/// è€ƒãˆæ–¹
+/// 3d ã§ã®ç›®æ¨™ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’D
+/// 3d ã§ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ­£é¢ãƒ™ã‚¯ãƒˆãƒ«ã‚’F
+/// 2d ã§ã®æ­£é¢ãƒ™ã‚¯ãƒˆãƒ«F1ã¯(0,1)
+/// F ã‹ã‚‰ä½•åº¦å›è»¢ã—ãŸæ–¹å‘ã«DãŒã‚ã‚‹ã‹çŸ¥ã‚ŠãŸã„ã®ã§ F ãƒ» D ã‚’æ±‚ã‚ã‚‹
+/// ã“ã‚Œã‚’2d ä¸Šã§å†ç¾ã™ã‚Œã°ã‚ˆã„ã‹ã‚‚
 #region Cos_
 //// the vector player -> target
 //Vector3 t = (target - origin).normalized, f = cameraForward.normalized;
@@ -36,7 +36,7 @@ using static UnityEngine.GraphicsBuffer;
 #endregion
 
 #region Atan2
-// XZ•½–Ê ¨ forward-right•½–Ê
+// XZå¹³é¢ â†’ forward-rightå¹³é¢
 // calculate angle
 //Vector3 forward = target - cameraForward;
 //Vector3 right = target - cameraRight;
@@ -73,9 +73,9 @@ using static UnityEngine.GraphicsBuffer;
 //Vector3 resVec1 = Quaternion.Euler(0, angleAcos, 0) * cameraForward;
 
 //// calculate angle Atan2
-//// Ë‰eƒxƒNƒgƒ‹‚ğ‹‚ß‚é Atan‚Ìx
+//// å°„å½±ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹ Atanã®x
 //Vector3 pjT = r.normalized * (t.magnitude * Mathf.Cos((90.0f - angleAcos)));
-//// ‚‚³‚ÌƒwƒNƒgƒ‹ Atan‚Ìy
+//// é«˜ã•ã®ãƒ˜ã‚¯ãƒˆãƒ« Atanã®y
 //Vector3 h = t.normalized * Mathf.Sin((90.0f - angleAcos));
 //float atan2 = Mathf.Atan2(h.magnitude, pjT.magnitude);
 //Vector3 resVec2 = Quaternion.Euler(0, atan2, 0) * cameraForward;
@@ -97,7 +97,7 @@ using static UnityEngine.GraphicsBuffer;
 #endregion
 //}
 #endregion
-/// <summary> ƒ}ƒbƒv“à‚É–Ú•W‚ğ‹­’²•\¦ </summary>
+/// <summary> ãƒãƒƒãƒ—å†…ã«ç›®æ¨™ã‚’å¼·èª¿è¡¨ç¤º </summary>
 public class ObjectiveMapIndicator : MonoBehaviour
 {
     [SerializeField, Header("Indicator Sprite Image")]
@@ -146,7 +146,7 @@ public class ObjectiveMapIndicator : MonoBehaviour
 
     private void Update()
     {
-        if (GameObject.FindAnyObjectByType<GameInfo>().GetSceneStatus != GameInfo.SceneTransitStatus.ToInGame)
+        if (GameObject.FindAnyObjectByType<GameInfo>().GetSceneStatus != GameInfo.SceneTransitStatus.WentToInGameScene)
         { return; }
 
         _rect = ImageIcon.gameObject.GetComponent<RectTransform>();

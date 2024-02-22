@@ -1,27 +1,34 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
+
 using System;
 using System.Linq;
 using UnityEngine;
+
 namespace SgLib
 {
     namespace AI
     {
-        /// <summary> “¹‹Ø‚ÌÀ•Wî•ñ‚ğŠi”[‚µ‚Ä‚¢‚é </summary>
+        /// <summary> é“ç­‹ã®åº§æ¨™æƒ…å ±ã‚’æ ¼ç´ã—ã¦ã„ã‚‹ </summary>
         public class PatrollerPathHolder : MonoBehaviour
         {
-            [SerializeField, Header("Path Color")]
-            Color color = Color.yellow;
+            [SerializeField, Header("Path Color")] Color color = Color.yellow;
+
             [SerializeField, Header("Marker Color")]
             Color markerC = Color.cyan;
+
             [SerializeField, Header("Point Marker Size")]
             float markerSize = 1.0f;
-            /// <summary> AI‚Ìƒpƒgƒ[ƒ‹‚·‚é“¹‹Ø‚ÌŠe•ªŠò“_‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğ•Ô‚· </summary>
-            /// <returns></returns>
-            public Vector3[] GetPatrollingPath()
+
+            /// <summary> AIã®ãƒ‘ãƒˆãƒ­ãƒ¼ãƒ«ã™ã‚‹é“ç­‹ã®å„åˆ†å²ç‚¹ã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¿”ã™ </summary>
+            public Vector3[] GetPatrollingPath
             {
-                var temp = Array.ConvertAll(transform.GetComponentsInChildren<Transform>(), x => x.position).ToList();
-                temp.RemoveAt(0);
-                return temp.ToArray();
+                get
+                {
+                    var temp = Array.ConvertAll(transform.GetComponentsInChildren<Transform>(), x => x.position)
+                        .ToList();
+                    temp.RemoveAt(0);
+                    return temp.ToArray();
+                }
             }
 
             private void OnDrawGizmos()
@@ -35,6 +42,7 @@ namespace SgLib
                 {
                     Gizmos.DrawCube(p.position, Vector3.one * markerSize);
                 } // draw sphere to each point's position
+
                 Gizmos.color = color;
                 Gizmos.DrawLineStrip(Array.ConvertAll(points, x => x.position), true);
             }

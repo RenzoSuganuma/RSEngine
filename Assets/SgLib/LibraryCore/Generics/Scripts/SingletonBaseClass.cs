@@ -1,11 +1,11 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System;
 using UnityEngine;
 namespace SgLib
 {
     namespace Singleton
     {
-        /// <summary> ‚±‚ÌƒNƒ‰ƒX‚ğŒp³‚·‚é‚±‚Æ‚É‚æ‚Á‚ÄAƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“‚ÌƒrƒwƒCƒrƒA‚Ì‹@”\‚ğ’ñ‹Ÿ‚·‚é </summary>
+        /// <summary> ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã™ã‚‹ã“ã¨ã«ã‚ˆã£ã¦ã€ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ã®ãƒ“ãƒ˜ã‚¤ãƒ“ã‚¢ã®æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ </summary>
         /// <typeparam name="T"></typeparam>
         public abstract class SingletonBaseClass<T> : MonoBehaviour where T : Component
         {
@@ -24,7 +24,7 @@ namespace SgLib
                     ToDoAtAwakeSingleton();
                 }
             }
-            /// <summary> AwakeŠÖ”“à‚ÅŒÄ‚Ño‚µ‚Ä‚Ù‚µ‚¢ˆ—‚ğ‘‚­ </summary>
+            /// <summary> Awakeé–¢æ•°å†…ã§å‘¼ã³å‡ºã—ã¦ã»ã—ã„å‡¦ç†ã‚’æ›¸ã </summary>
             protected abstract void ToDoAtAwakeSingleton();
         }
     }

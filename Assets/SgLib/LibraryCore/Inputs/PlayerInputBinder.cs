@@ -1,4 +1,4 @@
-using SgLib.Singleton;
+ï»¿using SgLib.Singleton;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace SgLib
             GameObject.DontDestroyOnLoad(this);
         }
 
-        // ƒAƒNƒVƒ‡ƒ“–¼‚ğw’è‚µ‚Ä‚»‚ê‚É“o˜^
+        // ã‚¢ã‚¯ã‚·ãƒ§ãƒ³åã‚’æŒ‡å®šã—ã¦ãã‚Œã«ç™»éŒ²
         public void BindAxis(string actionMapName, string actionName
         , Action<InputAction.CallbackContext> callbackAction, ActionInvokeFaze actionInvokingFaze)
         {

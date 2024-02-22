@@ -1,4 +1,4 @@
-// ŠÇ—Ò ›À
+ï»¿// ç®¡ç†è€… è…æ²¼
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,7 @@ namespace SgLib
         Warning,
         Error,
     }
-    /// <summary> “n‚³‚ê‚½•¶š—ñ‚ğ‚½‚¾DebugƒƒO‚Öo—Í‚·‚éB </summary>
+    /// <summary> æ¸¡ã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’ãŸã Debugãƒ­ã‚°ã¸å‡ºåŠ›ã™ã‚‹ã€‚ </summary>
     public class DummyLogger : MonoBehaviour
     {
         [SerializeField] LoggingMode mode;
