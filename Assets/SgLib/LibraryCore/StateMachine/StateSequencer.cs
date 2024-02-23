@@ -11,15 +11,15 @@ namespace SgLib
         public class StateSequencer
         {
             // 通常ステート
-            HashSet<IState> _states = new HashSet<IState>();
+            HashSet<ISequensableState> _states = new HashSet<ISequensableState>();
             // Anyステートからのステート
-            HashSet<IState> _statesFromAnyState = new HashSet<IState>();
+            HashSet<ISequensableState> _statesFromAnyState = new HashSet<ISequensableState>();
             // トランジション
             HashSet<StateMachineTransition> _transitions = new HashSet<StateMachineTransition>();
             // Anyからのトランジション
             HashSet<StateMachineTransition> _transitionsFromAny = new HashSet<StateMachineTransition>();
             // 現在突入しているステート
-            IState _currentPlayingState;
+            ISequensableState _currentPlayingSequensableState;
             // 現在突入しているトランジション名
             string _currentTransitionName;
             // ステートマシンが一時停止中かのフラグ
@@ -31,36 +31,36 @@ namespace SgLib
 
             #region 登録処理
             /// <summary> ステートの登録 </summary>
-            /// <param name="state"></param>
-            public void ResistState(IState state)
+            /// <param name="sequensableState"></param>
+            public void ResistState(ISequensableState sequensableState)
             {
-                _states.Add(state);
-                if (_currentPlayingState == null) { _currentPlayingState = state; }
+                _states.Add(sequensableState);
+                if (_currentPlayingSequensableState == null) { _currentPlayingSequensableState = sequensableState; }
             }
 
             /// <summary> Anyからのステートの登録 </summary>
-            /// <param name="state"></param>
-            public void ResistStateFromAny(IState state)
+            /// <param name="sequensableState"></param>
+            public void ResistStateFromAny(ISequensableState sequensableState)
             {
-                _statesFromAnyState.Add(state);
+                _statesFromAnyState.Add(sequensableState);
             }
 
             /// <summary> 複数のステートを引数に渡してすべての渡されたステートを登録 </summary>
             /// <param name="states"></param>
-            public void ResistStates(List<IState> states)
+            public void ResistStates(List<ISequensableState> states)
             {
-                foreach (IState state in states)
+                foreach (ISequensableState state in states)
                 {
                     _states.Add(state);
-                    if (_currentPlayingState == null) { _currentPlayingState = state; }
+                    if (_currentPlayingSequensableState == null) { _currentPlayingSequensableState = state; }
                 }
             }
 
             /// <summary> 複数のステートを引数に渡してすべての渡されたAnyからのステートを登録 </summary>
             /// <param name="states"></param>
-            public void ResistStatesFromAny(List<IState> states)
+            public void ResistStatesFromAny(List<ISequensableState> states)
             {
-                foreach (IState state in _statesFromAnyState)
+                foreach (ISequensableState state in _statesFromAnyState)
                 {
                     _states.Add(state);
                 }
@@ -70,7 +70,7 @@ namespace SgLib
             /// <param name="from"></param>
             /// <param name="to"></param>
             /// <param name="name"></param>
-            public void MakeTransition(IState from, IState to, string name)
+            public void MakeTransition(ISequensableState from, ISequensableState to, string name)
             {
                 var tmp = new StateMachineTransition(from, to, name);
                 _transitions.Add(tmp);
@@ -80,9 +80,9 @@ namespace SgLib
             /// <param name="from"></param>
             /// <param name="to"></param>
             /// <param name="name"></param>
-            public void MakeTransitionFromAny(IState to, string name)
+            public void MakeTransitionFromAny(ISequensableState to, string name)
             {
-                var tmp = new StateMachineTransition(new DummyStateClass(), to, name);
+                var tmp = new StateMachineTransition(new DummySequensableStateClass(), to, name);
                 _transitionsFromAny.Add(tmp);
             }
 
@@ -103,14 +103,14 @@ namespace SgLib
                     // もし遷移条件を満たしていて遷移名が一致するなら
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
-                        if (t.SFrom == _currentPlayingState) // 現在左ステートなら
+                        if (t.SFrom == _currentPlayingSequensableState) // 現在左ステートなら
                         {
-                            _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                            _currentPlayingSequensableState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
                             if (OnExited != null)
                                 OnExited(_currentTransitionName);
                             if (isTrigger) condition2transist = !equalsTo; // IsTrigger が trueなら
-                            _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
-                            _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                            _currentPlayingSequensableState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
+                            _currentPlayingSequensableState.Entry(); // 現在のステートの初回起動処理を呼ぶ
                             if (OnEntered != null)
                                 OnEntered(_currentTransitionName);
                             _currentTransitionName = name; // 現在の遷移ネームを更新
@@ -119,7 +119,7 @@ namespace SgLib
                     // 遷移の条件を満たしてはいないが、遷移ネームが一致（更新されていないなら）現在のステートの更新処理を呼ぶ
                     else if (t.Name == name)
                     {
-                        _currentPlayingState.Update();
+                        _currentPlayingSequensableState.Update();
                         if (OnUpdated != null)
                             OnUpdated(_currentTransitionName);
                     }
@@ -138,12 +138,12 @@ namespace SgLib
                     // もし遷移条件を満たしていて遷移名が一致するなら
                     if ((condition2transist == equalsTo) && t.Name == name)
                     {
-                        _currentPlayingState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
+                        _currentPlayingSequensableState.Exit(); // 右ステートへの遷移条件を満たしたので抜ける
                         if (OnExited != null)
                             OnExited(_currentTransitionName);
                         if (isTrigger) condition2transist = !equalsTo; // 遷移条件を初期化
-                        _currentPlayingState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
-                        _currentPlayingState.Entry(); // 現在のステートの初回起動処理を呼ぶ
+                        _currentPlayingSequensableState = t.STo; // 現在のステートを右ステートに更新、遷移はそのまま
+                        _currentPlayingSequensableState.Entry(); // 現在のステートの初回起動処理を呼ぶ
                         if (OnEntered != null)
                             OnEntered(_currentTransitionName);
                         _currentTransitionName = name; // 現在の遷移ネームを更新
@@ -151,7 +151,7 @@ namespace SgLib
                     // 遷移の条件を満たしてはいないが、遷移ネームが一致（更新されていないなら）現在のステートの更新処理を呼ぶ
                     else if (t.Name == name)
                     {
-                        _currentPlayingState.Update();
+                        _currentPlayingSequensableState.Update();
                         if (OnUpdated != null)
                             OnUpdated(_currentTransitionName);
                     }
@@ -164,7 +164,7 @@ namespace SgLib
             public void PopStateMachine()
             {
                 _bIsPausing = false;
-                _currentPlayingState.Entry();
+                _currentPlayingSequensableState.Entry();
             }
             #endregion
 
@@ -180,13 +180,13 @@ namespace SgLib
         /// <summary> ステート間遷移の情報を格納している </summary>
         public class StateMachineTransition
         {
-            IState _from;
-            public IState SFrom => _from;
-            IState _to;
-            public IState STo => _to;
+            ISequensableState _from;
+            public ISequensableState SFrom => _from;
+            ISequensableState _to;
+            public ISequensableState STo => _to;
             string _name;
             public string Name => _name;
-            public StateMachineTransition(IState from, IState to, string name)
+            public StateMachineTransition(ISequensableState from, ISequensableState to, string name)
             {
                 _from = from;
                 _to = to;
@@ -195,7 +195,7 @@ namespace SgLib
         }
 
         /// <summary> ステートとして登録をするクラスが継承するべきインターフェース </summary>
-        public interface IState
+        public interface ISequensableState
         {
             public void Entry();
             public void Update();
@@ -203,7 +203,7 @@ namespace SgLib
         }
 
         /// <summary> ダミーのステートのクラス </summary>
-        class DummyStateClass : IState
+        class DummySequensableStateClass : ISequensableState
         {
             public void Entry()
             {

@@ -1,6 +1,4 @@
-﻿using SgLib.Systems;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,12 +15,9 @@ namespace SgLib
     {
         public class DisplaySettingsManager : MonoBehaviour
         {
-            [SerializeField]
-            Dropdown displaysDD;
-            [SerializeField]
-            Dropdown resolutionsDD;
-            [SerializeField]
-            Dropdown refreshRateDD;
+            [SerializeField] Dropdown displaysDD;
+            [SerializeField] Dropdown resolutionsDD;
+            [SerializeField] Dropdown refreshRateDD;
 
             int _resolutionIndex;
             public int ResolutionIndex => _resolutionIndex;
@@ -31,27 +26,8 @@ namespace SgLib
             int _displayIndex;
             public int DisplayIndex => _displayIndex;
 
+            private DisplaySettingDataContainer dispDatas;
             
-
-            /// <summary> 解像度の一覧。Key -> 表示するのに取得、Value -> 関数に渡す </summary>
-            Dictionary<string, string> ResolutionsList = new()
-        {
-            {"FHD [1920×1080 16:9]" , "1920 1080"},
-            {"WSXGA [1680×1050 16:10]" , "1680 1050"},
-            {"WQHD [2560×1440 16:9]" , "2560 1440"},
-            {"WQXGA [2560×1600 16:10]" , "2560 1600"},
-        };
-
-            /// <summary> リフレッシュレートの一覧。Key -> 表示するのに取得、Value -> 関数に渡す </summary>
-            Dictionary<string, int> RefreshRateList = new()
-        {
-            {"60Hz" , 60},
-            {"75Hz", 75 },
-            {"120Hz", 120 },
-            {"144Hz" , 144},
-            {"165Hz", 165 }
-        };
-
             #region ScriptFunctions
 
             /// <summary> DropDownOnValueChanged </summary>
@@ -92,6 +68,13 @@ namespace SgLib
 
                 Screen.SetResolution(width, height, true);
             }
+            public void SetDisplayResolutions(Tuple<int, int> resolution)
+            {
+                int width = resolution.Item1;
+                int height = resolution.Item2;
+                
+                Screen.SetResolution(width, height, true);
+            }
 
             public int GetRefreshRate()
             {
@@ -118,7 +101,7 @@ namespace SgLib
             public void ChangeGameResolutions(Dropdown dropdown)
             {
                 int resolutionIndex = DDOnValueChanged(dropdown);
-                var resolutionRaw = ResolutionsList.Values.ToList();
+                var resolutionRaw = dispDatas.GetResolutionList.Values.ToList();
                 var resolution = resolutionRaw[resolutionIndex];
 
                 _resolutionIndex = resolutionIndex;
@@ -128,14 +111,14 @@ namespace SgLib
             public void ChangeGameRefreshRate(Dropdown dropdown)
             {
                 int rateIndex = DDOnValueChanged(dropdown);
-                var rateRaw = RefreshRateList.Values.ToList();
+                var rateRaw = dispDatas.GetRefreshRateList;
                 var rate = rateRaw[rateIndex];
 
                 _refreshRateIndex = rateIndex;
                 SetRefreshRate(rate);
             }
 
-            void SetupActiveDisplaysDropdown()  // アクティブなディスプレイをドロップダウンへ名前のみ渡す
+            void SetupActiveDisplaysDropdown() // アクティブなディスプレイをドロップダウンへ名前のみ渡す
             {
                 displaysDD.options.Clear();
                 var displays = GetDisplays();
@@ -146,6 +129,7 @@ namespace SgLib
                     data.text = display.name;
                     optionData.Add(data);
                 }
+
                 displaysDD.options = optionData;
             }
 
@@ -153,13 +137,14 @@ namespace SgLib
             {
                 resolutionsDD.options.Clear();
                 List<Dropdown.OptionData> optionData = new();
-                var resolutions = ResolutionsList.Keys.ToList();
+                var resolutions = dispDatas.GetResolutionList.Keys.ToList();
                 foreach (var resolution in resolutions)
                 {
                     Dropdown.OptionData data = new Dropdown.OptionData();
                     data.text = resolution;
                     optionData.Add(data);
                 }
+
                 resolutionsDD.options = optionData;
             }
 
@@ -167,13 +152,14 @@ namespace SgLib
             {
                 refreshRateDD.options.Clear();
                 List<Dropdown.OptionData> optionData = new();
-                var rates = RefreshRateList.Keys.ToList();
+                var rates = dispDatas.GetRefreshRateList;
                 foreach (var rate in rates)
                 {
                     Dropdown.OptionData data = new Dropdown.OptionData();
-                    data.text = rate;
+                    data.text = rate.ToString();
                     optionData.Add(data);
                 }
+
                 refreshRateDD.options = optionData;
             }
 

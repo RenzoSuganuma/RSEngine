@@ -13,7 +13,7 @@ using UnityEngine.Events;
 namespace SgLib.UI
 {
     /// <summary> 
-    /// <para> ボタンのような機能を提供する </para>
+    /// <para> ボタンのような機能を提供する。 多角形に対応</para>
     /// This Component Works As Button
     /// </summary>
     public class ClicableObject : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasRaycastFilter
