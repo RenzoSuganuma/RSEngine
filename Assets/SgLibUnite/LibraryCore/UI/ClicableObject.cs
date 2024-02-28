@@ -124,13 +124,5 @@ namespace SgLibUnite.UI
         {
             Debug.Log("Submit");
         }
-
-        private void Awake()
-        {
-        }
-
-        private void Update()
-        {
-        }
     }
 }
